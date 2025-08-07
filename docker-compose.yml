@@ -1,0 +1,26 @@
+services:
+  nginx:
+   container_name : nginx_container
+   build:
+    context: ./config
+    dockerfile: Dockerfile
+   networks:
+      - camagru-network
+  php:
+    container_name: php_container
+    networks:
+      - camagru-network
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+  mysql:
+    container_name: mysql_container
+    volumes: db-data:/var/lib/mysql
+    networks:
+      - camagru-network
+
+  volumes:
+    db-data:      
+  networks:
+    camagru-network:
+      driver: bridge

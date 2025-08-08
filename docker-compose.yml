@@ -1,26 +1,44 @@
 services:
-  nginx:
-   container_name : nginx_container
-   build:
-    context: ./config
-    dockerfile: Dockerfile
-   networks:
-      - camagru-network
-  php:
-    container_name: php_container
-    networks:
-      - camagru-network
-    build:
-      context: ./app
-      dockerfile: Dockerfile
-  mysql:
-    container_name: mysql_container
-    volumes: db-data:/var/lib/mysql
+  web:
+    image: nginx:latest
+    container_name: nginx_container
+    volumes:
+      - ./app:/var/www/html/public
+      - ./config/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - php
     networks:
       - camagru-network
 
-  volumes:
-    db-data:      
-  networks:
-    camagru-network:
-      driver: bridge
+  php:
+    container_name: php_container
+    build:
+      context: ./config/php
+    volumes:
+      - ./app:/var/www/html
+    env_file:
+      - ./env
+    depends_on:
+      - mariadb
+    networks:
+      - camagru-network
+
+  mariadb:
+    container_name: mariadb_container
+    build:
+      context: ./config/mariadb
+    env_file:
+      - ./env
+    volumes:
+      - db-data:/var/lib/mysql
+    expose:
+      - "3306"
+    networks:
+      - camagru-network
+
+volumes:
+  db-data:
+
+networks:
+  camagru-network:
+    driver: bridge

@@ -1,39 +1,38 @@
 
-CREATE TABLE IF NOT EXISTS user {
+CREATE TABLE IF NOT EXISTS user (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) NOT NULL UNIQUE,
     email VARCHAR(100) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     emailPreference BOOLEAN NOT NULL DEFAULT 1,
 	emailConfirmed BOOLEAN NOT NULL DEFAULT 0
-}
+);
 
-CREATE TABLE IF NOT EXISTS post {
+CREATE TABLE IF NOT EXISTS post (
     id INT AUTO_INCREMENT PRIMARY KEY,
     userId INT,
     title VARCHAR(255) NOT NULL,
-    timestamp VARCHAR(255) NOT NULL,
+    date DATETIME NOT NULL,
     mediaUrl VARCHAR(255),
     FOREIGN KEY (userId) REFERENCES user(id)
+);
 
-}
-
-CREATE TABLE IF NOT EXISTS comment {
+CREATE TABLE IF NOT EXISTS comment (
     id INT AUTO_INCREMENT PRIMARY KEY,
     postId INT,
     userComment INT,
     content VARCHAR(255) NOT NULL,
-    timestamp VARCHAR(255) NOT NULL,
+    date DATETIME NOT NULL,
     FOREIGN KEY (postId) REFERENCES post(id),
-    FOREIGN KEY (userComment) REFERENCES user(id),
-}
+    FOREIGN KEY (userComment) REFERENCES user(id)
+);
 
 
-CREATE TABLE IF NOT EXISTS likes {
+CREATE TABLE IF NOT EXISTS likes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     postId INT,
     userId INT,
-    timestamp VARCHAR(255) NOT NULL,
+    date DATETIME NOT NULL,
     FOREIGN KEY (postId) REFERENCES post(id),
-    FOREIGN KEY (userId) REFERENCES user(id),
-}
+    FOREIGN KEY (userId) REFERENCES user(id)
+);

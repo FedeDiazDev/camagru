@@ -3,21 +3,23 @@ services:
     image: nginx:latest
     container_name: nginx_container
     volumes:
-      - ./app:/var/www/html/public
+      - ./:/var/www/html/ 
       - ./config/nginx.conf:/etc/nginx/nginx.conf
     depends_on:
       - php
     networks:
       - camagru-network
+    ports:
+      - "8080:80"
 
   php:
     container_name: php_container
     build:
       context: ./config/php
     volumes:
-      - ./app:/var/www/html
+      - ./:/var/www/html
     env_file:
-      - ./env
+      - ./.env
     depends_on:
       - mariadb
     networks:
@@ -28,7 +30,7 @@ services:
     build:
       context: ./config/mariadb
     env_file:
-      - ./env
+      - ./.env
     volumes:
       - db-data:/var/lib/mysql
     expose:

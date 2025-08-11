@@ -18,15 +18,15 @@
         <i class="fa-solid fa-star w-5 h-5"></i>
         <span class="font-medium">Discover</span>
       </a>
-      <a href="/camera.php" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-gray-800/50 transition-all">
+      <a href="/camera" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-gray-800/50 transition-all">
         <i class="fas fa-camera w-5 h-5"></i>
         <span>Create</span>
       </a>
-      <a href="/gallery.php" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-gray-800/50 transition-all">
+      <a href="/gallery" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-gray-800/50 transition-all">
         <i class="fas fa-users w-5 h-5"></i>
         <span>Gallery</span>
       </a>
-      <a href="/trending.php" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-gray-800/50 transition-all">
+      <a href="/trending" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-gray-800/50 transition-all">
         <i class="fas fa-chart-line w-5 h-5"></i>
         <span>Trending</span>
       </a>

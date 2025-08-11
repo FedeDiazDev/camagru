@@ -42,7 +42,7 @@
                             <div class="col-span-8 bg-gray-900/50 border border-gray-800 backdrop-blur-sm overflow-hidden group cursor-pointer hover:shadow-2xl hover:shadow-purple-500/20 transition-all duration-300 rounded">
                                 <div class="aspect-[16/10] relative">
                                     <img
-                                        src="/dark-moody-photo.png?height=400&width=640&query=featured dark photography"
+                                        src="https://placehold.co/600x400"
                                         alt="Featured Dark Photo"
                                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                                     <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
@@ -84,7 +84,7 @@
                                         <div class="flex items-center gap-3 group cursor-pointer">
                                             <div class="w-12 h-12 rounded-lg overflow-hidden bg-gray-800">
                                                 <img
-                                                    src="/dark-moody-photo.png?height=48&width=48&query=trending 1"
+                                                    src="https://placehold.co/600x400"
                                                     alt="Trending 1"
                                                     class="w-full h-full object-cover group-hover:scale-110 transition-transform" />
                                             </div>
@@ -97,7 +97,7 @@
                                         <div class="flex items-center gap-3 group cursor-pointer">
                                             <div class="w-12 h-12 rounded-lg overflow-hidden bg-gray-800">
                                                 <img
-                                                    src="/dark-moody-photo.png?height=48&width=48&query=trending 2"
+                                                    src="https://placehold.co/600x400"
                                                     alt="Trending 2"
                                                     class="w-full h-full object-cover group-hover:scale-110 transition-transform" />
                                             </div>
@@ -110,7 +110,7 @@
                                         <div class="flex items-center gap-3 group cursor-pointer">
                                             <div class="w-12 h-12 rounded-lg overflow-hidden bg-gray-800">
                                                 <img
-                                                    src="/dark-moody-photo.png?height=48&width=48&query=trending 3"
+                                                    src="https://placehold.co/600x400"
                                                     alt="Trending 3"
                                                     class="w-full h-full object-cover group-hover:scale-110 transition-transform" />
                                             </div>
@@ -150,7 +150,7 @@
                                     <div class="overflow-hidden group cursor-pointer hover:shadow-xl hover:shadow-purple-500/20 transition-all duration-300 bg-gray-900/30 border border-gray-800 rounded">
                                         <div class="aspect-square relative">
                                             <img
-                                                src="/dark-moody-photo.png?height=200&width=200&query=gallery photo 1"
+                                                src="https://placehold.co/600x400"
                                                 alt="Photo 1"
                                                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                                             <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>

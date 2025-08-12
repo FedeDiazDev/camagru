@@ -27,10 +27,10 @@ class User
         return $stmt->fetch(PDO::FETCH_OBJ);
     }
 
-    public function getUserByEmail($mail){
+    public function getUserByEmail($email){
         $query = "SELECT * FROM user WHERE email :email";
         $stmt = $this->connection->prepare($query);
-        $stmt->bindParam(':username', $username);
+        $stmt->bindParam(':email', $email);
 
         return $stmt->fetch(PDO::FETCH_OBJ);
     }
@@ -53,10 +53,10 @@ class User
 
     public function updateUser($id, $data){
         $query = "UPDATE user set username = :username, email = :email, password = :password, emailPreference = :emailPreference WHERE id = :id";
-        $hashed_pass = password_hash($password, PASSWORD_DEFAULT);
+        $hashed_pass = password_hash($data->password, PASSWORD_DEFAULT);
         $stmt = $this->connection->prepare($query);
-        $stmt->bindParam(':username', $username);
-        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':username', $data->username);
+        $stmt->bindParam(':email', $data->email);
         $stmt->bindParam(':password', $hashed_pass);
 
         if ($stmt->execute()) {

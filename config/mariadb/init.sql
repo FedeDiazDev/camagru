@@ -1,9 +1,15 @@
+CREATE DATABASE IF NOT EXISTS camagru_db;
+USE camagru_db;
+CREATE USER IF NOT EXISTS 'fdiaz-root'@'%' IDENTIFIED BY 'secure_password';
+GRANT ALL PRIVILEGES ON *.* TO 'fdiaz-root'@'%';
+FLUSH PRIVILEGES;
 
 CREATE TABLE IF NOT EXISTS user (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) NOT NULL UNIQUE,
     email VARCHAR(100) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
+    confirmationToken VARCHAR(255),
     emailPreference BOOLEAN NOT NULL DEFAULT 1,
 	emailConfirmed BOOLEAN NOT NULL DEFAULT 0
 );

@@ -1,5 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+<?php
+require_once '/controllers/UserController.php';
+
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $username = trim(htmlspecialchars($_POST['username']));
+    $email = trim(htmlspecialchars($_POST['email']));
+    $password = trim(htmlspecialchars($_POST['password']));
+    $confirmPassword = trim(htmlspecialchars($_POST['confirmPassword']));
+}
+
+?>
 
 <head>
     <meta charset="UTF-8">
@@ -11,10 +22,8 @@
     <title>Register</title>
 </head>
 <div class="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black flex">
-    <!-- Left Side - Registration Form -->
     <div class="w-full lg:w-1/2 flex items-center justify-center p-8">
         <div class="w-full max-w-md">
-            <!-- Back Button -->
             <a href="/" class="mb-8 inline-flex items-center text-gray-400 hover:text-white hover:bg-gray-800 px-3 py-2 rounded cursor-pointer">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
@@ -73,7 +82,6 @@
                                 placeholder="Create a strong password"
                                 class="h-11 bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:border-purple-500 focus:ring-purple-500/20 rounded px-3 w-full pr-12"
                                 required />
-                            <!-- Aquí podrías añadir un botón para mostrar/ocultar password con JS -->
                         </div>
 
                         <div class="space-y-2 relative">
@@ -85,7 +93,6 @@
                                 placeholder="Confirm your password"
                                 class="h-11 bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:border-purple-500 focus:ring-purple-500/20 rounded px-3 w-full pr-12"
                                 required />
-                            <!-- Igual aquí un botón JS para mostrar/ocultar -->
                         </div>
 
                         <button
@@ -111,7 +118,6 @@
         </div>
     </div>
 
-    <!-- Right Side - Benefits -->
     <div class="hidden lg:flex lg:w-1/2 relative overflow-hidden">
         <div class="absolute inset-0 bg-gradient-to-bl from-purple-600/20 to-pink-600/20"></div>
         <img

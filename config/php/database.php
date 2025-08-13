@@ -1,8 +1,22 @@
 <?php
 require_once __DIR__ . '/config.php';
 
-$conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+class Database
+{
+    private $host = DB_HOST;
+    private $user = DB_USER;
+    private $pass = DB_PASS;
+    private $dbname = DB_NAME;
+    public $conn;
 
-if ($conn->connect_error) {
-    die("Error de conexión: " . $conn->connect_error);
+    public function connect()
+    {
+        $this->conn = new mysqli($this->host, $this->user, $this->pass, $this->dbname);
+
+        if ($this->conn->connect_error) {
+            die("Error de conexión: " . $this->conn->connect_error);
+        }
+
+        return $this->conn;
+    }
 }

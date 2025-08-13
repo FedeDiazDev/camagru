@@ -209,7 +209,6 @@ function capturePhoto() {
 }
 
 
-
 function retakePhoto() {
     capturedImage.classList.add('hidden')
     retakeBtn.classList.add('hidden')

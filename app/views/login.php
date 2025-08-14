@@ -1,3 +1,29 @@
+<?php
+session_start();
+
+if (isset($_SESSION['user_id'])) {
+    header("Location: /camera.php");
+    die();
+}
+require_once __DIR__ . '/../controllers/UserController.php';
+$userController = new UserController();
+
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $username = trim(htmlspecialchars($_POST['username']));
+    $password = htmlspecialchars($_POST['password']);
+
+    $res = $userController->logIn($username, $password);
+    echo $res;
+    if ($res['res']) {
+        $_SESSION['userId'] = json_decode($res['msg'])->id;
+        $_SESSION['username'] = json_decode($res['msg'])->username;
+    }
+    header('Content-Type: application/json');
+    echo ($res);
+    exit;
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -39,7 +65,6 @@
             </div>
         </div>
 
-        <!-- Right Side - Login Form -->
         <div class="w-full lg:w-1/2 flex items-center justify-center p-8">
             <div class="w-full max-w-md">
                 <!-- Back Button -->
@@ -62,15 +87,17 @@
                         </p>
                     </header>
 
-                    <form onsubmit="handleSubmit(event)" class="space-y-6">
+                    <form id= "form" method="post" action="/login" class="space-y-6">
                         <div class="space-y-1">
-                            <label for="email" class="block text-gray-300 text-sm font-medium">
+                            <label for="text" class="block text-gray-300 text-sm font-medium">
                                 Email Address
                             </label>
                             <input
-                                id="email"
-                                type="email"
-                                placeholder="your@email.com"
+                                id="username"
+                                type="username"
+                                name="username"
+                                 value="<?= htmlspecialchars($_POST['username'] ?? '') ?>"
+                                placeholder="Username"
                                 required
                                 class="w-full h-12 bg-gray-800 border border-gray-700 rounded px-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500" />
                         </div>
@@ -82,6 +109,7 @@
                             <input
                                 id="password"
                                 type="password"
+                                name="password"
                                 placeholder="Enter your password"
                                 required
                                 class="w-full h-12 bg-gray-800 border border-gray-700 rounded px-3 pr-12 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500" />
@@ -130,6 +158,25 @@
                 </section>
             </div>
         </div>
+        <script>
+            const form = document.getElementById("form");
+            form.addEventListener("submit", async (event) => {
+                event.preventDefault();
+
+                const formData = new FormData(form);
+                const response = await fetch(form.action, {
+                    method: "POST",
+                    body: formData
+                });
+                const result = await response.json();
+                console.log(result);
+                if (!result.res) { //TODO:: pintar eerror en fron
+                    console.log(result.errors.map((error) => `<p>${error}</p>`).join(""));
+                } else {
+                    window.location.href = "/camera";
+                }
+            });
+        </script>
 </body>
 
 </html>

@@ -1,25 +1,27 @@
 <?php
 
-//      verifyUser($email, $password)
 class User
 {
     private $connection;
 
-    public function __construct($db){
+    public function __construct($db)
+    {
         $this->connection = $db;
     }
 
-    public function getUserById($id){
-		$query = "SELECT * FROM user WHERE id = :id";
-		$stmt = $this->connection->prepare($query);
-		$stmt->bindParam(':id', $id, PDO::PARAM_INT);
-		$stmt->execute();
+    public function getUserById($id)
+    {
+        $query = "SELECT * FROM `user` WHERE id = :id";
+        $stmt = $this->connection->prepare($query);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
 
-		return $stmt->fetch(PDO::FETCH_OBJ);
-	}
+        return $stmt->fetch(PDO::FETCH_OBJ);
+    }
 
-    public function getUserByUsername($username){
-        $query = "SELECT * FROM user WHERE username = :username";
+    public function getUserByUsername($username)
+    {
+        $query = "SELECT * FROM `user` WHERE username = :username";
         $stmt = $this->connection->prepare($query);
         $stmt->bindParam(':username', $username);
         $stmt->execute();
@@ -27,19 +29,28 @@ class User
         return $stmt->fetch(PDO::FETCH_OBJ);
     }
 
-    public function getUserByEmail($email){
-        $query = "SELECT * FROM user WHERE email :email";
+    public function getUserByEmail($email)
+    {
+        $query = "SELECT * FROM `user` WHERE email = :email";
         $stmt = $this->connection->prepare($query);
+        if (!$stmt) {
+            var_dump($this->connection->errorInfo());
+            return null;
+        }
+
         $stmt->bindParam(':email', $email);
+        $stmt->execute();
 
         return $stmt->fetch(PDO::FETCH_OBJ);
     }
 
-    public function createUser($username, $email, $password){
+    public function createUser($username, $email, $password)
+    {
         $token = bin2hex(random_bytes(50));
         $hashed_pass = password_hash($password, PASSWORD_DEFAULT);
-        $query = "INSERT INTO user (username, email, password, cofirmationToken) VALUES (:username, :email, :password, :token)";
+        $query = "INSERT INTO `user` (username, email, password, confirmationToken) VALUES (:username, :email, :password, :token)";
         $stmt = $this->connection->prepare($query);
+
         $stmt->bindParam(':username', $username);
         $stmt->bindParam(':email', $email);
         $stmt->bindParam(':password', $hashed_pass);
@@ -51,7 +62,8 @@ class User
         return false;
     }
 
-    public function updateUser($id, $data){
+    public function updateUser($id, $data)
+    {
         $query = "UPDATE user set username = :username, email = :email, password = :password, emailPreference = :emailPreference WHERE id = :id";
         $hashed_pass = password_hash($data->password, PASSWORD_DEFAULT);
         $stmt = $this->connection->prepare($query);

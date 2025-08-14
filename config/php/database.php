@@ -11,12 +11,13 @@ class Database
 
     public function connect()
     {
-        $this->conn = new mysqli($this->host, $this->user, $this->pass, $this->dbname);
-
-        if ($this->conn->connect_error) {
+        try {
+            $dsn = "mysql:host={$this->host};dbname={$this->dbname};charset=utf8";
+            $this->conn = new PDO($dsn, $this->user, $this->pass);
+            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            return $this->conn;
+        } catch (PDOException $e) {
             die("Error de conexión: " . $this->conn->connect_error);
         }
-
-        return $this->conn;
     }
 }

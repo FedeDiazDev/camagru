@@ -1,8 +1,8 @@
 <?php
-require_once __DIR__ . '/../config/Database.php';
+require_once  __DIR__ .   '/../../config/php/database.php';
 require_once __DIR__ . '/../models/User.php';
 
-class UserController{
+class UserController {
     private $user;
 
     public function __construct() {
@@ -10,23 +10,64 @@ class UserController{
         $this->user = new User($database->connect());
     }
 
-    public function register($username, $email, $password, $confirmPassword)
-    {
-        if ($email != $confirmPassword)
-            return ("Password don't match");
-        else if (empty($usename) || empty($email) || empty($password) || empty($confirmPassword))
-            return ("Empty fields");
-        else if ($this->user->getUserByEmail($email))
-            return ("Email already registered");
-        else if($this->user->getUserByUsername($usename))
-            return ("Username already registered");
-        
-        if ($this->user->createUser($usename, $email, $password)){
-            //enviarMail
-            // if (!enviarMail)
-                return[false, "Error sending email confirmation"];
-            return true;
+    public function register($username, $email, $password, $confirmPassword) {
+        if ($password != $confirmPassword) {
+            return json_encode([
+                'res' => false,
+                'msg' => "Passwords don't match"
+            ]);
         }
-        return [false, "Error registering user"];
+
+        if (empty($username) || empty($email) || empty($password) || empty($confirmPassword)) {
+            return json_encode([
+                'res' => false,
+                'msg' => "Empty fields"
+            ]);
+        }
+
+        if ($this->user->getUserByEmail($email)) {
+            return json_encode([
+                'res' => false,
+                'msg' => "Email already registered"
+            ]);
+        }
+
+        if ($this->user->getUserByUsername($username)) {
+            return json_encode([
+                'res' => false,
+                'msg' => "Username already registered"
+            ]);
+        }
+
+        if ($this->user->createUser($username, $email, $password)) {
+            //TODO: enviar mail confirmacion
+            return json_encode([
+                'res' => true,
+                'msg' => "User registered succesfully"
+            ]);
+        }
+
+        return json_encode([
+            'res' => false,
+            'msg' => "Error registering user"
+        ]);
+    }
+
+    public function logIn($username, $password)
+    {
+        if (empty($username) ||empty($password))
+        {
+            return json_encode(['res' => true, 'msg' => "Empty fields"]);
+        }
+        if (!$this->user->getUserByUsername($username)){
+            return json_encode(['res' => true, 'msg' => "User doesn't exist"]);
+        }
+        $user = $this->user->getUserByUsername($username);
+        if (!password_verify($password, $user->password))
+        {
+            return json_encode(['res' => true, 'msg' => "Wrong password"]);
+        }
+        return json_encode(['res' => true, 'msg' => $user]);
     }
 }
+?>

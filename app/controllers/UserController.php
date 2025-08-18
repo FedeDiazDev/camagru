@@ -2,15 +2,18 @@
 require_once  __DIR__ .   '/../../config/php/database.php';
 require_once __DIR__ . '/../models/User.php';
 
-class UserController {
+class UserController
+{
     private $user;
 
-    public function __construct() {
+    public function __construct()
+    {
         $database = new Database();
         $this->user = new User($database->connect());
     }
 
-    public function register($username, $email, $password, $confirmPassword) {
+    public function register($username, $email, $password, $confirmPassword)
+    {
         if ($password != $confirmPassword) {
             return json_encode([
                 'res' => false,
@@ -55,19 +58,23 @@ class UserController {
 
     public function logIn($username, $password)
     {
-        if (empty($username) ||empty($password))
-        {
-            return json_encode(['res' => true, 'msg' => "Empty fields"]);
+        if (empty($username) || empty($password)) {
+            return (['res' => true, 'msg' => "Empty fields"]);
         }
-        if (!$this->user->getUserByUsername($username)){
-            return json_encode(['res' => true, 'msg' => "User doesn't exist"]);
+        if (!$this->user->getUserByUsername($username)) {
+            return (['res' => true, 'msg' => "User doesn't exist"]);
         }
         $user = $this->user->getUserByUsername($username);
-        if (!password_verify($password, $user->password))
-        {
-            return json_encode(['res' => true, 'msg' => "Wrong password"]);
+        if (!password_verify($password, $user->password)) {
+            return (['res' => true, 'msg' => "Wrong password"]);
         }
-        return json_encode(['res' => true, 'msg' => $user]);
+        return [
+            'res' => true,
+            'msg' => [
+                'id' => $user->id,
+                'username' => $user->username,
+                'email' => $user->email
+            ]
+        ];
     }
 }
-?>

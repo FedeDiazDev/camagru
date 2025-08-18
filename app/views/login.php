@@ -1,8 +1,8 @@
 <?php
 session_start();
 
-if (isset($_SESSION['user_id'])) {
-    header("Location: /camera.php");
+if (isset($_SESSION['userId'])) {
+    header("Location: /camera");
     die();
 }
 require_once __DIR__ . '/../controllers/UserController.php';
@@ -13,13 +13,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $password = htmlspecialchars($_POST['password']);
 
     $res = $userController->logIn($username, $password);
-    echo $res;
     if ($res['res']) {
-        $_SESSION['userId'] = json_decode($res['msg'])->id;
-        $_SESSION['username'] = json_decode($res['msg'])->username;
+        $_SESSION['userId'] = $res['msg']['id'];
+        $_SESSION['username'] = $res['msg']['username'];
     }
-    header('Content-Type: application/json');
-    echo ($res);
+    echo json_encode($res);
     exit;
 }
 ?>

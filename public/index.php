@@ -32,12 +32,13 @@ switch ($request) {
         include_once __DIR__ . '/../app/views/register.php';
         exit;
         break;
+    case '/profile':
+        include_once __DIR__ . '/../app/views/pages/profile.php';
+        exit;
+        break;
     default:
-        // Página no encontrada
         http_response_code(404);
         include_once __DIR__ . '/./404.html';
         exit;
         break;
 }
-?>
-

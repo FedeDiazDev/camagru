@@ -77,4 +77,13 @@ class UserController
             ]
         ];
     }
+
+    public function updateUser($data)
+    {
+        if ($data->username || empty($data->mail))
+            return json_encode([
+                'res' => false,
+                'msg' => "Empty fields"
+            ]);
+    }
 }

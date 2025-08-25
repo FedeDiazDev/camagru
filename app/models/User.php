@@ -62,7 +62,7 @@ class User
         return false;
     }
 
-    public function updateUser($id, $data)
+    public function updateUser($data)
     {
         $query = "UPDATE user set username = :username, email = :email, password = :password, emailPreference = :emailPreference WHERE id = :id";
         $hashed_pass = password_hash($data->password, PASSWORD_DEFAULT);
@@ -70,6 +70,7 @@ class User
         $stmt->bindParam(':username', $data->username);
         $stmt->bindParam(':email', $data->email);
         $stmt->bindParam(':password', $hashed_pass);
+        $stmt->bindParam(':id', $data->id);
 
         if ($stmt->execute()) {
             return true;

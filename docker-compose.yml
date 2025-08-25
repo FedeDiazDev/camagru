@@ -10,7 +10,7 @@ services:
     networks:
       - camagru-network
     ports:
-      - "8080:80"
+      - "8081:81"
 
   php:
     container_name: php_container

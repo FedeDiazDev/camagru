@@ -59,14 +59,14 @@ class UserController
     public function logIn($username, $password)
     {
         if (empty($username) || empty($password)) {
-            return ['res' => true, 'msg' => "Empty fields"];
+            return ['res' => false, 'msg' => "Empty fields"];
         }
         if (!$this->user->getUserByUsername($username)) {
-            return ['res' => true, 'msg' => "User doesn't exist"];
+            return ['res' => false, 'msg' => "User doesn't exist"];
         }
         $user = $this->user->getUserByUsername($username);
         if (!password_verify($password, $user->password)) {
-            return ['res' => true, 'msg' => "Wrong password"];
+            return ['res' => false, 'msg' => "Wrong password"];
         }
         return [
             'res' => true,
@@ -80,15 +80,16 @@ class UserController
 
     //username, email, (password, new password(optional)) 
     public function updateUser($data)
-    {
-        if (empty($data->username) || empty($data->mail))
+    {        
+        $decodedData = json_decode($data);
+        if (empty($decodedData->username) || empty($decodedData->email))
             return json_encode([
                 'res' => false,
                 'msg' => "Empty fields"
             ]);
 
-        $user = $this->user->getUserById($data->id);
-        if ($data->password && !password_verify($data->password, $user->password)) {
+        $user = $this->user->getUserById($decodedData->id);
+        if ($decodedData->password && !password_verify($decodedData->currentPassword, $user->password)) {
             return json_encode([
                 'res' => false,
                 'msg' => "Password doesn't match"
@@ -102,14 +103,14 @@ class UserController
          * * Cómo se cuando cuando están vacíos a propósito y cuando no
          * * si rellenan la contraseña actual es obligatorio que rellenen las otras? o simplemente ignorarlo?
          */
-        if ($this->user->getUserByUsername($data->username)) {
+        if ($this->user->getUserByUsername($decodedData->username)) {
             return json_encode([
                 'res' => false,
                 'msg' => "Username already exists"
             ]);
         }
 
-        if ($this->user->getUserByEmail($data->email)) {
+        if ($this->user->getUserByEmail($decodedData->email)) {
             return json_encode([
                 'res' => false,
                 'msg' => "Email already exists"
@@ -118,9 +119,9 @@ class UserController
 
         $updatedData = new stdClass();
         $updatedData->id = $user->id;
-        $updatedData->email = $data->email;
-        $updatedData->username = $data->username;
-        if (!$data->new_password) {
+        $updatedData->email = $decodedData->email;
+        $updatedData->username = $decodedData->username;
+        if (!$decodedData->password) {
             $updatedData->password = $user->password;
         }
         if (!$this->user->updateUser($updatedData)) {

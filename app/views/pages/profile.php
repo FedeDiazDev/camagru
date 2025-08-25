@@ -1,23 +1,27 @@
 <?php
 session_start();
 
-if (isset(($_SESSION['userId']))) {
-    header("Location: /profile");
-    die();
-}
+// if (isset(($_SESSION['userId']))) {
+//     header("Location: /profile");
+//     die();
+// }
 require_once __DIR__ . '/../../controllers/UserController.php';
-
+// echo ("HHHHHHHHHHHHHHHH");
+// echo( $_SESSION['userId']);
+$id = $_SESSION['userId'];
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $data = new stdClass();
-    $data->id = $_SESSION['userId'];
-    $data->username = trim(htmlspecialchars($$_POST['username']));
+    $data->id = $id;
+    $data->username = trim(htmlspecialchars($_POST['username']));
     $data->email = trim(htmlspecialchars($_POST['email']));
+    $data->currentPassword = htmlspecialchars($_POST['currentPassword']);
     $data->password = htmlspecialchars($_POST['password']);
     $data->confirmPassword = htmlspecialchars($_POST['confirmPassword']);
-
+    // echo  json_encode($data);
+    // exit;
     $userController = new UserController();
-    $res = $userController->updateUser($data);
-    header('Content-Type: application/json');
+    $res = $userController->updateUser(json_encode($data));
+    //header('Content-Type: application/json');
     echo $res;
     exit;
 }
@@ -97,13 +101,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label for="username" class="block text-sm text-gray-300 mb-1">Username</label>
-                            <input id="username" type="text" value="Username" disabled
+                            <input id="username" type="text" name="username" value="Username" disabled
                                 class="w-full h-11 bg-gray-900/50 border border-gray-700 rounded-lg px-3 text-gray-400 placeholder:text-gray-500 focus:border-purple-500 cursor-not-allowed" />
                         </div>
 
                         <div>
                             <label for="email" class="block text-sm text-gray-300 mb-1">Email Address</label>
-                            <input id="email" type="email" value="email@camagru.com" disabled
+                            <input id="email" type="email" name="email" value="email@camagru.com" disabled
                                 class="w-full h-11 bg-gray-900/50 border border-gray-700 rounded-lg px-3 text-gray-400 placeholder:text-gray-500 focus:border-purple-500 cursor-not-allowed" />
                         </div>
                     </div>
@@ -120,7 +124,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                             <label for="currentPassword" class="block text-sm text-gray-300 mb-1">Current
                                 Password</label>
                             <div class="relative">
-                                <input id="currentPassword" type="password" placeholder="Enter current password"
+                                <input id="currentPassword" type="password" name="currentPassword" placeholder="Enter current password"
                                     disabled
                                     class="w-full h-11 bg-gray-900/50 border border-gray-700 rounded-lg px-3 text-gray-400 placeholder:text-gray-500 focus:border-purple-500 pr-10 cursor-not-allowed" />
                                 <button type="button" onclick="togglePassword('currentPassword','iconCurrent')"
@@ -134,7 +138,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                             <div>
                                 <label for="newPassword" class="block text-sm text-gray-300 mb-1">New Password</label>
                                 <div class="relative">
-                                    <input id="newPassword" type="password" placeholder="Enter new password" disabled
+                                    <input id="newPassword" type="password" name="password" placeholder="Enter new password" disabled
                                         class="w-full h-11 bg-gray-900/50 border border-gray-700 rounded-lg px-3 text-gray-400 placeholder:text-gray-500 focus:border-purple-500 pr-10 cursor-not-allowed" />
                                     <button type="button" onclick="togglePassword('newPassword','iconNew')"
                                         class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white">
@@ -147,7 +151,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                                 <label for="confirmPassword" class="block text-sm text-gray-300 mb-1">Confirm New
                                     Password</label>
                                 <div class="relative">
-                                    <input id="confirmPassword" type="password" placeholder="Confirm new password"
+                                    <input id="confirmPassword" name="confirmPassword" type="password" placeholder="Confirm new password"
                                         disabled
                                         class="w-full h-11 bg-gray-900/50 border border-gray-700 rounded-lg px-3 text-gray-400 placeholder:text-gray-500 focus:border-purple-500 pr-10 cursor-not-allowed" />
                                     <button type="button" onclick="togglePassword('confirmPassword','iconConfirm')"

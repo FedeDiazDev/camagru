@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-if (isset($_SESSION['user_id'])) {
+if (isset($_SESSION['userId'])) {
     header("Location: /camera.php");
     die();
 }
@@ -16,9 +16,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $userController = new UserController();
     $res = $userController->register($username, $email, $password, $confirmPassword);
     header('Content-Type: application/json');
-    echo ($res);
+    echo $res;
     exit;
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -172,7 +173,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 		const result = await response.json();
         console.log(result);
 		if (!result.res) {//TODO:: pintar eerror en fron
-			console.log(result.errors.map((error) => `<p>${error}</p>`).join(""));
+			console.log(result.msg);
 		} else {
 			window.location.href = "/camera";
 		}

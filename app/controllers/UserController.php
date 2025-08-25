@@ -1,5 +1,5 @@
 <?php
-require_once  __DIR__ .   '/../../config/php/database.php';
+require_once __DIR__ . '/../../config/php/database.php';
 require_once __DIR__ . '/../models/User.php';
 
 class UserController
@@ -59,14 +59,14 @@ class UserController
     public function logIn($username, $password)
     {
         if (empty($username) || empty($password)) {
-            return (['res' => true, 'msg' => "Empty fields"]);
+            return ['res' => true, 'msg' => "Empty fields"];
         }
         if (!$this->user->getUserByUsername($username)) {
-            return (['res' => true, 'msg' => "User doesn't exist"]);
+            return ['res' => true, 'msg' => "User doesn't exist"];
         }
         $user = $this->user->getUserByUsername($username);
         if (!password_verify($password, $user->password)) {
-            return (['res' => true, 'msg' => "Wrong password"]);
+            return ['res' => true, 'msg' => "Wrong password"];
         }
         return [
             'res' => true,
@@ -78,12 +78,61 @@ class UserController
         ];
     }
 
+    //username, email, (password, new password(optional)) 
     public function updateUser($data)
     {
-        if ($data->username || empty($data->mail))
+        if (empty($data->username) || empty($data->mail))
             return json_encode([
                 'res' => false,
                 'msg' => "Empty fields"
             ]);
+
+        $user = $this->user->getUserById($data->id);
+        if ($data->password && !password_verify($data->password, $user->password)) {
+            return json_encode([
+                'res' => false,
+                'msg' => "Password doesn't match"
+            ]);
+
+        }
+        /**
+         * * Si dejan otro campo vacío(email o username, ignorar y dejar los default?)
+         * ? Verificar si quiere o no cambiar contraseña
+         * * Si los campos están vacíos, ignorarlos?
+         * * Cómo se cuando cuando están vacíos a propósito y cuando no
+         * * si rellenan la contraseña actual es obligatorio que rellenen las otras? o simplemente ignorarlo?
+         */
+        if ($this->user->getUserByUsername($data->username)) {
+            return json_encode([
+                'res' => false,
+                'msg' => "Username already exists"
+            ]);
+        }
+
+        if ($this->user->getUserByEmail($data->email)) {
+            return json_encode([
+                'res' => false,
+                'msg' => "Email already exists"
+            ]);
+        }
+
+        $updatedData = new stdClass();
+        $updatedData->id = $user->id;
+        $updatedData->email = $data->email;
+        $updatedData->username = $data->username;
+        if (!$data->new_password) {
+            $updatedData->password = $user->password;
+        }
+        if (!$this->user->updateUser($updatedData)) {
+            return json_encode([
+                'res' => false,
+                'msg' => "Error updating user"
+            ]);
+        }
+        return [
+            'res' => true,
+            'msg' => "User updated"
+        ];
+
     }
 }

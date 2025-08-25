@@ -37,7 +37,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 <body>
     <div class="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black flex">
-        <!-- Left Side - Branding -->
         <div class="hidden lg:flex lg:w-1/2 relative overflow-hidden">
             <div class="absolute inset-0 bg-gradient-to-br from-purple-600/20 to-pink-600/20"></div>
             <img
@@ -65,7 +64,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         <div class="w-full lg:w-1/2 flex items-center justify-center p-8">
             <div class="w-full max-w-md">
-                <!-- Back Button -->
                 <button onclick="location.href='/'" class="mb-8 text-gray-400 hover:text-white hover:bg-gray-800 flex items-center gap-2 px-3 py-2 rounded">
                     <i class="fas fa-arrow-left"></i>
                     <span>Back to Home</span>
@@ -169,7 +167,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 const result = await response.json();
                 console.log(result);
                 if (!result.res) { //TODO:: pintar eerror en fron
-                    console.log(result.errors.map((error) => `<p>${error}</p>`).join(""));
+                    console.log(result.msg);
                 } else {
                     window.location.href = "/camera";
                 }

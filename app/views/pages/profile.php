@@ -1,4 +1,26 @@
 <?php
+session_start();
+
+if (isset(($_SESSION['userId']))) {
+    header("Location: /profile");
+    die();
+}
+require_once __DIR__ . '/../../controllers/UserController.php';
+
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $data = new stdClass();
+    $data->id = $_SESSION['userId'];
+    $data->username = trim(htmlspecialchars($$_POST['username']));
+    $data->email = trim(htmlspecialchars($_POST['email']));
+    $data->password = htmlspecialchars($_POST['password']);
+    $data->confirmPassword = htmlspecialchars($_POST['confirmPassword']);
+
+    $userController = new UserController();
+    $res = $userController->updateUser($data);
+    header('Content-Type: application/json');
+    echo $res;
+    exit;
+}
 ?>
 
 <!DOCTYPE html>
@@ -32,7 +54,8 @@
         <div class="container mx-auto px-4 py-4 flex items-center justify-between">
             <a href="/" class="flex items-center gap-2">
                 <i class="fas fa-camera text-purple-400 text-2xl"></i>
-                <h1 class="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                <h1
+                    class="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
                     Camagru
                 </h1>
             </a>
@@ -49,7 +72,8 @@
                 <div class="relative">
                     <img src="https://placehold.co/600x600/png" alt="avatar"
                         class="w-24 h-24 rounded-full border-4 border-purple-500/30 object-cover">
-                    <div class="absolute -bottom-2 -right-2 w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center border-2 border-gray-900">
+                    <div
+                        class="absolute -bottom-2 -right-2 w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center border-2 border-gray-900">
                         <i class="fas fa-camera text-white text-sm"></i>
                     </div>
                 </div>
@@ -58,7 +82,7 @@
             <h2 class="text-2xl lg:text-3xl text-white text-center mb-2">Update Profile</h2>
             <p class="text-gray-400 text-center mb-6">Manage your account information and security settings</p>
 
-            <form id="profileForm" class="space-y-6">
+            <form id="profileForm" class="space-y-6" action="/profile" method="post">
                 <div class="space-y-4">
                     <div class="flex items-center justify-between">
                         <h3 class="text-lg font-semibold text-white flex items-center gap-2">
@@ -93,9 +117,11 @@
 
                     <div class="space-y-4">
                         <div>
-                            <label for="currentPassword" class="block text-sm text-gray-300 mb-1">Current Password</label>
+                            <label for="currentPassword" class="block text-sm text-gray-300 mb-1">Current
+                                Password</label>
                             <div class="relative">
-                                <input id="currentPassword" type="password" placeholder="Enter current password" disabled
+                                <input id="currentPassword" type="password" placeholder="Enter current password"
+                                    disabled
                                     class="w-full h-11 bg-gray-900/50 border border-gray-700 rounded-lg px-3 text-gray-400 placeholder:text-gray-500 focus:border-purple-500 pr-10 cursor-not-allowed" />
                                 <button type="button" onclick="togglePassword('currentPassword','iconCurrent')"
                                     class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white">
@@ -118,9 +144,11 @@
                             </div>
 
                             <div>
-                                <label for="confirmPassword" class="block text-sm text-gray-300 mb-1">Confirm New Password</label>
+                                <label for="confirmPassword" class="block text-sm text-gray-300 mb-1">Confirm New
+                                    Password</label>
                                 <div class="relative">
-                                    <input id="confirmPassword" type="password" placeholder="Confirm new password" disabled
+                                    <input id="confirmPassword" type="password" placeholder="Confirm new password"
+                                        disabled
                                         class="w-full h-11 bg-gray-900/50 border border-gray-700 rounded-lg px-3 text-gray-400 placeholder:text-gray-500 focus:border-purple-500 pr-10 cursor-not-allowed" />
                                     <button type="button" onclick="togglePassword('confirmPassword','iconConfirm')"
                                         class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white">
@@ -212,6 +240,18 @@
                 input.classList.remove("bg-gray-800", "text-white");
             });
         });
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const formData = new FormData(form);
+            const response = await fetch(form.action, { method: 'POST', body: formData });
+            const result = await response.json();
+            console.log(result);
+            if (!result.res) {//TODO:: pintar eerror en fron
+                console.log(result.msg);
+            } else {
+                window.location.href = "/profile";
+            }
+        })
     </script>
 
 </body>

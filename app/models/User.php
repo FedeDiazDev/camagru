@@ -68,8 +68,8 @@ class User
         $hashed_pass = password_hash($data->password, PASSWORD_DEFAULT);
         $stmt = $this->connection->prepare($query);
         $stmt->bindParam(':username', $data->username);
-        $stmt->bindParam(':email', $data->email);
         $stmt->bindParam(':password', $hashed_pass);
+        $stmt->bindParam(':email', $data->email);
         $stmt->bindParam(':id', $data->id);
 
         if ($stmt->execute()) {

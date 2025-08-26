@@ -198,7 +198,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     </button>
                 </div>
             </div>
-
+            <a href="/logout">Cerrar sesión</a>
         </div>
 
     </div>

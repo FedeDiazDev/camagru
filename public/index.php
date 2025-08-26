@@ -12,33 +12,28 @@ switch ($request) {
     case '/':
         include_once __DIR__ . '/../app/views/pages/home.php';
         exit;
-        break;
 
     case '/camera':
         include_once __DIR__ . '/../app/views/camera.php';
         exit;
-        break;
 
     case '/gallery':
         include_once __DIR__ . '/../app/views/gallery.php';
         exit;
-        break;
 
     case '/login':
         include_once __DIR__ . '/../app/views/login.php';
         exit;
-        break;
     case '/register':
         include_once __DIR__ . '/../app/views/register.php';
         exit;
-        break;
     case '/profile':
         include_once __DIR__ . '/../app/views/pages/profile.php';
+    case '/logout':
+        include_once __DIR__ . '/../app/views/pages/logout.php';
         exit;
-        break;
     default:
         http_response_code(404);
         include_once __DIR__ . '/./404.html';
         exit;
-        break;
 }

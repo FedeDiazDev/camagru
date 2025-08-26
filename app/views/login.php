@@ -167,7 +167,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 const result = await response.json();
                 console.log(result);
                 if (!result.res) { //TODO:: pintar eerror en fron
-                    console.log(result.msg);
+                    console.log(resu
+                    lt.msg);
                 } else {
                     window.location.href = "/camera";
                 }

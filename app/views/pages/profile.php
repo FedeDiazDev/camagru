@@ -1,10 +1,10 @@
 <?php
 session_start();
 
-// if (isset(($_SESSION['userId']))) {
-//     header("Location: /profile");
-//     die();
-// }
+if (!isset(($_SESSION['userId']))) {
+    header("Location: /");
+    die();
+}
 require_once __DIR__ . '/../../controllers/UserController.php';
 // echo ("HHHHHHHHHHHHHHHH");
 // echo( $_SESSION['userId']);

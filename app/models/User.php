@@ -65,13 +65,24 @@ class User
     public function updateUser($data)
     {
         $query = "UPDATE user set username = :username, email = :email, password = :password, emailPreference = :emailPreference WHERE id = :id";
+        // echo "PASS" . $data->password;
+        // echo password_get_info($data->password)['algo'] !== 2y ? "HOLA"  : "FIN";
+        // echo "HASSS" . password_get_info($data->password)['algo'];
+        // return false;
+        $a = password_hash("geeksforgeeks", PASSWORD_DEFAULT);
+        var_dump(password_get_info($a));        
+        // $hashed_pass = (password_get_info($data->password)['algo'] !== "2y")
+        //     ? $data->password
+        //     : password_hash($data->password, PASSWORD_DEFAULT);
+
         $hashed_pass = password_hash($data->password, PASSWORD_DEFAULT);
         $stmt = $this->connection->prepare($query);
         $stmt->bindParam(':username', $data->username);
-        $stmt->bindParam(':password', $hashed_pass);
+        $stmt->bindParam(':password', $hashed_pass, PDO::PARAM_STR);
         $stmt->bindParam(':email', $data->email);
+        $emailPreference = 1;
+        $stmt->bindParam(':emailPreference', $emailPreference, PDO::PARAM_INT);
         $stmt->bindParam(':id', $data->id);
-
         if ($stmt->execute()) {
             return true;
         }

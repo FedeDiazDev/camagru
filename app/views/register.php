@@ -2,7 +2,7 @@
 session_start();
 
 if (isset($_SESSION['userId'])) {
-    header("Location: /camera.php");
+    header("Location: /camera");
     die();
 }
 require_once __DIR__ . '/../controllers/UserController.php';

@@ -80,7 +80,7 @@ class UserController
 
     //username, email, (password, new password(optional)) 
     public function updateUser($data)
-    {        
+    {
         $decodedData = json_decode($data);
         if (empty($decodedData->username) || empty($decodedData->email))
             return json_encode([
@@ -121,19 +121,18 @@ class UserController
         $updatedData->id = $user->id;
         $updatedData->email = $decodedData->email;
         $updatedData->username = $decodedData->username;
-        if (!$decodedData->password) {
-            $updatedData->password = $user->password;
-        }
+        $updatedData->password = $decodedData->password ? $decodedData->password : $user->password;
+
         if (!$this->user->updateUser($updatedData)) {
             return json_encode([
                 'res' => false,
                 'msg' => "Error updating user"
             ]);
         }
-        return [
+        return json_encode([
             'res' => true,
             'msg' => "User updated"
-        ];
+        ]);
 
     }
 }

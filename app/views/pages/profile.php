@@ -9,6 +9,13 @@ require_once __DIR__ . '/../../controllers/UserController.php';
 // echo ("HHHHHHHHHHHHHHHH");
 // echo( $_SESSION['userId']);
 $id = $_SESSION['userId'];
+if ($_SERVER["REQUEST_METHOD"] === "GET")    
+    if ($userCon = new UserController())
+        $user = json_decode($userCon->getUserById($id), true);
+    // echo $user['msg']['email'];
+// exit;
+//     echo $user;
+// exit;
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $data = new stdClass();
     $data->id = $id;
@@ -110,13 +117,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label for="username" class="block text-sm text-gray-300 mb-1">Username</label>
-                            <input id="username" type="text" name="username" value="Username" disabled
+                            <input id="username" type="text" name="username" value=<?= htmlspecialchars($user['msg']['username']) ?> disabled
                                 class="w-full h-11 bg-gray-900/50 border border-gray-700 rounded-lg px-3 text-gray-400 placeholder:text-gray-500 focus:border-purple-500 cursor-not-allowed" />
                         </div>
 
                         <div>
                             <label for="email" class="block text-sm text-gray-300 mb-1">Email Address</label>
-                            <input id="email" type="email" name="email" value="email@camagru.com" disabled
+                            <input id="email" type="email" name="email" value=<?= htmlspecialchars($user['msg']['email']) ?> disabled
                                 class="w-full h-11 bg-gray-900/50 border border-gray-700 rounded-lg px-3 text-gray-400 placeholder:text-gray-500 focus:border-purple-500 cursor-not-allowed" />
                         </div>
                     </div>
@@ -195,7 +202,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     </button>
                 </div>
                 <div class="flex flex-row gap-3 p-2 items-center h-6">
-                    <input type="checkbox" id="notifications" name="notifications" value="1">
+                    <input type="checkbox" id="notifications" name="notifications" <?= ($user['msg']['notification'] == 1) ? 'checked' : '' ?>
+                    value="1" >
                     <label for="notifications" class="text-white"> Deseo recibir las notificaciones en mi email</label><br>
                 </div>
             </form>

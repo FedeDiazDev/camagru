@@ -12,6 +12,32 @@ class UserController
         $this->user = new User($database->connect());
     }
 
+
+    public function getUserById($id)
+    {
+        if (!$id) {
+            return json_encode([
+                'res' => false,
+                'msg' => "Missing id"
+            ]);
+        }
+        $user = $this->user->getUserById($id);
+        if (!$user) {
+            return json_encode([
+                'res' => false,
+                'msg' => "User doesn't exists"
+            ]);
+        }
+        return json_encode([
+            'res' => true,
+            'msg' => [
+                'id' => $user->id,
+                'username' => $user->username,
+                'email' => $user->email,
+                'notification' => $user->emailPreference
+            ]
+        ]);
+    }
     public function register($username, $email, $password, $confirmPassword)
     {
         if ($password != $confirmPassword) {

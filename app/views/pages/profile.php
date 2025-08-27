@@ -195,7 +195,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     </button>
                 </div>
                 <div class="flex flex-row gap-3 p-2 items-center h-6">
-                    <input type="checkbox" id="notifications" name="notifications" value="Yes">
+                    <input type="checkbox" id="notifications" name="notifications" value="1">
                     <label for="notifications" class="text-white"> Deseo recibir las notificaciones en mi email</label><br>
                 </div>
             </form>

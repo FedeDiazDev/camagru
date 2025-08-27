@@ -17,6 +17,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $data->currentPassword = htmlspecialchars($_POST['currentPassword']);
     $data->password = htmlspecialchars($_POST['password']);
     $data->confirmPassword = htmlspecialchars($_POST['confirmPassword']);
+    $data->notifications = $_POST['notifications'] ?? 0;
+    // if ( $_POST['notifications'] )
+    //     echo "HOLA";
+    // else
+    //     echo"SAD"; 
+    // exit;
+
+    // echo "CONFIRMAION [" .$_POST['notifications'] . "]\n";
+    // exit ;
     // echo  json_encode($data);
     // exit;
     $userController = new UserController();
@@ -76,10 +85,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 <div class="relative">
                     <img src="https://placehold.co/600x600/png" alt="avatar"
                         class="w-24 h-24 rounded-full border-4 border-purple-500/30 object-cover">
-                    <div
-                        class="absolute -bottom-2 -right-2 w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center border-2 border-gray-900">
-                        <i class="fas fa-camera text-white text-sm"></i>
-                    </div>
+                    <!-- <div -->
+                        <!-- class="absolute -bottom-2 -right-2 w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center border-2 border-gray-900"> -->
+                        <!-- <i class="fas fa-camera text-white text-sm"></i> -->
+                    <!-- </div> -->
                 </div>
             </div>
 
@@ -124,8 +133,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                             <label for="currentPassword" class="block text-sm text-gray-300 mb-1">Current
                                 Password</label>
                             <div class="relative">
-                                <input id="currentPassword" type="password" name="currentPassword" placeholder="Enter current password"
-                                    disabled
+                                <input id="currentPassword" type="password" name="currentPassword"
+                                    placeholder="Enter current password" disabled
                                     class="w-full h-11 bg-gray-900/50 border border-gray-700 rounded-lg px-3 text-gray-400 placeholder:text-gray-500 focus:border-purple-500 pr-10 cursor-not-allowed" />
                                 <button type="button" onclick="togglePassword('currentPassword','iconCurrent')"
                                     class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white">
@@ -138,7 +147,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                             <div>
                                 <label for="newPassword" class="block text-sm text-gray-300 mb-1">New Password</label>
                                 <div class="relative">
-                                    <input id="newPassword" type="password" name="password" placeholder="Enter new password" disabled
+                                    <input id="newPassword" type="password" name="password"
+                                        placeholder="Enter new password" disabled
                                         class="w-full h-11 bg-gray-900/50 border border-gray-700 rounded-lg px-3 text-gray-400 placeholder:text-gray-500 focus:border-purple-500 pr-10 cursor-not-allowed" />
                                     <button type="button" onclick="togglePassword('newPassword','iconNew')"
                                         class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white">
@@ -151,8 +161,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                                 <label for="confirmPassword" class="block text-sm text-gray-300 mb-1">Confirm New
                                     Password</label>
                                 <div class="relative">
-                                    <input id="confirmPassword" name="confirmPassword" type="password" placeholder="Confirm new password"
-                                        disabled
+                                    <input id="confirmPassword" name="confirmPassword" type="password"
+                                        placeholder="Confirm new password" disabled
                                         class="w-full h-11 bg-gray-900/50 border border-gray-700 rounded-lg px-3 text-gray-400 placeholder:text-gray-500 focus:border-purple-500 pr-10 cursor-not-allowed" />
                                     <button type="button" onclick="togglePassword('confirmPassword','iconConfirm')"
                                         class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white">
@@ -184,6 +194,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         <i class="fas fa-times mr-2"></i> Cancel
                     </button>
                 </div>
+                <div class="flex flex-row gap-3 p-2 items-center h-6">
+                    <input type="checkbox" id="notifications" name="notifications" value="Yes">
+                    <label for="notifications" class="text-white"> Deseo recibir las notificaciones en mi email</label><br>
+                </div>
             </form>
             <div class="mt-8 pt-6 border-t border-gray-700">
                 <h3 class="text-lg font-semibold text-white mb-4">Account Actions</h3>
@@ -198,7 +212,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     </button>
                 </div>
             </div>
-            <a href="/logout">Cerrar sesión</a>
+            <a href="/logout" class="text-white">Cerrar sesión</a>
         </div>
 
     </div>

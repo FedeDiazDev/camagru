@@ -122,6 +122,7 @@ class UserController
         $updatedData->email = $decodedData->email;
         $updatedData->username = $decodedData->username;
         $updatedData->password = $decodedData->password ? $decodedData->password : $user->password;
+        $updatedData->notifications = $decodedData->notifications;
 
         if (!$this->user->updateUser($updatedData)) {
             return json_encode([

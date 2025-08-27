@@ -20,7 +20,6 @@ switch ($request) {
     case '/gallery':
         include_once __DIR__ . '/../app/views/gallery.php';
         exit;
-
     case '/login':
         include_once __DIR__ . '/../app/views/login.php';
         exit;
@@ -29,6 +28,7 @@ switch ($request) {
         exit;
     case '/profile':
         include_once __DIR__ . '/../app/views/pages/profile.php';
+        exit;
     case '/logout':
         include_once __DIR__ . '/../app/views/pages/logout.php';
         exit;

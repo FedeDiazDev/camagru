@@ -9,10 +9,10 @@ require_once __DIR__ . '/../../controllers/UserController.php';
 // echo ("HHHHHHHHHHHHHHHH");
 // echo( $_SESSION['userId']);
 $id = $_SESSION['userId'];
-if ($_SERVER["REQUEST_METHOD"] === "GET")    
+if ($_SERVER["REQUEST_METHOD"] === "GET")
     if ($userCon = new UserController())
         $user = json_decode($userCon->getUserById($id), true);
-    // echo $user['msg']['email'];
+// echo $user['msg']['email'];
 // exit;
 //     echo $user;
 // exit;
@@ -93,8 +93,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     <img src="https://placehold.co/600x600/png" alt="avatar"
                         class="w-24 h-24 rounded-full border-4 border-purple-500/30 object-cover">
                     <!-- <div -->
-                        <!-- class="absolute -bottom-2 -right-2 w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center border-2 border-gray-900"> -->
-                        <!-- <i class="fas fa-camera text-white text-sm"></i> -->
+                    <!-- class="absolute -bottom-2 -right-2 w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center border-2 border-gray-900"> -->
+                    <!-- <i class="fas fa-camera text-white text-sm"></i> -->
                     <!-- </div> -->
                 </div>
             </div>
@@ -201,11 +201,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         <i class="fas fa-times mr-2"></i> Cancel
                     </button>
                 </div>
-                <div class="flex flex-row gap-3 p-2 items-center h-6">
-                    <input type="checkbox" id="notifications" name="notifications" <?= ($user['msg']['notification'] == 1) ? 'checked' : '' ?>
-                    value="1" >
-                    <label for="notifications" class="text-white"> Deseo recibir las notificaciones en mi email</label><br>
+                <div class="col-span-2">
+                    <label for="notifications" class="flex items-center gap-3 text-sm text-gray-300">
+                        <input id="notifications" type="checkbox" name="notifications" value="1" <?= ($user['msg']['notification'] == 1) ? 'checked' : '' ?> disabled
+                            class="w-5 h-5 text-purple-600 bg-gray-900/50 border-gray-700 rounded focus:ring-purple-500 cursor-not-allowed">
+                        <span>Quiero recibir notificaciones por correo electrónico</span>
+                    </label>
                 </div>
+
             </form>
             <div class="mt-8 pt-6 border-t border-gray-700">
                 <h3 class="text-lg font-semibold text-white mb-4">Account Actions</h3>
@@ -269,10 +272,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         form.addEventListener("submit", async (e) => {
             e.preventDefault();
             const formData = new FormData(form);
-            const response = await fetch(form.action, { method: 'POST', body: formData });
+            const response = await fetch(form.action, {
+                method: 'POST',
+                body: formData
+            });
             const result = await response.json();
             console.log(result);
-            if (!result.res) {//TODO:: pintar eerror en fron
+            if (!result.res) { //TODO:: pintar eerror en fron
                 console.log(result.msg);
             } else {
                 window.location.href = "/profile";

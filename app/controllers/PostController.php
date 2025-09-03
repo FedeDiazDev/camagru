@@ -140,6 +140,6 @@ class PostController
                 'res' => true,
                 "msg" => "Post deleted successfully"
             ]);
-
+        return $this->post->deletePost($postId);
     }
 }

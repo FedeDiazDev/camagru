@@ -122,24 +122,23 @@ class PostController
         ]);
     }
 
-    public function deletePost($postId) {
-        if (!$postId){
+    public function deletePost($postId)
+    {
+        if (!$postId) {
             return json_encode([
-                'res'=> false,
+                'res' => false,
                 'msg' => "Missing post id"
             ]);
         }
-        if (!$this->post->deletePost($postId))
-        {
+        if (!$this->post->deletePost($postId)) {
             return json_encode([
                 'res' => false,
                 "msg" => "Couldn't delete the post"
             ]);
         }
         return json_encode([
-                'res' => true,
-                "msg" => "Post deleted successfully"
-            ]);
-        return $this->post->deletePost($postId);
+            'res' => true,
+            "msg" => "Post deleted successfully"
+        ]);
     }
 }

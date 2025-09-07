@@ -50,13 +50,13 @@ class CommentController
         {
             return json_encode([
                 'res' => true,
-                'msg' => 
+                'msg' => "Comment added"
             ]);
         }
 
         return json_encode([
             'res' => false,
-            'msg' => 
+            'msg' => "Couldn't post the comment"
         ]) ;
     }
 }

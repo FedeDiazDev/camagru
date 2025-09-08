@@ -175,7 +175,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 		if (!result.res) {//TODO:: pintar eerror en fron
 			console.log(result.msg);
 		} else {
-			window.location.href = "/camera";
+			window.location.href = "/login";
 		}
 	});
 </script>

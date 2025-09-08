@@ -29,6 +29,9 @@ switch ($request) {
     case '/profile':
         include_once __DIR__ . '/../app/views/pages/profile.php';
         exit;
+    case '/post':
+        include_once __DIR__ . '/../app/views/pages/post.php';
+        exit;
     case '/logout':
         include_once __DIR__ . '/../app/views/pages/logout.php';
         exit;

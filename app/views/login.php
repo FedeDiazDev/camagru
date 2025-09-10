@@ -46,7 +46,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
             <div class="absolute bottom-12 left-12 right-12">
                 <div class="flex items-center gap-3 mb-6">
-                    <i class="fas fa-camera-retro text-purple-400 text-3xl"></i>
+                    <i class="fas fa-camera fa-fw text-purple-400 text-3xl"></i>
                     <div>
                         <h1 class="text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
                             Camagru <span class="ml-1 text-yellow-300">🌙</span>
@@ -72,7 +72,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 <section class="bg-gray-900/80 border border-gray-800 rounded-lg backdrop-blur-sm p-8">
                     <header class="text-center pb-8">
                         <div class="lg:hidden flex items-center justify-center gap-2 mb-6">
-                            <i class="fas fa-camera-retro text-purple-400 text-2xl"></i>
+                            <i class="fas fa-camera fa-fw text-purple-400 text-2xl"></i>
                             <h1 class="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
                                 In <span class="ml-1 text-yellow-300">🌙</span>
                             </h1>
@@ -123,7 +123,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                                     class="rounded border-gray-600 bg-gray-800 text-purple-600 focus:ring-purple-500" />
                                 <span>Remember me</span>
                             </label>
-                            <a href="/forgot-password" class="text-purple-400 hover:text-purple-300 transition-colors">
+                            <a href="/password" class="text-purple-400 hover:text-purple-300 transition-colors">
                                 Forgot password?
                             </a>
                         </div>

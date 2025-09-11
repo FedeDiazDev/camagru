@@ -235,15 +235,16 @@ function sharePhoto() {
         alert("Por favor, añade al menos un sticker antes de tomar la foto.");
         return;
     }
-    if (navigator.share) {
-        navigator.share({
-            title: 'Dark Studio Photo',
-            text: 'Check out my photo from Dark Studio!',
-            files: [dataURLtoFile(capturedImage.src, 'photo.png')],
-        }).catch(console.error)
-    } else {
-        alert('Sharing not supported on this browser.')
-    }
+    savePhoto("Sin título")
+    // if (navigator.share) {
+    //     navigator.share({
+    //         title: 'Dark Studio Photo',
+    //         text: 'Check out my photo from Dark Studio!',
+    //         files: [dataURLtoFile(capturedImage.src, 'photo.png')],
+    //     }).catch(console.error)
+    // } else {
+    //     alert('Sharing not supported on this browser.')
+    // }
 }
 
 function dataURLtoFile(dataurl, filename) {
@@ -310,6 +311,32 @@ function createFilterButtons() {
     })
     filtersContainer.firstChild.classList.add('bg-purple-700')
 }
+
+function savePhoto(title) {
+    const imageData = canvas.toDataURL('image/png');
+
+    fetch('/camera.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            userId: 1,
+            title: "hola",
+            image: imageData
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.res) {
+            alert('Post creado!');
+        } else {
+            alert('Error: ' + data.msg);
+        }
+    })
+    .catch(console.error);
+}
+
 
 startCameraBtn.addEventListener('click', startCamera)
 captureBtn.addEventListener('click', capturePhoto)

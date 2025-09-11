@@ -110,6 +110,25 @@ class PostController
                 'msg' => "User doesn't exists"
             ]);
         }
+
+        $input = json_decode(file_get_contents('php://input'), true);
+        $imageData = $input['image'] ?? null;
+        if (!$imageData) {
+            return json_encode([
+                'res' => false,
+                'msg' => "Missing image"
+            ]);
+        }
+
+        $img = str_replace('data:image/png;base64,', '', $imageData);
+        $img = str_replace(' ', '+', $img);
+        $data = base64_decode($img);
+        
+        $fileName = 'uploads/' . uniqid('camagru_') . '.png';
+        file_put_contents($fileName, $data);
+
+        $mediaUrl = $fileName;
+
         if ($this->post->createPost($userId, $title, $mediaUrl)) {
             return json_encode([
                 'res' => true,

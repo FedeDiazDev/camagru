@@ -181,7 +181,7 @@ function capturePhoto() {
     canvas.height = realHeight;
     ctx.filter = getFilterStyle();
     ctx.drawImage(video, 0, 0, realWidth, realHeight);
-   
+
     const displayWidth = capturedImage.clientWidth || imageContainer.clientWidth;
     const displayHeight = capturedImage.clientHeight || imageContainer.clientHeight;
 
@@ -326,15 +326,16 @@ function savePhoto(title) {
             image: imageData
         })
     })
-    .then(res => res.json())
-    .then(data => {
-        if (data.res) {
-            alert('Post creado!');
-        } else {
-            alert('Error: ' + data.msg);
-        }
-    })
-    .catch(console.error);
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                alert('Post creado! ID: ' + data.postId + '\nURL: ' + data.url);
+            } else {
+                alert('Error al crear el post');
+            }
+        })
+
+        .catch(console.error);
 }
 
 

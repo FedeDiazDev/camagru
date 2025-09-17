@@ -1,3 +1,14 @@
+<?php
+
+require_once __DIR__ . '/../controllers/PostController.php';
+if ($_SERVER["REQUEST_METHOD"] === "GET") {
+    $postController = new PostController();
+    $posts = $postController->getPosts(5, 1);
+    $data = json_decode($posts);
+    echo $posts;
+    $mediaUrl = $data->msg[0]->mediaUrl;   
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -27,20 +38,17 @@
             <div
                 class="overflow-hidden group hover:shadow-2xl hover:shadow-purple-500/20 transition-all duration-300 bg-gray-900/50 border border-gray-800 backdrop-blur-sm rounded-lg">
                 <div class="aspect-square relative overflow-hidden rounded-lg">
-                    <img
-                        src="https://placehold.co/600x600/png"
-                        alt="Dark photo by user123"
+                    <img src="<?=$mediaUrl ?>" alt="Dark photo by user123"
                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                     <div
-                        class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg"></div>
+                        class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg">
+                    </div>
                     <div
                         class="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-white">
                         <div class="flex items-center gap-2 mb-2">
                             <div
                                 class="w-6 h-6 rounded-full border border-white/20 bg-gray-700 overflow-hidden flex items-center justify-center">
-                                <img
-                                    src="https://placehold.co/24x24/png"
-                                    alt="Avatar user123"
+                                <img src="https://placehold.co/24x24/png" alt="Avatar user123"
                                     class="w-full h-full object-cover" />
                             </div>
                             <span class="text-sm font-medium">user123</span>
@@ -64,20 +72,17 @@
             <div
                 class="overflow-hidden group hover:shadow-2xl hover:shadow-purple-500/20 transition-all duration-300 bg-gray-900/50 border border-gray-800 backdrop-blur-sm rounded-lg">
                 <div class="aspect-square relative overflow-hidden rounded-lg">
-                    <img
-                        src="https://placehold.co/600x600/png"
-                        alt="Dark photo by user123"
+                    <img src="https://placehold.co/600x600/png" alt="Dark photo by user123"
                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                     <div
-                        class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg"></div>
+                        class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg">
+                    </div>
                     <div
                         class="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-white">
                         <div class="flex items-center gap-2 mb-2">
                             <div
                                 class="w-6 h-6 rounded-full border border-white/20 bg-gray-700 overflow-hidden flex items-center justify-center">
-                                <img
-                                    src="https://placehold.co/24x24/png"
-                                    alt="Avatar user123"
+                                <img src="https://placehold.co/24x24/png" alt="Avatar user123"
                                     class="w-full h-full object-cover" />
                             </div>
                             <span class="text-sm font-medium">user123</span>

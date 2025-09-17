@@ -87,16 +87,14 @@ class PostController
         ]);
     }
 
-    public function createPost($userId, $title)
+    public function createPost($userId, $title, $mediaUrl)
     {
         if (!$userId) {
             return json_encode([
                 'res' => false,
                 'msg' => "Missing user id"
             ]);
-        }
-        //TODO: mediaURL
-        $mediaUrl = "";
+        } 
         if (empty($title)) {
             return json_encode([
                 'res' => false,
@@ -127,7 +125,7 @@ class PostController
         $fileName = 'uploads/' . uniqid('camagru_') . '.png';
         file_put_contents($fileName, $data);
 
-        $mediaUrl = $fileName;
+        // $mediaUrl = $fileName;
 
         if ($this->post->createPost($userId, $title, $mediaUrl)) {
             return json_encode([

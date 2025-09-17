@@ -8,7 +8,7 @@ $data = json_decode(file_get_contents("php://input"), true);
 $userId = $data['userId'] ?? null;
 $title  = $data['title']  ?? '';
 $image  = $data['image']  ?? null;
-
+file_put_contents("/tmp/debug.txt", substr($image, 0, 1000)); // guardar los primeros 1000 chars en un log
 if (!$userId || !$image) {
     http_response_code(400);
     echo json_encode(["error" => "Faltan datos"]);
@@ -21,7 +21,7 @@ if (count($imageData) !== 2) {
     echo json_encode(["error" => "Formato de imagen inválido"]);
     exit;
 }
-$decodedImage = base64_decode($imageData[1]);
+$decodedImage = base64_decode(str_replace(' ', '+', $imageData[1]));
 
 $uploadDir = __DIR__ . '/uploads/';
 if (!is_dir($uploadDir)) {

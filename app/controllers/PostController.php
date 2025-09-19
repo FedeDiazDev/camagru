@@ -90,54 +90,20 @@ class PostController
     public function createPost($userId, $title, $mediaUrl)
     {
         if (!$userId) {
-            return json_encode([
-                'res' => false,
-                'msg' => "Missing user id"
-            ]);
-        } 
-        if (empty($title)) {
-            return json_encode([
-                'res' => false,
-                'msg' => "Missing title"
-            ]);
+            return false;
         }
+        if (empty($title)) {
+            return false;
+        }
+
         $userController = new UserController();
         if (!$userController->getUserById($userId)) {
-            return json_encode([
-                'res' => false,
-                'msg' => "User doesn't exists"
-            ]);
+            return false;
         }
 
-        $input = json_decode(file_get_contents('php://input'), true);
-        $imageData = $input['image'] ?? null;
-        if (!$imageData) {
-            return json_encode([
-                'res' => false,
-                'msg' => "Missing image"
-            ]);
-        }
-
-        $img = str_replace('data:image/png;base64,', '', $imageData);
-        $img = str_replace(' ', '+', $img);
-        $data = base64_decode($img);
-        
-        $fileName = 'uploads/' . uniqid('camagru_') . '.png';
-        file_put_contents($fileName, $data);
-
-        // $mediaUrl = $fileName;
-
-        if ($this->post->createPost($userId, $title, $mediaUrl)) {
-            return json_encode([
-                'res' => true,
-                'msg' => "Post created"
-            ]);
-        }
-        return json_encode([
-            'res' => false,
-            'msg' => "Error creating post"
-        ]);
+        return $this->post->createPost($userId, $title, $mediaUrl);
     }
+
 
     public function deletePost($postId)
     {

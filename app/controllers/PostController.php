@@ -40,7 +40,7 @@ class PostController
 
     public function getPosts($limit, $offset)
     {
-        if (!$limit || !$offset) {
+        if ($limit <= 0|| $offset < 0) {
             return json_encode([
                 'res' => false,
                 'msg' => "Error on pagination"

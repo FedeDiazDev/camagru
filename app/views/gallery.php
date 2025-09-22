@@ -3,10 +3,11 @@
 require_once __DIR__ . '/../controllers/PostController.php';
 if ($_SERVER["REQUEST_METHOD"] === "GET") {
     $postController = new PostController();
-    $posts = $postController->getPosts(5, 1);
+    $posts = $postController->getPosts(5, 0);
     $data = json_decode($posts);
     echo $posts;
-    $mediaUrl = $data->msg[0]->mediaUrl;   
+    $mediaUrl = $data->msg[0]->mediaUrl;
+    // echo $mediaUrl;
 }
 ?>
 <!DOCTYPE html>
@@ -33,78 +34,54 @@ if ($_SERVER["REQUEST_METHOD"] === "GET") {
         <p class="text-gray-400">42 photos found</p>
     </header>
 
-    <main>
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            <div
-                class="overflow-hidden group hover:shadow-2xl hover:shadow-purple-500/20 transition-all duration-300 bg-gray-900/50 border border-gray-800 backdrop-blur-sm rounded-lg">
-                <div class="aspect-square relative overflow-hidden rounded-lg">
-                    <img src="<?=$mediaUrl ?>" alt="Dark photo by user123"
-                        class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-                    <div
-                        class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg">
-                    </div>
-                    <div
-                        class="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-white">
-                        <div class="flex items-center gap-2 mb-2">
-                            <div
-                                class="w-6 h-6 rounded-full border border-white/20 bg-gray-700 overflow-hidden flex items-center justify-center">
-                                <img src="https://placehold.co/24x24/png" alt="Avatar user123"
-                                    class="w-full h-full object-cover" />
-                            </div>
-                            <span class="text-sm font-medium">user123</span>
+<main>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <?php if (!empty($data->msg)): ?>
+            <?php foreach ($data->msg as $post): ?>
+                <div
+                    class="overflow-hidden group hover:shadow-2xl hover:shadow-purple-500/20 transition-all duration-300 bg-gray-900/50 border border-gray-800 backdrop-blur-sm rounded-lg">
+                    
+                    <!-- enlace al post -->
+                    <a href="/post?id=<?= htmlspecialchars($post->id) ?>" class="aspect-square block relative overflow-hidden rounded-lg">
+                        <img src="<?= htmlspecialchars($post->mediaUrl) ?>" alt="Foto"
+                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                        <div
+                            class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg">
                         </div>
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-3">
-                                <div class="flex items-center gap-1 text-pink-400">
-                                    <i class="fas fa-heart w-4 h-4"></i>
-                                    <span class="text-sm">123</span>
+                        <div
+                            class="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-white">
+                            <div class="flex items-center gap-2 mb-2">
+                                <div
+                                    class="w-6 h-6 rounded-full border border-white/20 bg-gray-700 overflow-hidden flex items-center justify-center">
+                                    <img src="<?= htmlspecialchars($post->avatarUrl ?? 'https://placehold.co/24x24/png') ?>" alt="Avatar"
+                                        class="w-full h-full object-cover" />
                                 </div>
-                                <div class="flex items-center gap-1 text-purple-400">
-                                    <i class="fas fa-comment-dots w-4 h-4"></i>
-                                    <span class="text-sm">15</span>
-                                </div>
+                                <span class="text-sm font-medium"><?= htmlspecialchars($post->username ?? 'unknown') ?></span>
                             </div>
-                            <span class="text-gray-300 text-xs">2h ago</span>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-3">
+                                    <div class="flex items-center gap-1 text-pink-400">
+                                        <i class="fas fa-heart w-4 h-4"></i>
+                                        <span class="text-sm"><?= htmlspecialchars($post->likes ?? 0) ?></span>
+                                    </div>
+                                    <div class="flex items-center gap-1 text-purple-400">
+                                        <i class="fas fa-comment-dots w-4 h-4"></i>
+                                        <span class="text-sm"><?= htmlspecialchars($post->comments ?? 0) ?></span>
+                                    </div>
+                                </div>
+                                <span class="text-gray-300 text-xs"><?= htmlspecialchars($post->createdAt ?? '') ?></span>
+                            </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
-            </div>
-            <div
-                class="overflow-hidden group hover:shadow-2xl hover:shadow-purple-500/20 transition-all duration-300 bg-gray-900/50 border border-gray-800 backdrop-blur-sm rounded-lg">
-                <div class="aspect-square relative overflow-hidden rounded-lg">
-                    <img src="https://placehold.co/600x600/png" alt="Dark photo by user123"
-                        class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-                    <div
-                        class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg">
-                    </div>
-                    <div
-                        class="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-white">
-                        <div class="flex items-center gap-2 mb-2">
-                            <div
-                                class="w-6 h-6 rounded-full border border-white/20 bg-gray-700 overflow-hidden flex items-center justify-center">
-                                <img src="https://placehold.co/24x24/png" alt="Avatar user123"
-                                    class="w-full h-full object-cover" />
-                            </div>
-                            <span class="text-sm font-medium">user123</span>
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-3">
-                                <div class="flex items-center gap-1 text-pink-400">
-                                    <i class="fas fa-heart w-4 h-4"></i>
-                                    <span class="text-sm">123</span>
-                                </div>
-                                <div class="flex items-center gap-1 text-purple-400">
-                                    <i class="fas fa-comment-dots w-4 h-4"></i>
-                                    <span class="text-sm">15</span>
-                                </div>
-                            </div>
-                            <span class="text-gray-300 text-xs">2h ago</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p class="text-gray-400">No se encontraron fotos</p>
+        <?php endif; ?>
+    </div>
+</main>
+
+
 
 </body>
 

@@ -20,19 +20,23 @@ class Post
 
     public function getPosts($limit, $offset)
     {
-        $query = "SELECT * FROM post";
-        // $query = "SELECT p.*, u.username AS author,
-        //              COUNT(l.id) AS likes
-        //       FROM post p
-        //       JOIN user u ON p.userId = u.id
-        //       LEFT JOIN likes l ON l.postId = p.id
-        //       GROUP BY p.id, u.username
-        //       ORDER BY p.date DESC
-        //       LIMIT :limit OFFSET :offset";
+        // $query = "SELECT * FROM post";
+        $query = "SELECT p.id,
+        p.userId,
+        p.date,
+        p.mediaUrl,
+        u.username AS author,
+        COUNT(l.id) AS likes
+            FROM post p
+            JOIN user u ON p.userId = u.id
+            LEFT JOIN likes l ON l.postId = p.id
+            GROUP BY p.id, p.userId, p.date, p.mediaUrl, u.username
+            ORDER BY p.date DESC
+            LIMIT :limit OFFSET :offset;";
 
         $stmt = $this->connection->prepare($query);
-        // $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
-        // $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+        $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+        $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
         $stmt->execute();
 
         return $stmt->fetchAll(PDO::FETCH_OBJ);

@@ -6,9 +6,9 @@ require_once __DIR__ . '/../app/controllers/PostController.php';
 $data = json_decode(file_get_contents("php://input"), true);
 
 $userId = $data['userId'] ?? null;
-$title  = $data['title']  ?? '';
-$image  = $data['image']  ?? null;
-file_put_contents("/tmp/debug.txt", substr($image, 0, 1000)); // guardar los primeros 1000 chars en un log
+$title = $data['title'] ?? '';
+$image = $data['image'] ?? null;
+
 if (!$userId || !$image) {
     http_response_code(400);
     echo json_encode(["error" => "Faltan datos"]);
@@ -21,7 +21,14 @@ if (count($imageData) !== 2) {
     echo json_encode(["error" => "Formato de imagen inválido"]);
     exit;
 }
-$decodedImage = base64_decode(str_replace(' ', '+', $imageData[1]));
+
+$decodedImage = base64_decode($imageData[1], true);
+if ($decodedImage === false) {
+    http_response_code(400);
+    echo json_encode(["error" => "Base64 inválido"]);
+    exit;
+}
+
 
 $uploadDir = __DIR__ . '/uploads/';
 if (!is_dir($uploadDir)) {
@@ -48,6 +55,6 @@ $postId = $postController->createPost($userId, $title, $mediaUrl);
 
 echo json_encode([
     "success" => true,
-    "postId"  => $postId,
-    "url"     => $mediaUrl
+    "postId" => $postId,
+    "url" => $mediaUrl
 ]);

@@ -169,10 +169,10 @@ window.addEventListener('mousemove', (e) => {
 function capturePhoto() {
     if (!isCapturing) return;
 
-    if (movableStickers.length === 0) {
-        alert("Por favor, añade al menos un sticker antes de tomar la foto.");
-        return;
-    }
+    // if (movableStickers.length === 0) {
+    //     alert("Por favor, añade al menos un sticker antes de tomar la foto.");
+    //     return;
+    // }
 
     const realWidth = video.videoWidth;
     const realHeight = video.videoHeight;
@@ -181,7 +181,7 @@ function capturePhoto() {
     canvas.height = realHeight;
     ctx.filter = getFilterStyle();
     ctx.drawImage(video, 0, 0, realWidth, realHeight);
-
+    ctx.filter = 'none';
     const displayWidth = capturedImage.clientWidth || imageContainer.clientWidth;
     const displayHeight = capturedImage.clientHeight || imageContainer.clientHeight;
 
@@ -220,10 +220,10 @@ function retakePhoto() {
 }
 
 function downloadPhoto() {
-    if (movableStickers.length === 0) {
-        alert("Por favor, añade al menos un sticker antes de tomar la foto.");
-        return;
-    }
+    // if (movableStickers.length === 0) {
+    //     alert("Por favor, añade al menos un sticker antes de tomar la foto.");
+    //     return;
+    // }
     const link = document.createElement('a')
     link.href = capturedImage.src
     link.download = `darkstudio_${Date.now()}.png`
@@ -231,10 +231,10 @@ function downloadPhoto() {
 }
 
 function sharePhoto() {
-    if (movableStickers.length === 0) {
-        alert("Por favor, añade al menos un sticker antes de tomar la foto.");
-        return;
-    }
+    // if (movableStickers.length === 0) {
+    //     alert("Por favor, añade al menos un sticker antes de tomar la foto.");
+    //     return;
+    // }
     savePhoto("Sin título")
     // if (navigator.share) {
     //     navigator.share({

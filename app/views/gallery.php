@@ -56,7 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] === "GET") {
                                     <img src="<?= htmlspecialchars($post->avatarUrl ?? 'https://placehold.co/24x24/png') ?>" alt="Avatar"
                                         class="w-full h-full object-cover" />
                                 </div>
-                                <span class="text-sm font-medium"><?= htmlspecialchars($post->username ?? 'unknown') ?></span>
+                                <span class="text-sm font-medium"><?= htmlspecialchars($post->author ?? 'unknown') ?></span>
                             </div>
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center gap-3">

@@ -27,20 +27,27 @@ class PostController
                 'msg' => "Couldn't get the post"
             ]);
         }
+        // return json_encode([
+        //     'res' => true,
+        //     'msg' => $post
+        // ]);
         return json_encode([
             'res' => true,
             'msg' => [
                 'id' => $post->id,
                 'title' => $post->title,
                 'date' => $post->date,
-                'url' => $post->mediaUrl
+                'url' => $post->mediaUrl,
+                'author' => $post->author,
+                'likes' => $post->likes,
+                'comments' => $post->comments
             ]
         ]);
     }
 
     public function getPosts($limit, $offset)
     {
-        if ($limit <= 0|| $offset < 0) {
+        if ($limit <= 0 || $offset < 0) {
             return json_encode([
                 'res' => false,
                 'msg' => "Error on pagination"

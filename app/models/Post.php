@@ -10,12 +10,40 @@ class Post
 
     public function getPostById($id)
     {
-        $query = "SELECT * FROM `post` WHERE id = :id";
+        $query = "SELECT p.id,
+        p.userId,
+        p.date,
+        p.mediaUrl,
+        p.title,
+        u.username AS author,
+        COUNT(l.id) AS likes
+        FROM post p
+        JOIN user u ON p.userId = u.id
+        LEFT JOIN likes l ON l.postId = p.id
+        WHERE p.id = :id
+        GROUP BY p.id, p.userId, p.date, p.mediaUrl, p.title, u.username;";
         $stmt = $this->connection->prepare($query);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
+        $post = $stmt->fetch(PDO::FETCH_OBJ);
+        $queryComments = "SELECT c.id,
+                             c.content,
+                             c.date,
+                             u.username                            
+                      FROM comment c
+                      JOIN user u ON c.userComment = u.id
+                      WHERE c.postId = :id
+                      ORDER BY c.date DESC";
 
-        return $stmt->fetch(PDO::FETCH_OBJ);
+        $stmt = $this->connection->prepare($queryComments);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        $comments = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+        // Añadir comentarios al objeto post
+        $post->comments = $comments;
+
+        return $post;
     }
 
     public function getPosts($limit, $offset)

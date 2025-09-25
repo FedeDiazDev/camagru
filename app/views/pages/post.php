@@ -7,8 +7,8 @@ session_start();
 // }
 
 require_once __DIR__ . '/../../controllers/PostController.php';
+require_once __DIR__ . '/../../controllers/CommentController.php.php';
 
-if ($_SERVER["REQUEST_METHOD"] === "GET") {
     $postControl = new PostController();
     $postID = $_GET['id'];
     $dataPost = json_decode($postControl->getPostById($postID));
@@ -41,8 +41,16 @@ if ($_SERVER["REQUEST_METHOD"] === "GET") {
         }
 
         return $postDate->format('d M Y');
+        if ($_SERVER["REQUEST_METHOD"] === "POST") {
+            $commentController = new CommentController();
+            $comment = trim(htmlspecialchars($_POST['comment']));
+            $res = $commentController->addComment($postID, $comment, $_SESSION['userId']);
+            if ($res['res'])
+            {
+                echo "SUUUUUUUUUUUUUUH";
+            }
+        }
 
-    }
 }
 
 ?>
@@ -200,8 +208,8 @@ if ($_SERVER["REQUEST_METHOD"] === "GET") {
                             <img src="https://placehold.co/600x600/png" alt=""
                                 class="w-10 h-10 rounded-full border-2 border-purple-500/30" />
                             <div class="flex-1">
-                                <form id="form" method="post" action="/post?id=<?= $postID ?>">
-                                    <textarea placeholder="Add a comment..."
+                                <form id="formComment" method="post" action="/post?id=<?= $postID ?>">
+                                    <textarea placeholder="Add a comment..." name="comment" value="comment"
                                         class="w-full bg-gray-800 border border-gray-700 text-white placeholder-gray-500 rounded-lg p-3 min-h-[80px]"></textarea>
                                 </form>
                                 <div class="flex justify-end items-center mt-3">
@@ -248,6 +256,19 @@ if ($_SERVER["REQUEST_METHOD"] === "GET") {
             </div>
         </div>
     </div>
+    <script>
+        const form = document.getElementById("formComment");
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const formData =new FormData(form);
+            const response = await fetch(form.action, {
+                method: 'POST',
+                body: formData
+            });
+            const result = await response.json();
+            console.log(result);
+        });
+    </script>
 </body>
 
 </html>

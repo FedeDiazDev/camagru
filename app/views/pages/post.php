@@ -1,56 +1,72 @@
 <?php
 session_start();
-
+//TODO: HACER LIKES
+//TODO: REVISAR IMG
+//TODO: QUITAR "No comments yet" cuando se haga el 1er cometnario
+//TODO: Borrar comentario
 // if (!isset(($_SESSION['userId']))) {
 //     header("Location: /");
 //     die();
 // }
 
 require_once __DIR__ . '/../../controllers/PostController.php';
-require_once __DIR__ . '/../../controllers/CommentController.php.php';
+require_once __DIR__ . '/../../controllers/CommentController.php';
 
-    $postControl = new PostController();
-    $postID = $_GET['id'];
-    $dataPost = json_decode($postControl->getPostById($postID));
-    $post = $dataPost->msg;
-    // echo '<pre>';
-    // print_r($dataPost);
-    // echo '</pre>';
-    function formatTime($date)
-    {
-        $postDate = new DateTime($date);
-        $now = new DateTime();
-        $diff = $now->diff($postDate);
+$postControl = new PostController();
+$postID = $_GET['id'];
+$dataPost = json_decode($postControl->getPostById($postID));
+$post = $dataPost->msg;
+// echo '<pre>';
+// print_r($dataPost);
+// echo '</pre>';
+function formatTime($date)
+{
+    $postDate = new DateTime($date);
+    $now = new DateTime();
+    $diff = $now->diff($postDate);
 
-        if ($diff->days === 0) {
-            if ($diff->h > 0) {
-                return "{$diff->h} hours ago";
-            } elseif ($diff->i > 0) {
-                return "{$diff->i} minutes ago";
-            } else {
-                return "a few seconds ago";
-            }
+    if ($diff->days === 0) {
+        if ($diff->h > 0) {
+            return "{$diff->h} hours ago";
+        } elseif ($diff->i > 0) {
+            return "{$diff->i} minutes ago";
+        } else {
+            return "a few seconds ago";
         }
+    }
 
-        if ($diff->days === 1) {
-            return "Yesterday";
-        }
+    if ($diff->days === 1) {
+        return "Yesterday";
+    }
 
-        if ($diff->days < 7) {
-            return "{$diff->days} days ago";
-        }
+    if ($diff->days < 7) {
+        return "{$diff->days} days ago";
+    }
 
-        return $postDate->format('d M Y');
-        if ($_SERVER["REQUEST_METHOD"] === "POST") {
-            $commentController = new CommentController();
-            $comment = trim(htmlspecialchars($_POST['comment']));
-            $res = $commentController->addComment($postID, $comment, $_SESSION['userId']);
-            if ($res['res'])
-            {
-                echo "SUUUUUUUUUUUUUUH";
-            }
-        }
+    return $postDate->format('d M Y');
 
+}
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $commentController = new CommentController();
+    $comment = trim(htmlspecialchars($_POST['comment']));
+    $res = $commentController->addComment($postID, $comment, $_SESSION['userId']);
+    if ($res) {
+        echo json_encode([
+            "success" => true,
+            "data" => [
+                "username" => $_SESSION['username'],
+                "avatarUrl" => $_SESSION['avatarUrl'] ?? 'https://placehold.co/40x40',
+                "date" => formatTime(date('Y-m-d H:i:s')) ,
+                "content" => htmlspecialchars($comment)
+            ]
+        ]);
+    } else {
+        echo json_encode([
+            "success" => false,
+            "error" => "No se pudo guardar el comentario."
+        ]);
+    }
+    exit;
 }
 
 ?>
@@ -195,34 +211,31 @@ require_once __DIR__ . '/../../controllers/CommentController.php.php';
                 </div>
             </div>
         </div>
-
         <div class="mt-6">
             <div class="bg-gray-900/50 border border-gray-800 backdrop-blur-sm rounded-2xl">
                 <div class="p-6">
                     <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
                         <i class="fa-regular fa-comment text-purple-400"></i> Comments <?= count($post->comments) ?>
                     </h3>
-
                     <div class="mb-6">
                         <div class="flex gap-3">
                             <img src="https://placehold.co/600x600/png" alt=""
                                 class="w-10 h-10 rounded-full border-2 border-purple-500/30" />
                             <div class="flex-1">
                                 <form id="formComment" method="post" action="/post?id=<?= $postID ?>">
-                                    <textarea placeholder="Add a comment..." name="comment" value="comment"
+                                    <textarea placeholder="Add a comment..." name="comment" value="comment" required
                                         class="w-full bg-gray-800 border border-gray-700 text-white placeholder-gray-500 rounded-lg p-3 min-h-[80px]"></textarea>
+                                    <div class="flex justify-end items-center mt-3">
+                                        <button
+                                            class="px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg text-white">
+                                            <i class="fa-solid fa-paper-plane mr-2"></i> Post
+                                        </button>
+                                    </div>
                                 </form>
-                                <div class="flex justify-end items-center mt-3">
-                                    <button
-                                        class="px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg text-white">
-                                        <i class="fa-solid fa-paper-plane mr-2"></i> Post
-                                    </button>
-                                </div>                                
                             </div>
                         </div>
                     </div>
-
-                    <div class="space-y-6">
+                    <div class="space-y-6" id="comments">
                         <?php if (!empty($post->comments)): ?>
                             <?php foreach ($post->comments as $comment): ?>
                                 <div class="flex gap-3">
@@ -237,7 +250,7 @@ require_once __DIR__ . '/../../controllers/CommentController.php.php';
                                                     </p>
                                                 </div>
                                                 <span class="text-gray-500 text-xs">
-                                                    <?= htmlspecialchars($comment->date) ?>
+                                                    <?= formatTime($comment->date) ?>
                                                 </span>
                                             </div>
                                             <p class="text-gray-300 leading-relaxed">
@@ -260,14 +273,38 @@ require_once __DIR__ . '/../../controllers/CommentController.php.php';
         const form = document.getElementById("formComment");
         form.addEventListener("submit", async (e) => {
             e.preventDefault();
-            const formData =new FormData(form);
+            const formData = new FormData(form);
             const response = await fetch(form.action, {
                 method: 'POST',
                 body: formData
             });
             const result = await response.json();
-            console.log(result);
+            if (result.success) {
+                renderComment(result.data);
+                form.reset();
+            }
+
         });
+        function renderComment(comment) {
+            const commentsContainer = document.getElementById("comments");
+            const div = document.createElement("div");
+            div.classList.add("flex", "gap-3");
+            div.innerHTML = `
+            <img src="${comment.avatarUrl}" class="w-10 h-10 rounded-full border-2 border-purple-500/30" />
+            <div class="flex-1 min-w-0">
+                <div class="bg-gray-800/50 rounded-lg p-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <p class="font-semibold text-white text-sm">${comment.username}</p>
+                        </div>
+                        <span class="text-gray-500 text-xs">${comment.date}</span>
+                    </div>
+                    <p class="text-gray-300 leading-relaxed">${comment.content}</p>
+                </div>
+            </div>
+        `;
+            commentsContainer.prepend(div);
+        }
     </script>
 </body>
 

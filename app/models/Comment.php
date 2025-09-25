@@ -11,11 +11,11 @@ class Comment
 
     public function addComment($postId, $comment, $userCommentId)
     {
-        $query = "INSERT INTO comment (postId, content, userComment) VALUES (:postId, :userCommentId, :comment)";
+        $query = "INSERT INTO comment (postId, content, userComment, date) VALUES (:postId, :comment, :userCommentId,  NOW() )";
         $stmt = $this->connection->prepare($query);
-        $stmt->bindParam('postId', $postId, PDO::PARAM_INT);
-        $stmt->bindParam('userCommentId', $userCommentId, PDO::PARAM_INT);
-        $stmt->bindParam('coment', $comment);
+        $stmt->bindParam(':postId', $postId, PDO::PARAM_INT);
+        $stmt->bindParam(':comment', $comment);
+        $stmt->bindParam(':userCommentId', $userCommentId, PDO::PARAM_INT);
         if ($stmt->execute()) {
 			return true;
 		}

@@ -9,6 +9,8 @@ if ($_SERVER["REQUEST_METHOD"] === "GET") {
     $mediaUrl = $data->msg[0]->mediaUrl;
     // echo $mediaUrl;
 }
+//TODO: ACTUALIZAR NUMERO DE COMENTARIOS
+//TODO: GALERIA MÄS GRANDE?
 ?>
 <!DOCTYPE html>
 <html lang="en">

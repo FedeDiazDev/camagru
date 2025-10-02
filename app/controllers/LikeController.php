@@ -10,19 +10,19 @@ class LikeController
     public function __construct()
     {
         $database = new Database();
-        $this->like = new User($database->connect());
+        $this->like = new Like($database->connect());
     }
 
-    public function getLikesbyPost($postId){
-        if (!$postId){
+    public function getLikesbyPost($postId)
+    {
+        if (!$postId) {
             return json_encode([
                 'res' => false,
                 'msg' => "Missing id"
             ]);
         }
         $likes = $this->like->getLikesbyPost($postId);
-        if (!$likes)
-        {
+        if (!$likes) {
             return json_encode([
                 'res' => false,
                 'msg' => "Couldn't get number of likes"
@@ -34,10 +34,17 @@ class LikeController
         ]);
     }
 
-    public function like_unlike($postId, $userId, $liked){
-        if ($liked){
-            return $this->like->removeLike($postId);
+    public function like_unlike($postId, $userId)
+    {
+        if ($this->like->hasLiked($postId, $userId)) {
+            return $this->like->removeLike($postId, $userId);
+        } else {
+            return $this->like->addLike($postId, $userId);
         }
-        return $this->like->addLike($postId, $userId);
+    }
+
+    public function hasLiked($postID, $userId)
+    {
+        return $this->like->hasLiked($postID, $userId);
     }
 }

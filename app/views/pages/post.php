@@ -1,8 +1,6 @@
 <?php
 session_start();
-//TODO: HACER LIKES
 //TODO: REVISAR IMG
-//TODO: QUITAR "No comments yet" cuando se haga el 1er cometnario
 //TODO: Borrar comentario
 // if (!isset(($_SESSION['userId']))) {
 //     header("Location: /");
@@ -11,6 +9,7 @@ session_start();
 
 require_once __DIR__ . '/../../controllers/PostController.php';
 require_once __DIR__ . '/../../controllers/CommentController.php';
+require_once __DIR__ . '/../../controllers/LikeController.php';
 
 $postControl = new PostController();
 $postID = $_GET['id'];
@@ -47,26 +46,40 @@ function formatTime($date)
 
 }
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $commentController = new CommentController();
-    $comment = trim(htmlspecialchars($_POST['comment']));
-    $res = $commentController->addComment($postID, $comment, $_SESSION['userId']);
-    if ($res) {
+
+    if (isset($_POST['comment'])) {
+
+        $commentController = new CommentController();
+        $comment = trim(htmlspecialchars($_POST['comment']));
+        $res = $commentController->addComment($postID, $comment, $_SESSION['userId']);
+        if ($res) {
+            echo json_encode([
+                "success" => true,
+                "data" => [
+                    "username" => $_SESSION['username'],
+                    "avatarUrl" => $_SESSION['avatarUrl'] ?? 'https://placehold.co/40x40',
+                    "date" => formatTime(date('Y-m-d H:i:s')),
+                    "content" => htmlspecialchars($comment)
+                ]
+            ]);
+        } else {
+            echo json_encode([
+                "success" => false,
+                "error" => "No se pudo guardar el comentario."
+            ]);
+        }
+        exit;
+    }
+    if (isset($_POST['action']) && $_POST['action'] === 'like') {
+        $likeController = new LikeController();
+        $res = $likeController->like_unlike($postID, $_SESSION['userId']);
         echo json_encode([
             "success" => true,
-            "data" => [
-                "username" => $_SESSION['username'],
-                "avatarUrl" => $_SESSION['avatarUrl'] ?? 'https://placehold.co/40x40',
-                "date" => formatTime(date('Y-m-d H:i:s')) ,
-                "content" => htmlspecialchars($comment)
-            ]
+            "likes" => $likeController->getLikesbyPost($postID),
+            "liked" => $likeController->hasLiked($postID, $_SESSION['userId'])
         ]);
-    } else {
-        echo json_encode([
-            "success" => false,
-            "error" => "No se pudo guardar el comentario."
-        ]);
+        exit;
     }
-    exit;
 }
 
 ?>
@@ -144,7 +157,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                                 <div class="flex items-center gap-4">
                                     <button class="p-2 text-gray-400 hover:text-pink-400 hover:bg-gray-800 rounded-lg">
                                         <i class="fa-regular fa-heart mr-2"></i>
-                                        <span class="font-medium"><?= htmlspecialchars($post->likes) ?></span>
+                                        <span id="likeCount"
+                                            class="font-medium"><?= htmlspecialchars($post->likes) ?></span>
                                     </button>
                                     <button
                                         class="p-2 text-gray-400 hover:text-purple-400 hover:bg-gray-800 rounded-lg">
@@ -187,7 +201,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
                             <div class="flex items-center justify-between mb-6">
                                 <div class="flex items-center gap-4">
-                                    <button class="p-2 text-gray-400 hover:text-pink-400 hover:bg-gray-800 rounded-lg">
+                                    <button id="likeBtn" data-post-id="<?= $postID ?>"
+                                        class="p-2 text-gray-400 hover:text-pink-400 hover:bg-gray-800 rounded-lg">
                                         <i class="fa-regular fa-heart mr-2"></i>
                                         <span class="font-medium"><?= htmlspecialchars($post->likes) ?></span>
                                     </button>
@@ -261,7 +276,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                                 </div>
                             <?php endforeach; ?>
                         <?php else: ?>
-                            <p class="text-gray-400">No comments yet. Be the first!</p>
+                            <p class="text-gray-400" id="no-comments">No comments yet. Be the first!</p>
                         <?php endif; ?>
 
                     </div>
@@ -271,6 +286,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     </div>
     <script>
         const form = document.getElementById("formComment");
+        const likeBtn = document.getElementById("likeBtn");
+        const likeCountEl = document.getElementById("likeCount");
         form.addEventListener("submit", async (e) => {
             e.preventDefault();
             const formData = new FormData(form);
@@ -285,9 +302,36 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             }
 
         });
+        likeBtn.addEventListener("click", async () => {
+            const formData = new FormData();
+            formData.append("action", "like");
+
+            const response = await fetch(window.location.href, {
+                method: "POST",
+                body: formData,
+                headers: { "X-Requested-With": "XMLHttpRequest" }
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                likeCountEl.textContent = result.likes;
+                const icon = likeBtn.querySelector("i");
+
+                if (result.liked) {
+                    icon.classList.remove("fa-regular");
+                    icon.classList.add("fa-solid", "text-pink-400");
+                } else {
+                    icon.classList.add("fa-regular");
+                    icon.classList.remove("fa-solid", "text-pink-400");
+                }
+            }
+        });
         function renderComment(comment) {
+            const noComments = document.getElementById("no-comments");
             const commentsContainer = document.getElementById("comments");
             const div = document.createElement("div");
+            if (noComments)
+                noComments.style.display = 'none';
             div.classList.add("flex", "gap-3");
             div.innerHTML = `
             <img src="${comment.avatarUrl}" class="w-10 h-10 rounded-full border-2 border-purple-500/30" />

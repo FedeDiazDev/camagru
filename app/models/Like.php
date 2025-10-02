@@ -1,5 +1,5 @@
 <?php
-class User
+class Like
 {
     private $connection;
 
@@ -10,7 +10,7 @@ class User
 
     public function getLikesbyPost($postId)
     {
-        $query = "SELECT COUNT (*) FROM likes WHERE postId : postId";
+        $query = "SELECT COUNT(*) as total FROM likes WHERE postId = :postId";
         $stmt = $this->connection->prepare($query);
         $stmt->bindParam(':postId', $postId, PDO::PARAM_INT);
         $stmt->execute();
@@ -19,7 +19,7 @@ class User
 
     public function addLike($postId, $userId)
     {
-        $query = "INSERT INTO likes (postId, userId) VALUES (:postId, :userId)";
+        $query = "INSERT INTO likes (postId, userId, date) VALUES (:postId, :userId, NOW())";
         $stmt = $this->connection->prepare($query);
         $stmt->bindParam('postId', $postId, PDO::PARAM_INT);
         $stmt->bindParam('userId', $userId, PDO::PARAM_INT);
@@ -28,12 +28,21 @@ class User
         }
         return false;
     }
-
-    public function removeLike($postId)
+    public function hasLiked($postId, $userId)
     {
-        $query = "DELETE FROM likes WHERE postId = :postId";
+        $query = "SELECT 1 FROM likes WHERE postId = :postId AND userId = :userId";
         $stmt = $this->connection->prepare($query);
         $stmt->bindParam(":postId", $postId, PDO::PARAM_INT);
+        $stmt->bindParam(":userId", $userId, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch() !== false;
+    }
+    public function removeLike($postId, $userId)
+    {
+        $query = "DELETE FROM likes WHERE postId = :postId AND userId = :userId";
+        $stmt = $this->connection->prepare($query);
+        $stmt->bindParam(":postId", $postId, PDO::PARAM_INT);
+        $stmt->bindParam(":userId", $userId, PDO::PARAM_INT);
         if ($stmt->execute()) {
             return true;
         }

@@ -1,11 +1,10 @@
 <?php
 session_start();
-//TODO: REVISAR IMG
-//TODO: Borrar comentario
-// if (!isset(($_SESSION['userId']))) {
-//     header("Location: /");
-//     die();
-// }
+
+if (!isset(($_SESSION['userId']))) {
+    header("Location: /");
+    die();
+}
 
 require_once __DIR__ . '/../../controllers/PostController.php';
 require_once __DIR__ . '/../../controllers/CommentController.php';
@@ -15,9 +14,7 @@ $postControl = new PostController();
 $postID = $_GET['id'];
 $dataPost = json_decode($postControl->getPostById($postID));
 $post = $dataPost->msg;
-// echo '<pre>';
-// print_r($dataPost);
-// echo '</pre>';
+
 function formatTime($date)
 {
     $postDate = new DateTime($date);

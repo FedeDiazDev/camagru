@@ -14,7 +14,8 @@ class Like
         $stmt = $this->connection->prepare($query);
         $stmt->bindParam(':postId', $postId, PDO::PARAM_INT);
         $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_OBJ);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return isset($row['total']) ? (int) $row['total'] : 0;
     }
 
     public function addLike($postId, $userId)

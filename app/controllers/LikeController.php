@@ -13,25 +13,12 @@ class LikeController
         $this->like = new Like($database->connect());
     }
 
-    public function getLikesbyPost($postId)
+    public function     getLikesbyPost($postId)
     {
         if (!$postId) {
-            return json_encode([
-                'res' => false,
-                'msg' => "Missing id"
-            ]);
+            return 0;
         }
-        $likes = $this->like->getLikesbyPost($postId);
-        if (!$likes) {
-            return json_encode([
-                'res' => false,
-                'msg' => "Couldn't get number of likes"
-            ]);
-        }
-        return json_encode([
-            'res' => true,
-            'msg' => $likes
-        ]);
+        return  $this->like->getLikesbyPost($postId);
     }
 
     public function like_unlike($postId, $userId)

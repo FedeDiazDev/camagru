@@ -40,7 +40,6 @@ function formatTime($date)
     }
 
     return $postDate->format('d M Y');
-
 }
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
@@ -152,11 +151,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
                             <div class="flex items-center justify-between mb-4">
                                 <div class="flex items-center gap-4">
-                                    <button class="p-2 text-gray-400 hover:text-pink-400 hover:bg-gray-800 rounded-lg">
-                                        <i class="fa-regular fa-heart mr-2"></i>
-                                        <span id="likeCount"
-                                            class="font-medium"><?= htmlspecialchars($post->likes) ?></span>
+                                    <?php
+                                    $liked = (new LikeController())->hasLiked($postID, $_SESSION['userId']);
+                                    ?>
+                                    <button data-post-id="<?= $postID ?>"
+                                        class="likeBtn p-2 hover:bg-gray-800 rounded-lg cursor-pointer
+                                        <?= $liked ? 'text-pink-400' : 'text-gray-400' ?>">
+                                        <i class="<?= $liked ? 'fa-solid fa-heart text-pink-400' : 'fa-regular fa-heart' ?> mr-2"></i>
+                                        <span class="likeCount font-medium"><?= htmlspecialchars($post->likes) ?></span>
                                     </button>
+
                                     <button
                                         class="p-2 text-gray-400 hover:text-purple-400 hover:bg-gray-800 rounded-lg">
                                         <i class="fa-regular fa-comment mr-2"></i>
@@ -198,11 +202,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
                             <div class="flex items-center justify-between mb-6">
                                 <div class="flex items-center gap-4">
-                                    <button id="likeBtn" data-post-id="<?= $postID ?>"
-                                        class="p-2 text-gray-400 hover:text-pink-400 hover:bg-gray-800 rounded-lg">
-                                        <i class="fa-regular fa-heart mr-2"></i>
-                                        <span class="font-medium"><?= htmlspecialchars($post->likes) ?></span>
+                                    <button
+                                        class="likeBtn p-2 text-gray-400 hover:text-pink-400 hover:bg-gray-800 rounded-lg cursor-pointer"
+                                        data-post-id="<?= $postID ?>">
+                                        <i class="<?= $liked ? 'fa-solid text-pink-400 fa-heart' : 'fa-regular fa-heart' ?> mr-2"></i>
+                                        <span class="likeCount font-medium"><?= htmlspecialchars($post->likes) ?></span>
                                     </button>
+
                                     <button
                                         class="p-2 text-gray-400 hover:text-purple-400 hover:bg-gray-800 rounded-lg">
                                         <i class="fa-regular fa-comment mr-2"></i>
@@ -299,30 +305,40 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             }
 
         });
-        likeBtn.addEventListener("click", async () => {
-            const formData = new FormData();
-            formData.append("action", "like");
+        document.querySelectorAll(".likeBtn").forEach(btn => {
+            btn.addEventListener("click", async () => {
+                const postId = btn.dataset.postId;
+                const formData = new FormData();
+                formData.append("action", "like");
 
-            const response = await fetch(window.location.href, {
-                method: "POST",
-                body: formData,
-                headers: { "X-Requested-With": "XMLHttpRequest" }
-            });
+                const response = await fetch(window.location.href, {
+                    method: "POST",
+                    body: formData,
+                    headers: {
+                        "X-Requested-With": "XMLHttpRequest"
+                    }
+                });
 
-            const result = await response.json();
-            if (result.success) {
-                likeCountEl.textContent = result.likes;
-                const icon = likeBtn.querySelector("i");
+                const result = await response.json();
+                if (result.success) {
+                    document.querySelectorAll(`.likeBtn[data-post-id="${postId}"] .likeCount`)
+                        .forEach(el => el.textContent = result.likes);
 
-                if (result.liked) {
-                    icon.classList.remove("fa-regular");
-                    icon.classList.add("fa-solid", "text-pink-400");
-                } else {
-                    icon.classList.add("fa-regular");
-                    icon.classList.remove("fa-solid", "text-pink-400");
+                    document.querySelectorAll(`.likeBtn[data-post-id="${postId}"] i`)
+                        .forEach(icon => {
+                            if (result.liked) {
+                                icon.classList.remove("fa-regular");
+                                icon.classList.add("fa-solid", "text-pink-400");
+                            } else {
+                                icon.classList.add("fa-regular");
+                                icon.classList.remove("fa-solid", "text-pink-400");
+                            }
+                        });
                 }
-            }
+            });
         });
+
+
         function renderComment(comment) {
             const noComments = document.getElementById("no-comments");
             const commentsContainer = document.getElementById("comments");

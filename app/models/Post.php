@@ -8,6 +8,20 @@ class Post
         $this->connection = $db;
     }
 
+    public function countPosts()
+    {
+        try {
+            $query = "SELECT COUNT(*) as total FROM post";
+            $stmt = $this->connection->prepare($query);
+            $stmt->execute();
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            return (int)($row['total'] ?? 0);
+        } catch (PDOException $e) {
+            return 0;
+        }
+    }
+
+
     public function getPostById($id)
     {
         $query = "SELECT p.id,
@@ -40,7 +54,6 @@ class Post
         $stmt->execute();
         $comments = $stmt->fetchAll(PDO::FETCH_OBJ);
 
-        // Añadir comentarios al objeto post
         $post->comments = $comments;
 
         return $post;
@@ -48,8 +61,9 @@ class Post
 
     public function getPosts($limit, $offset)
     {
-        // $query = "SELECT * FROM post";
-        $query = "SELECT p.id,
+        try {
+
+            $query = "SELECT p.id,
         p.userId,
         p.date,
         p.mediaUrl,
@@ -62,12 +76,15 @@ class Post
             ORDER BY p.date DESC
             LIMIT :limit OFFSET :offset;";
 
-        $stmt = $this->connection->prepare($query);
-        $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
-        $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
-        $stmt->execute();
+            $stmt = $this->connection->prepare($query);
+            $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+            $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+            $stmt->execute();
 
-        return $stmt->fetchAll(PDO::FETCH_OBJ);
+            return $stmt->fetchAll(PDO::FETCH_OBJ);
+        } catch (PDOException $e) {
+            return false;
+        }
     }
 
 

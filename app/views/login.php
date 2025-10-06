@@ -86,7 +86,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     <form id= "form" method="post" action="/login" class="space-y-6">
                         <div class="space-y-1">
                             <label for="text" class="block text-gray-300 text-sm font-medium">
-                                Email Address
+                                Username
                             </label>
                             <input
                                 id="username"

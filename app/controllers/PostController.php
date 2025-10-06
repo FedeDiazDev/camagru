@@ -56,8 +56,15 @@ class PostController
         $posts = $this->post->getPosts($limit, $offset);
         if (!$posts) {
             return json_encode([
-                'res' => false,
+                'res' => true,
                 'msg' => "Error getting posts"
+            ]);
+        }
+        if (empty($posts)) {
+            return json_encode([
+                'res' => true,
+                'msg' => [],
+                'info' => "No posts found"
             ]);
         }
         return json_encode([
@@ -130,5 +137,9 @@ class PostController
             'res' => true,
             "msg" => "Post deleted successfully"
         ]);
+    }
+    
+    public function countPosts() {
+        return $this->post->countPosts();
     }
 }

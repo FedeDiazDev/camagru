@@ -40,7 +40,8 @@ class PostController
                 'url' => $post->mediaUrl,
                 'author' => $post->author,
                 'likes' => $post->likes,
-                'comments' => $post->comments
+                'comments' => $post->comments,
+                'userId' => $post->userId
             ]
         ]);
     }

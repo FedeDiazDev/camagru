@@ -42,6 +42,20 @@ function formatTime($date)
     return $postDate->format('d M Y');
 }
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    if (isset($_POST['action']) && $_POST['action'] === 'delete_post') {
+        if ($post->userId !== $_SESSION['userId']) {
+            echo json_encode(["success" => false, "error" => "Unauthorized"]);
+            exit;
+        }
+
+        $deleted = $postControl->deletePost($postID);
+        if ($deleted) {
+            echo json_encode(["success" => true]);
+        } else {
+            echo json_encode(["success" => false, "error" => "Could not delete post"]);
+        }
+        exit;
+    }
 
     if (isset($_POST['comment'])) {
 
@@ -125,6 +139,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     <div class="aspect-square relative">
                         <img src="<?= htmlspecialchars($post->url) ?>" alt="Post image"
                             class="w-full h-full object-cover" />
+                        <?php if (isset($post->userId) && $post->userId == $_SESSION['userId']): ?>
+                            <form id="deletePostForm" method="POST" class="absolute top-4 right-4">
+                                <input type="hidden" name="action" value="delete_post">
+                                <button type="submit"
+                                    class="px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium transition">
+                                    <i class="fa-solid fa-trash mr-1"></i> Delete
+                                </button>
+                            </form>
+                        <?php endif; ?>
+
 
                         <div
                             class="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black/80 via-black/20 to-transparent">
@@ -291,6 +315,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         const form = document.getElementById("formComment");
         const likeBtn = document.getElementById("likeBtn");
         const likeCountEl = document.getElementById("likeCount");
+        const deleteForm = document.getElementById("deletePostForm");
+
         form.addEventListener("submit", async (e) => {
             e.preventDefault();
             const formData = new FormData(form);
@@ -337,7 +363,25 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 }
             });
         });
+        if (deleteForm) {
+            deleteForm.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                if (!confirm("Are you sure you want to delete this post?")) return;
 
+                const formData = new FormData(deleteForm);
+                const res = await fetch(window.location.href, {
+                    method: "POST",
+                    body: formData,
+                });
+                const result = await res.json();
+                if (result.success) {
+                    alert("Post deleted successfully.");
+                    window.location.href = "/gallery";
+                } else {
+                    alert(result.error || "Error deleting post.");
+                }
+            });
+        }
 
         function renderComment(comment) {
             const noComments = document.getElementById("no-comments");

@@ -30,10 +30,10 @@ $totalPages = ceil($totalPosts / $limit);
     </a>
 
     <header class="mb-8">
-        <h2 class="text-3xl font-bold text-white mb-2">Discover</h2>
-        <p class="text-gray-400">
+        <h2 class="text-3xl font-bold text-white mb-2">Gallery</h2>
+        <!-- <p class="text-gray-400">
             <?= $totalPosts > 0 ? "$totalPosts photos found" : "No photos yet" ?>
-        </p>
+        </p> -->
     </header>
 
     <main>
@@ -84,7 +84,7 @@ $totalPages = ceil($totalPosts / $limit);
             <?php endif; ?>
 
         <?php else: ?>
-            <p class="text-gray-400 text-center mt-20 text-lg">No se encontraron fotos.</p>
+            <p class="text-gray-400 text-center mt-20 text-lg">Not photos yet.</p>
         <?php endif; ?>
     </main>
 

@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     
     $userController = new UserController();
     $res = $userController->register($username, $email, $password, $confirmPassword);
-    header('Content-Type: application/json');
+    // header('Content-Type: application/json');
     echo $res;
     exit;
 }

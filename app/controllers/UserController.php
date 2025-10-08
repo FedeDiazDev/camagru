@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../../config/php/database.php';
 require_once __DIR__ . '/../models/User.php';
-
+require_once __DIR__ . '/../testmail.php';
 class UserController
 {
     private $user;
@@ -67,13 +67,20 @@ class UserController
                 'msg' => "Username already registered"
             ]);
         }
-
         if ($this->user->createUser($username, $email, $password)) {
             //TODO: enviar mail confirmacion
-            return json_encode([
-                'res' => true,
-                'msg' => "User registered succesfully"
-            ]);
+            $user = $this->user->getUserByUsername($username);           
+            if (sendVerificationEmail($user->email, $user->confirmationToken))
+            {
+                return json_encode([
+                    'res' => true,
+                    'msg' => "User registered succesfully"
+                ]);
+            }
+            return json_encode(([
+                    'res' => false,
+                    'msg' => "Error registering user"
+            ]));
         }
 
         return json_encode([

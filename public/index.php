@@ -38,6 +38,10 @@ switch ($request) {
     case '/password':
         include_once __DIR__ . '/../app/views/pages/forgotPassword.php';
         exit;
+    case '/verify':
+        include_once __DIR__ . '/../app/views/pages/verify.php';
+        exit;
+        
     default:
         http_response_code(404);
         include_once __DIR__ . '/./404.html';

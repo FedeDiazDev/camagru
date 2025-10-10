@@ -14,14 +14,16 @@ function sendVerificationEmail($toEmail, $token)
     $sendgrid = new \SendGrid(getenv('SENDGRID_API_KEY'));
     try {
         $response = $sendgrid->send($email);
-        printf("Response status: %d\n\n", $response->statusCode());
+        // printf("Response status: %d\n\n", $response->statusCode());
+        return $response->statusCode() === 202;
         $headers = array_filter($response->headers());
-        echo "Response Headers\n\n";
-        foreach ($headers as $header) {
-
-            echo '- ' . $header . "\n";
-        }
+        // echo "Response Headers\n\n";
+        // foreach ($headers as $header) {
+// 
+        // echo '- ' . $header . "\n";
+        // }
     } catch (Exception $e) {
         echo 'Caught exception: ' . $e->getMessage() . "\n";
+        return false;
     }
 }

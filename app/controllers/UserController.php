@@ -74,10 +74,12 @@ class UserController
 
         if ($this->user->createUser($username, $email, $password)) {
             $user = $this->user->getUserByUsername($username);
-            sendVerificationEmail($user->email, $user->confirmationToken);            
-            exit;
+            if (sendVerificationEmail($user->email, $user->confirmationToken)) {
+                return json_encode(['res' => true, 'msg' => "User registered successfully"]);
+            } else {
+                return json_encode(['res' => false, 'msg' => "Error sending verification email"]);
+            }
         }
-
         echo json_encode([
             'res' => false,
             'msg' => "Error registering user"
@@ -97,6 +99,13 @@ class UserController
         $user = $this->user->getUserByUsername($username);
         if (!password_verify($password, $user->password)) {
             return ['res' => false, 'msg' => "Wrong password"];
+        }
+        if ($user->emailConfirmed == 0)
+        {
+            return [
+                'res' => false,
+                'msg' => "Email not verified"
+            ];
         }
         return [
             'res' => true,

@@ -1,3 +1,4 @@
+<!-- checkear verificacion en verify.php y poner a 1 la flag de email verificacion-->
 <!DOCTYPE html>
 <html lang="en" class="bg-gradient-to-br from-gray-900 via-purple-900 to-black min-h-screen">
   <head>
@@ -7,8 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://kit.fontawesome.com/a2e0f5d2f3.js" crossorigin="anonymous"></script>
   </head>
-  <body class="text-gray-300">
-    <!-- Header -->
+  <body class="text-gray-300">    
     <header class="border-b border-gray-800 bg-black/50 backdrop-blur-xl">
       <div class="container mx-auto px-4 py-4 flex items-center justify-between">
         <a href="/" class="flex items-center gap-2">
@@ -29,29 +29,24 @@
         </a>
       </div>
     </header>
-
-    <!-- Main -->
+    
     <main class="flex items-center justify-center min-h-[calc(100vh-80px)] p-4">
-      <div class="w-full max-w-md bg-gray-900/80 border border-gray-800 backdrop-blur-xl rounded-2xl shadow-xl p-6 text-center">
-        <!-- ICON -->
+      <div class="w-full max-w-md bg-gray-900/80 border border-gray-800 backdrop-blur-xl rounded-2xl shadow-xl p-6 text-center">        
         <div id="icon" class="w-16 h-16 mx-auto mb-4 bg-purple-500/20 rounded-full flex items-center justify-center">
           <i class="fa-solid fa-spinner text-purple-400 text-2xl animate-spin"></i>
         </div>
-
-        <!-- TITLES -->
+        
         <h2 id="title" class="text-2xl lg:text-3xl text-white mb-2">Verifying Email...</h2>
         <p id="subtitle" class="text-gray-400 text-sm lg:text-base">
           Please wait while we verify your email address
         </p>
-
-        <!-- LOADING -->
+        
         <div id="loading" class="flex justify-center py-6 space-x-2">
           <div class="w-3 h-3 bg-purple-400 rounded-full animate-bounce"></div>
           <div class="w-3 h-3 bg-pink-400 rounded-full animate-bounce delay-100"></div>
           <div class="w-3 h-3 bg-purple-400 rounded-full animate-bounce delay-200"></div>
         </div>
-
-        <!-- SUCCESS (hidden by default) -->
+        
         <div id="success" class="hidden space-y-6">
           <div class="bg-green-500/10 border border-green-500/20 rounded-lg p-4 text-left">
             <div class="flex items-start gap-3">
@@ -99,8 +94,7 @@
             >
           </div>
         </div>
-
-        <!-- FOOTER -->
+        
         <div class="mt-8 pt-6 border-t border-gray-700 text-center text-xs text-gray-500">
           <p class="mb-2">Need help with verification?</p>
           <div class="flex justify-center gap-4">
@@ -111,10 +105,8 @@
         </div>
       </div>
     </main>
-
-    <!-- Optional JS to switch states -->
+    
     <script>
-      // Example: simulate verification success after 3 seconds
       setTimeout(() => {
         document.getElementById("loading").classList.add("hidden");
         document.getElementById("icon").innerHTML =

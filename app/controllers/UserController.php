@@ -41,53 +41,50 @@ class UserController
     public function register($username, $email, $password, $confirmPassword)
     {
         if ($password != $confirmPassword) {
-            return json_encode([
+            echo json_encode([
                 'res' => false,
                 'msg' => "Passwords don't match"
             ]);
+            exit;
         }
 
         if (empty($username) || empty($email) || empty($password) || empty($confirmPassword)) {
-            return json_encode([
+            echo json_encode([
                 'res' => false,
                 'msg' => "Empty fields"
             ]);
+            exit;
         }
 
         if ($this->user->getUserByEmail($email)) {
-            return json_encode([
+            echo json_encode([
                 'res' => false,
                 'msg' => "Email already registered"
             ]);
+            exit;
         }
 
         if ($this->user->getUserByUsername($username)) {
-            return json_encode([
+            echo json_encode([
                 'res' => false,
                 'msg' => "Username already registered"
             ]);
-        }
-        if ($this->user->createUser($username, $email, $password)) {
-            //TODO: enviar mail confirmacion
-            $user = $this->user->getUserByUsername($username);           
-            if (sendVerificationEmail($user->email, $user->confirmationToken))
-            {
-                return json_encode([
-                    'res' => true,
-                    'msg' => "User registered succesfully"
-                ]);
-            }
-            return json_encode(([
-                    'res' => false,
-                    'msg' => "Error registering user"
-            ]));
+            exit;
         }
 
-        return json_encode([
+        if ($this->user->createUser($username, $email, $password)) {
+            $user = $this->user->getUserByUsername($username);
+            sendVerificationEmail($user->email, $user->confirmationToken);            
+            exit;
+        }
+
+        echo json_encode([
             'res' => false,
             'msg' => "Error registering user"
         ]);
+        exit;
     }
+
 
     public function logIn($username, $password)
     {

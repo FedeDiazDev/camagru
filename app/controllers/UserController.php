@@ -116,7 +116,6 @@ class UserController
         ];
     }
 
-    //username, email, (password, new password(optional)) 
     public function updateUser($data)
     {
         $decodedData = json_decode($data);
@@ -190,7 +189,7 @@ class UserController
             ]);
         }
 
-        if ($this->user->verifyEmail($user->id)) {
+        if ($this->user->verifyEmail($token)) {
             return json_encode([
                 'res' => true,
                 'msg' => "Email verified successfully"

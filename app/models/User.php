@@ -96,14 +96,12 @@ class User
         return $stmt->fetch(PDO::FETCH_OBJ);
     }
 
-    public function verifyEmail($userId)
+    public function verifyEmail($confirmationToken)
     {
-        $stmt = $this->connection->prepare("
-        UPDATE user
-        SET emailConfirmed = 1, confirmationToken = NULL
-        WHERE confirmationToken = :token
-    ");
-        $stmt->execute(['id' => $userId]);
+        $stmt = $this->connection->prepare("UPDATE user SET emailConfirmed = 1, confirmationToken = NULL WHERE confirmationToken = :confirmationToken");
+        $stmt->bindParam(':confirmationToken', $confirmationToken);
+        $stmt->execute();
+        return $stmt->rowCount() > 0;
     }
 
 }

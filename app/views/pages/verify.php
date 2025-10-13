@@ -71,7 +71,7 @@ $jsonResult = json_encode($result);
 					<a href="/login"
 						class="block w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white text-center py-3 rounded-md font-medium transition">Sign
 						In to Your Account</a>
-					<a href="/"
+					<a href="/gallery"
 						class="block w-full border border-gray-600 text-gray-300 hover:bg-gray-800 hover:text-white py-3 rounded-md text-center font-medium transition">Explore
 						the Gallery</a>
 				</div>

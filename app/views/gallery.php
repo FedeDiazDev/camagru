@@ -71,7 +71,6 @@ $totalPages = ceil($totalPosts / $limit);
                     </div>
                 <?php endforeach; ?>
             </div>
-
             <?php if ($totalPages > 1): ?>
                 <div class="flex justify-center mt-10 space-x-2">
                     <?php for ($i = 1; $i <= $totalPages; $i++): ?>
@@ -82,7 +81,6 @@ $totalPages = ceil($totalPosts / $limit);
                     <?php endfor; ?>
                 </div>
             <?php endif; ?>
-
         <?php else: ?>
             <p class="text-gray-400 text-center mt-20 text-lg">Not photos yet.</p>
         <?php endif; ?>

@@ -41,6 +41,9 @@ switch ($request) {
     case '/verify':
         include_once __DIR__ . '/../app/views/pages/verify.php';
         exit;
+    case '/recover':
+        include_once __DIR__ . '/../app/views/pages/recover.php';
+        exit;
         
     default:
         http_response_code(404);

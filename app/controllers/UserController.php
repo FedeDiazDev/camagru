@@ -100,8 +100,7 @@ class UserController
         if (!password_verify($password, $user->password)) {
             return ['res' => false, 'msg' => "Wrong password"];
         }
-        if ($user->emailConfirmed == 0)
-        {
+        if ($user->emailConfirmed == 0) {
             return [
                 'res' => false,
                 'msg' => "Email not verified"
@@ -133,7 +132,6 @@ class UserController
                 'res' => false,
                 'msg' => "Password doesn't match"
             ]);
-
         }
         /**
          * * Si dejan otro campo vacío(email o username, ignorar y dejar los default?)
@@ -173,6 +171,35 @@ class UserController
             'res' => true,
             'msg' => "User updated"
         ]);
+    }
 
+    public function verifyEmail($token)
+    {
+        if (empty($token)) {
+            return json_encode([
+                'res' => false,
+                'msg' => "Missing token"
+            ]);
+        }
+
+        $user = $this->user->getUserByToken($token);
+        if (!$user) {
+            return json_encode([
+                'res' => false,
+                'msg' => "Invalid token"
+            ]);
+        }
+
+        if ($this->user->verifyEmail($user->id)) {
+            return json_encode([
+                'res' => true,
+                'msg' => "Email verified successfully"
+            ]);
+        } else {
+            return json_encode([
+                'res' => false,
+                'msg' => "Error verifying email"
+            ]);
+        }
     }
 }

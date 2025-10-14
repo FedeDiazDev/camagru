@@ -104,4 +104,23 @@ class User
         return $stmt->rowCount() > 0;
     }
 
+    public function setPasswordResetToken($email, $token, $expires)
+    {
+        $stmt = $this->connection->prepare("UPDATE user SET reset_token = ?, reset_expires = ? WHERE email = ?");
+        return $stmt->execute([$token, $expires, $email]);
+    }
+
+    public function getUserByResetToken($token)
+    {
+        $stmt = $this->connection->prepare("SELECT * FROM user WHERE reset_token = ? AND reset_expires > NOW()");
+        $stmt->execute([$token]);
+        return $stmt->fetch();
+    }
+
+    public function updatePassword($userId, $newPassword)
+    {
+        $hashed = password_hash($newPassword, PASSWORD_BCRYPT);
+        $stmt = $this->connection->prepare("UPDATE user SET password = ?, reset_token = NULL, reset_expires = NULL WHERE id = ?");
+        return $stmt->execute([$hashed, $userId]);
+    }
 }

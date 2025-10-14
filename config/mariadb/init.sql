@@ -11,7 +11,9 @@ CREATE TABLE IF NOT EXISTS user (
     password VARCHAR(255) NOT NULL,
     confirmationToken VARCHAR(255),
     emailPreference BOOLEAN NOT NULL DEFAULT 1,
-	emailConfirmed BOOLEAN NOT NULL DEFAULT 0
+	emailConfirmed BOOLEAN NOT NULL DEFAULT 0,
+    reset_token VARCHAR(64) DEFAULT NULL,
+    reset_expires DATETIME DEFAULT NULL
 );
 
 CREATE TABLE IF NOT EXISTS post (

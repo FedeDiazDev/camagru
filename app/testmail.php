@@ -3,14 +3,13 @@ require __DIR__ . '/../../vendor/autoload.php';
 
 function sendVerificationEmail($toEmail, $token)
 {
-	$email = new \SendGrid\Mail\Mail();
-	$email->setFrom("federicojose2000@gmail.com", "Camagru");
-	$email->setSubject("Confirma tu correo electrónico");
-	$email->addTo($toEmail);
-	//*Si uso "text/html" puedo usar hmtl y formatear el texto
-	$email->addContent(
-		"text/html",
-		"
+  $email = new \SendGrid\Mail\Mail();
+  $email->setFrom("federicojose2000@gmail.com", "Camagru");
+  $email->setSubject("Confirma tu correo electrónico");
+  $email->addTo($toEmail);
+  $email->addContent(
+    "text/html",
+    "
     <!DOCTYPE html>
     <html lang='es'>
       <head>
@@ -53,27 +52,27 @@ function sendVerificationEmail($toEmail, $token)
       </body>
     </html>
     "
-	);
+  );
 
-	$sendgrid = new \SendGrid(getenv('SENDGRID_API_KEY'));
-	try {
-		$response = $sendgrid->send($email);
-		return $response->statusCode() === 202;
-	} catch (Exception $e) {
-		echo 'Caught exception: ' . $e->getMessage() . "\n";
-		return false;
-	}
+  $sendgrid = new \SendGrid(getenv('SENDGRID_API_KEY'));
+  try {
+    $response = $sendgrid->send($email);
+    return $response->statusCode() === 202;
+  } catch (Exception $e) {
+    echo 'Caught exception: ' . $e->getMessage() . "\n";
+    return false;
+  }
 }
 
 function recoverPassword($toEmail, $token)
 {
-	$email = new \SendGrid\Mail\Mail();
-	$email->setFrom("federicojose2000@gmail.com", "Camagru");
-	$email->setSubject("Recupera tu contraseña");
-	$email->addTo($toEmail);
-	$email->addContent(
-		"text/html",
-		"<html>
+  $email = new \SendGrid\Mail\Mail();
+  $email->setFrom("federicojose2000@gmail.com", "Camagru");
+  $email->setSubject("Recupera tu contraseña");
+  $email->addTo($toEmail);
+  $email->addContent(
+    "text/html",
+    "<html>
         <body style='font-family: Arial, sans-serif; background-color: #f9f9f9; margin: 0; padding: 40px;'>
             <div style='max-width: 600px; margin: auto; background: #ffffff; border-radius: 8px; padding: 20px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);'>
                 <h2 style='color: #333;'>Recupera tu contraseña</h2>
@@ -99,34 +98,60 @@ function recoverPassword($toEmail, $token)
             </div>
         </body>
         </html>"
-	);
-	$sendgrid = new \SendGrid(getenv('SENDGRID_API_KEY'));
-	try {
-		$response = $sendgrid->send($email);
-		return $response->statusCode() === 202;
-	} catch (Exception $e) {
-		echo 'Caught exception: ' . $e->getMessage() . "\n";
-		return false;
-	}
-
-}
-function sendCommentNotification($toEmail)
-{
-	$email = new \SendGrid\Mail\Mail();
-	$email->setFrom("federicojose2000@gmail.com", "Camagru");
-	$email->setSubject("Has recibido un comentario en un post");
-  $email->addTo($toEmail);
-  $email->addContent(
-    "text/html",
-    ""
   );
   $sendgrid = new \SendGrid(getenv('SENDGRID_API_KEY'));
   try {
     $response = $sendgrid->send($email);
     return $response->statusCode() === 202;
-  } catch(Exception $e) {
+  } catch (Exception $e) {
     echo 'Caught exception: ' . $e->getMessage() . "\n";
     return false;
   }
-	
+
+}
+function sendCommentNotification($toEmail, $username, $commenter, $postTitle, $postLink)
+{
+  $email = new \SendGrid\Mail\Mail();
+  $email->setFrom("federicojose2000@gmail.com", "Camagru");
+  $email->setSubject("$commenter ha comentado tu post!");
+  $email->addTo($toEmail);
+  $email->addContent(
+    "text/html",
+    " <html>
+        <body style='font-family: Arial, sans-serif; background-color: #f9f9f9; margin: 0; padding: 40px;'>
+            <div style='max-width: 600px; margin: auto; background: #ffffff; border-radius: 8px; padding: 20px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);'>
+                <h2 style='color: #333;'>¡Tienes un nuevo comentario!</h2>
+                <p style='font-size: 16px; color: #555;'>
+                    Hola <strong>$username</strong>,
+                </p>
+                <p style='font-size: 16px; color: #555;'>
+                    <strong>$commenter</strong> ha dejado un comentario en tu publicación 
+                    <strong>\"$postTitle\"</strong>.
+                </p>
+                <div style='text-align: center; margin: 30px 0;'>
+                    <a href='$postLink' 
+                        style='background-color: #8B5CF6; color: white; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: bold;'>
+                        Ver comentario
+                    </a>
+                </div>
+                <p style='font-size: 14px; color: #888;'>
+                    Responde al comentario o revisa la conversación desde tu cuenta en Camagru.
+                </p>
+                <hr style='border: none; border-top: 1px solid #eee; margin: 20px 0;'>
+                <p style='font-size: 12px; color: #aaa; text-align: center;'>
+                    © " . date('Y') . " Camagru. Todos los derechos reservados.
+                </p>
+            </div>
+        </body>
+        </html>"
+  );
+  $sendgrid = new \SendGrid(getenv('SENDGRID_API_KEY'));
+  try {
+    $response = $sendgrid->send($email);
+    return $response->statusCode() === 202;
+  } catch (Exception $e) {
+    echo 'Caught exception: ' . $e->getMessage() . "\n";
+    return false;
+  }
+
 }

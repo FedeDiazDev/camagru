@@ -59,7 +59,7 @@ $totalPages = ceil($totalPosts / $limit);
                                             <i class="fas fa-heart w-4 h-4"></i>
                                             <span class="text-sm"><?= htmlspecialchars($post->likes ?? 0) ?></span>
                                         </div>
-                                        <div class="flex items-center gap-1 text-purple-400">
+                                        <div class="flex items-center gap-1 text-purple-400">º
                                             <i class="fas fa-comment-dots w-4 h-4"></i>
                                             <span class="text-sm"><?= htmlspecialchars($post->comments ?? 0) ?></span>
                                         </div>

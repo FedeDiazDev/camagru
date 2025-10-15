@@ -53,9 +53,9 @@ class CommentController
         {            
             $postController = new PostController();
             $userController = new UserController();
-            $post = $postController->getPostById($postId);            
-            $user = $userController->getUserById($post->author);
-            $commenter = $userController->getUserById($$userCommentId);
+            $post = json_decode($postController->getPostById($postId));
+            $user = json_decode($userController->getUserById($post->author));
+            $commenter = json_decode($userController->getUserById($$userCommentId));
             if ($user->emailPreference)
             {
                 if (!sendCommentNotification($user->email, $user->username, $commenter->username,$post->title, "http://localhost:8081/post?id=$post->id"))

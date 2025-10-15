@@ -1,6 +1,9 @@
 <?php
 require_once __DIR__ . '/../../config/php/database.php';
 require_once __DIR__ . '/../models/Comment.php';
+require_once __DIR__ . '/../controllers/PostController.php';
+require_once __DIR__ . '/../controllers/UserController.php';
+require_once __DIR__ . '/../testmail.php';
 
 class CommentController
 {
@@ -47,7 +50,22 @@ class CommentController
             ]);
         }
         if ($this->comment->addComment($postId, $comment, $userCommentId))
-        {
+        {            
+            $postController = new PostController();
+            $userController = new UserController();
+            $post = $postController->getPostById($postId);            
+            $user = $userController->getUserById($post->author);
+            $commenter = $userController->getUserById($$userCommentId);
+            if ($user->emailPreference)
+            {
+                if (!sendCommentNotification($user->email, $user->username, $commenter->username,$post->title, "http://localhost:8081/post?id=$post->id"))
+                {
+                    return json_encode([
+                    'res' => false,
+                    'msg' => "Error sending notification"
+                ]);
+            }
+            }
             return json_encode([
                 'res' => true,
                 'msg' => "Comment added"

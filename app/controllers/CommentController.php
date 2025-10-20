@@ -49,22 +49,22 @@ class CommentController
                 'msg' => "Missing postId"
             ]);
         }
-        if ($this->comment->addComment($postId, $comment, $userCommentId))
-        {            
+        if ($this->comment->addComment($postId, $comment, $userCommentId)) {
             $postController = new PostController();
             $userController = new UserController();
-            $post = json_decode($postController->getPostById($postId));
-            $user = json_decode($userController->getUserById($post->author));
-            $commenter = json_decode($userController->getUserById($$userCommentId));
-            if ($user->emailPreference)
-            {
-                if (!sendCommentNotification($user->email, $user->username, $commenter->username,$post->title, "http://localhost:8081/post?id=$post->id"))
-                {
+            $postResponse = json_decode($postController->getPostById($postId));
+            $post = $postResponse->msg;
+            $userResponse = json_decode($userController->getUserById($post->userId));
+            $user = $userResponse->msg;
+            $commenterResponse = json_decode($userController->getUserById($userCommentId));
+            $commenter = $commenterResponse->msg;
+            if ($user->emailPreference) {
+                if (!sendCommentNotification($user->email, $user->username, $commenter->username, $post->title, "http://localhost:8081/post?id=$post->id")) {
                     return json_encode([
-                    'res' => false,
-                    'msg' => "Error sending notification"
-                ]);
-            }
+                        'res' => false,
+                        'msg' => "Error sending notification"
+                    ]);
+                }
             }
             return json_encode([
                 'res' => true,
@@ -75,6 +75,6 @@ class CommentController
         return json_encode([
             'res' => false,
             'msg' => "Couldn't post the comment"
-        ]) ;
+        ]);
     }
 }

@@ -34,7 +34,7 @@ class UserController
                 'id' => $user->id,
                 'username' => $user->username,
                 'email' => $user->email,
-                'notification' => $user->emailPreference
+                'emailPreference' => $user->emailPreference,
             ]
         ]);
     }

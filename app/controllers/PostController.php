@@ -27,10 +27,6 @@ class PostController
                 'msg' => "Couldn't get the post"
             ]);
         }
-        // return json_encode([
-        //     'res' => true,
-        //     'msg' => $post
-        // ]);
         return json_encode([
             'res' => true,
             'msg' => [

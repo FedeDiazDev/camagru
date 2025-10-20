@@ -203,7 +203,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 </div>
                 <div class="col-span-2">
                     <label for="notifications" class="flex items-center gap-3 text-sm text-gray-300">
-                        <input id="notifications" type="checkbox" name="notifications" value="1" <?= ($user['msg']['notification'] == 1) ? 'checked' : '' ?> disabled
+                        <input id="notifications" type="checkbox" name="notifications" value="1" <?= ($user['msg']['emailPreference'] == 1) ? 'checked' : '' ?> disabled
                             class="w-5 h-5 text-purple-600 bg-gray-900/50 border-gray-700 rounded focus:ring-purple-500 cursor-not-allowed">
                         <span>Quiero recibir notificaciones por correo electrónico</span>
                     </label>

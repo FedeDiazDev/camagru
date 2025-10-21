@@ -206,9 +206,9 @@ class UserController
         return $this->user->setPasswordResetToken($email, $token, $expire);
     }
 
-    public function getUserByToken($token)
+    public function getUserByResetToken($token)
     {
-        $user = $this->user->getUserByToken($token);
+        $user = $this->user->getUserByResetToken($token);
         if (!$user) {
             return json_encode([
                 'res' => false,

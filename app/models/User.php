@@ -89,14 +89,6 @@ class User
         }
         return false;
     }
-    public function getUserByToken($token)
-    {
-        $stmt = $this->connection->prepare("SELECT * FROM user WHERE reset_token = :token");
-        $stmt->bindParam(':token', $token);
-        $stmt->execute();
-        $user = $stmt->fetch(PDO::FETCH_OBJ);
-        return $user ? $user : false;
-    }
 
 
     public function verifyEmail($confirmationToken)
@@ -124,12 +116,23 @@ class User
         }
     }
 
+    public function getUserByToken($token)
+    {
+        $stmt = $this->connection->prepare("SELECT * FROM user WHERE confirmationToken = :token");
+        $stmt->bindParam(':token', $token);
+        $stmt->execute();
+        $user = $stmt->fetch(PDO::FETCH_OBJ);
+        return $user ? $user : false;
+    }
+
 
     public function getUserByResetToken($token)
     {
-        $stmt = $this->connection->prepare("SELECT * FROM user WHERE reset_token = ? AND reset_expires > NOW()");
-        $stmt->execute([$token]);
-        return $stmt->fetch();
+       $stmt = $this->connection->prepare("SELECT * FROM user WHERE reset_token = :token");
+        $stmt->bindParam(':token', $token);
+        $stmt->execute();
+        $user = $stmt->fetch(PDO::FETCH_OBJ);
+        return $user ? $user : false;
     }
 
     public function updatePassword($userId, $newPassword)

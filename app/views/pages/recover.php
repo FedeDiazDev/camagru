@@ -14,7 +14,7 @@ if (!$token) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $userController = new UserController();
-    $userRes = json_decode($userController->getUserByToken($token));
+    $userRes = json_decode($userController->getUserByResetToken($token));
     $user = $userRes->msg;
     if (!$user) {
         die('Invalid or expired token');

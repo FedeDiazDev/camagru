@@ -1,4 +1,45 @@
 <?php
+require_once __DIR__ . '/../../testmail.php';
+require_once __DIR__ . '/../../controllers/UserController.php';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+
+    $userController = new UserController();
+    header('Content-Type: application/json');
+
+    $input = json_decode(file_get_contents("php://input"), true);
+
+    if (!$input || !isset($input['action'])) {
+        echo json_encode(['success' => false, 'msg' => 'Invalid request']);
+        exit;
+    }
+
+    if ($input['action'] === 'recoverPassword') {
+        $email = trim($input['email'] ?? '');
+        if (empty($email)) {
+            echo json_encode(['success' => false, 'msg' => 'Email is required']);
+            exit;
+        }
+
+        $token = bin2hex(random_bytes(32));
+        // $expires = date('Y-m-d H:i:s', strtotime('+1 hour'));
+        $res = $userController->setPasswordResetToken($email, $token, NULL);
+
+        if ($res) {
+            if (recoverPassword($email, $token)) {
+                echo json_encode(['success' => true, 'msg' => 'Password reset email sent']);
+            } else {
+                echo json_encode(['success' => false, 'msg' => 'Failed to send email']);
+            }
+        } else {
+            echo json_encode(['success' => false, 'msg' => 'Email not found']);
+        }
+        exit;
+    }
+
+    echo json_encode(['success' => false, 'msg' => 'Unknown action']);
+}
 
 ?>
 
@@ -98,7 +139,7 @@
                     No worries! Enter your email and we'll send you reset instructions
                 </p>
 
-                <form class="space-y-6 text-left">
+                <form class="space-y-6 text-left" method="post" action="/password">
                     <div class="space-y-2">
                         <label for="email" class="text-gray-300 text-sm lg:text-base">Email Address</label>
                         <input type="email" id="email" placeholder="Enter your email address"
@@ -136,5 +177,47 @@
         </div>
     </div>
 </body>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const form = document.querySelector("form");
+        const emailInput = document.getElementById("email");
+        const button = form.querySelector("button[type='submit']");
+
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const email = emailInput.value.trim();
+            if (!email) return alert("Please enter your email.");
+
+            button.disabled = true;
+            button.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> Sending...`;
+
+            try {
+                const res = await fetch(form.action, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        action: "recoverPassword",
+                        email
+                    })
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    console.log("Email sent successfully! Check your inbox.");
+                } else {
+                    console.log((data.msg || "Something went wrong."));
+                }
+            } catch (err) {
+                console.log("Error: " + err.message);
+            }
+
+            button.disabled = false;
+            button.innerHTML = `<i class="fa-solid fa-envelope mr-2"></i> Send Reset Link`;
+        });
+    });
+</script>
 
 </html>

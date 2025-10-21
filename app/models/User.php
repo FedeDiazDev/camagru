@@ -91,10 +91,13 @@ class User
     }
     public function getUserByToken($token)
     {
-        $stmt = $this->connection->prepare("SELECT * FROM user WHERE confirmationToken = :token");
-        $stmt->execute(['token' => $token]);
-        return $stmt->fetch(PDO::FETCH_OBJ);
+        $stmt = $this->connection->prepare("SELECT * FROM user WHERE reset_token = :token");
+        $stmt->bindParam(':token', $token);
+        $stmt->execute();
+        $user = $stmt->fetch(PDO::FETCH_OBJ);
+        return $user ? $user : false;
     }
+
 
     public function verifyEmail($confirmationToken)
     {
@@ -106,9 +109,21 @@ class User
 
     public function setPasswordResetToken($email, $token, $expires)
     {
-        $stmt = $this->connection->prepare("UPDATE user SET reset_token = ?, reset_expires = ? WHERE email = ?");
-        return $stmt->execute([$token, $expires, $email]);
+        try {
+            $stmt = $this->connection->prepare("
+            UPDATE user 
+            SET reset_token = ?, reset_expires = ? 
+            WHERE email = ?
+        ");
+            $stmt->execute([$token, $expires, $email]);
+
+            return $stmt->rowCount() > 0;
+        } catch (PDOException $e) {
+            error_log("Error setting password reset token: " . $e->getMessage());
+            return false;
+        }
     }
+
 
     public function getUserByResetToken($token)
     {
@@ -119,8 +134,14 @@ class User
 
     public function updatePassword($userId, $newPassword)
     {
-        $hashed = password_hash($newPassword, PASSWORD_BCRYPT);
-        $stmt = $this->connection->prepare("UPDATE user SET password = ?, reset_token = NULL, reset_expires = NULL WHERE id = ?");
-        return $stmt->execute([$hashed, $userId]);
+        $hashed_pass = password_hash($newPassword, PASSWORD_DEFAULT);
+        $stmt = $this->connection->prepare("UPDATE user SET password = :password, reset_token = NULL, reset_expires = NULL WHERE id = :id");
+        $stmt->bindParam(':password', $hashed_pass, PDO::PARAM_STR);
+        $stmt->bindParam(':id', $userId);
+
+        if ($stmt->execute()) {
+            return true;
+        }
+        return false;
     }
 }

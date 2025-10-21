@@ -201,4 +201,32 @@ class UserController
             ]);
         }
     }
+    public function setPasswordResetToken($email, $token, $expire)
+    {
+        return $this->user->setPasswordResetToken($email, $token, $expire);
+    }
+
+    public function getUserByToken($token)
+    {
+        $user = $this->user->getUserByToken($token);
+        if (!$user) {
+            return json_encode([
+                'res' => false,
+                'msg' => "Invalid token"
+            ]);
+        }
+        return json_encode([
+            'res' => true,
+            'msg' => [
+                'id' => $user->id,
+                'username' => $user->username,
+                'email' => $user->email,
+            ]
+        ]);
+    }
+
+    public function updatePassword($userId, $password)
+    {
+        return $this->user->updatePassword($userId, $password);
+    }
 }

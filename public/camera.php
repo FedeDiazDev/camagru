@@ -39,22 +39,13 @@ if (!is_dir($uploadDir)) {
     }
 }
 
-$fileName = uniqid('photo_', true) . '.png';
-$filePath = $uploadDir . $fileName;
-
-if (file_put_contents($filePath, $decodedImage) === false) {
-    http_response_code(500);
-    echo json_encode(["error" => "Error al guardar la imagen"]);
-    exit;
-}
-
-$mediaUrl = '/uploads/' . $fileName;
+$mediaData = $decodedImage;
 
 $postController = new PostController();
-$postId = $postController->createPost($userId, $title, $mediaUrl);
+$postId = $postController->createPost($userId, $title, $mediaData);
 
 echo json_encode([
     "success" => true,
     "postId" => $postId,
-    "url" => $mediaUrl
+    "url" => $mediaData
 ]);

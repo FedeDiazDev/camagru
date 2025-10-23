@@ -117,7 +117,7 @@ class Post
 
         $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
         $stmt->bindParam(':title', $title, PDO::PARAM_STR);
-        $stmt->bindParam(':mediaUrl', $mediaUrl, PDO::PARAM_STR);
+        $stmt->bindParam(':mediaUrl', $mediaUrl, PDO::PARAM_LOB);
 
         $stmt->execute();
         return $this->connection->lastInsertId();

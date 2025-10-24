@@ -313,7 +313,12 @@ function createFilterButtons() {
 }
 
 function savePhoto(title) {
+
     const imageData = canvas.toDataURL('image/png');
+
+    // Opcional: quitar el prefijo "data:image/png;base64," y enviarlo limpio
+    const base64Image = imageData.split(',')[1];
+    console.log("Tamaño Base64:", base64Image.length); // Debería ser >100k
 
     fetch('/camera.php', {
         method: 'POST',

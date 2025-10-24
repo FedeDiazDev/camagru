@@ -62,30 +62,35 @@ class Post
     public function getPosts($limit, $offset)
     {
         try {
-
             $query = "SELECT p.id,
-        p.userId,
-        p.date,
-        p.mediaUrl,
-        u.username AS author,
-        COUNT(l.id) AS likes
-            FROM post p
-            JOIN user u ON p.userId = u.id
-            LEFT JOIN likes l ON l.postId = p.id
-            GROUP BY p.id, p.userId, p.date, p.mediaUrl, u.username
-            ORDER BY p.date DESC
-            LIMIT :limit OFFSET :offset;";
+                         p.userId,
+                         p.date,
+                         u.username AS author,
+                         COUNT(l.id) AS likes
+                  FROM post p
+                  JOIN user u ON p.userId = u.id
+                  LEFT JOIN likes l ON l.postId = p.id
+                  GROUP BY p.id, p.userId, p.date, u.username
+                  ORDER BY p.date DESC
+                  LIMIT :limit OFFSET :offset;";
 
             $stmt = $this->connection->prepare($query);
             $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
             $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
             $stmt->execute();
 
-            return $stmt->fetchAll(PDO::FETCH_OBJ);
+            $posts = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+            foreach ($posts as $post) {
+                $post->mediaUrl = "/get_image.php?id=" . $post->id;
+            }
+
+            return $posts;
         } catch (PDOException $e) {
             return false;
         }
     }
+
 
 
     public function getUserPosts($userId, $limit, $offset)

@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS post (
     userId INT,
     title VARCHAR(255) NOT NULL,
     date DATETIME NOT NULL,
-    mediaUrl VARCHAR(255),
+    mediaUrl LONGBLOB,
     FOREIGN KEY (userId) REFERENCES user(id)
 );
 

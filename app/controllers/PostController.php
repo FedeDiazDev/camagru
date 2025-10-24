@@ -50,13 +50,16 @@ class PostController
                 'msg' => "Error on pagination"
             ]);
         }
+
         $posts = $this->post->getPosts($limit, $offset);
-        if (!$posts) {
+
+        if ($posts === false) {
             return json_encode([
-                'res' => true,
-                'msg' => "Error getting posts"
+                'res' => false,
+                'msg' => "Database error"
             ]);
         }
+
         if (empty($posts)) {
             return json_encode([
                 'res' => true,
@@ -64,11 +67,13 @@ class PostController
                 'info' => "No posts found"
             ]);
         }
+
         return json_encode([
             'res' => true,
             'msg' => $posts
         ]);
     }
+
 
     public function getUserPosts($userId, $limit, $offset)
     {
@@ -135,8 +140,9 @@ class PostController
             "msg" => "Post deleted successfully"
         ]);
     }
-    
-    public function countPosts() {
+
+    public function countPosts()
+    {
         return $this->post->countPosts();
     }
 }

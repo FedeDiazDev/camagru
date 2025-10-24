@@ -13,6 +13,8 @@ require_once __DIR__ . '/../../controllers/LikeController.php';
 $postControl = new PostController();
 $postID = $_GET['id'];
 $dataPost = json_decode($postControl->getPostById($postID));
+echo $dataPost;
+die();
 $post = $dataPost->msg;
 
 function formatTime($date)

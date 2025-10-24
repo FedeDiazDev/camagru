@@ -92,7 +92,6 @@ class Post
     }
 
 
-
     public function getUserPosts($userId, $limit, $offset)
     {
         $query = "SELECT p.*, u.username AS author,

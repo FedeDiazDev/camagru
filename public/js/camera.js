@@ -235,7 +235,8 @@ function sharePhoto() {
     //     alert("Por favor, añade al menos un sticker antes de tomar la foto.");
     //     return;
     // }
-    savePhoto("Sin título")
+    alert("PHOOOOOOOOOOOTO");
+    savePhoto("Sin título");
     // if (navigator.share) {
     //     navigator.share({
     //         title: 'Dark Studio Photo',
@@ -257,25 +258,33 @@ function dataURLtoFile(dataurl, filename) {
 }
 
 function handleUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
 
-    const file = event.target.files[0]
-    if (!file) return
-    const reader = new FileReader()
+    const reader = new FileReader();
     reader.onload = (e) => {
-        capturedImage.src = e.target.result
-        capturedImage.classList.remove('hidden')
-        video.classList.add('hidden')
+        capturedImage.src = e.target.result;
+        capturedImage.classList.remove('hidden');
+        video.classList.add('hidden');
 
-        clearAllMovableStickers()
-        startCameraBtn.classList.remove('hidden')
-        captureBtn.classList.add('hidden')
-        retakeBtn.classList.remove('hidden')
-        downloadBtn.classList.remove('hidden')
-        shareBtn.classList.remove('hidden')
+        capturedImage.onload = () => {
+            canvas.width = capturedImage.naturalWidth;
+            canvas.height = capturedImage.naturalHeight;
+            ctx.filter = getFilterStyle();
+            ctx.drawImage(capturedImage, 0, 0, canvas.width, canvas.height);
+            ctx.filter = 'none';
+        };
 
-    }
-    reader.readAsDataURL(file)
+        clearAllMovableStickers();
+        startCameraBtn.classList.remove('hidden');
+        captureBtn.classList.add('hidden');
+        retakeBtn.classList.remove('hidden');
+        downloadBtn.classList.remove('hidden');
+        shareBtn.classList.remove('hidden');
+    };
+    reader.readAsDataURL(file);
 }
+
 
 function createStickerButtons() {
     stickersContainer.innerHTML = ''
@@ -318,7 +327,8 @@ function savePhoto(title) {
 
     // Opcional: quitar el prefijo "data:image/png;base64," y enviarlo limpio
     const base64Image = imageData.split(',')[1];
-    console.log("Tamaño Base64:", base64Image.length); // Debería ser >100k
+    alert("HOLA");
+    console.log("Tamaño Base64:", base64Image.length);
 
     fetch('/camera.php', {
         method: 'POST',
@@ -344,15 +354,15 @@ function savePhoto(title) {
 }
 
 
-startCameraBtn.addEventListener('click', startCamera)
-captureBtn.addEventListener('click', capturePhoto)
-retakeBtn.addEventListener('click', retakePhoto)
-downloadBtn.addEventListener('click', downloadPhoto)
-shareBtn.addEventListener('click', sharePhoto)
-uploadInput.addEventListener('change', handleUpload)
+startCameraBtn.addEventListener('click', startCamera);
+captureBtn.addEventListener('click', capturePhoto);
+retakeBtn.addEventListener('click', retakePhoto);
+downloadBtn.addEventListener('click', downloadPhoto);
+shareBtn.addEventListener('click', sharePhoto);
+uploadInput.addEventListener('change', handleUpload);
 
-brightnessInput.addEventListener('input', e => updateBrightness(e.target.value))
-contrastInput.addEventListener('input', e => updateContrast(e.target.value))
+brightnessInput.addEventListener('input', e => updateBrightness(e.target.value));
+contrastInput.addEventListener('input', e => updateContrast(e.target.value));
 
 createStickerButtons()
 createFilterButtons()

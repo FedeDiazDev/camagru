@@ -34,8 +34,6 @@ if ($decodedImage === false) {
     echo json_encode(["success" => false, "error" => "Base64 inválido"]);
     exit;
 }
-file_put_contents(__DIR__ . '/uploads/test.png', $decodedImage);
-echo strlen($decodedImage);
 
 $postController = new PostController();
 $postId = $postController->createPost($userId, $title, $decodedImage);

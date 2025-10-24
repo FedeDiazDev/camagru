@@ -15,11 +15,9 @@ if ($id <= 0) {
 }
 
 try {
-    // Ajusta según tu clase Database. En tu proyecto usas new Database()->connect() en varios sitios.
     $db = new Database();
     $pdo = $db->connect();
 
-    // Obtén la longitud también para Content-Length
     $stmt = $pdo->prepare("SELECT OCTET_LENGTH(mediaUrl) AS len, mediaUrl FROM post WHERE id = :id LIMIT 1");
     $stmt->bindParam(':id', $id, PDO::PARAM_INT);
     $stmt->execute();
@@ -37,8 +35,7 @@ try {
         http_response_code(404);
         exit('Empty image');
     }
-
-    // Detectar MIME por las cabeceras mágicas
+    
     $mime = 'application/octet-stream';
     if (substr($blob, 0, 8) === "\x89PNG\x0D\x0A\x1A\x0A") {
         $mime = 'image/png';
@@ -48,16 +45,14 @@ try {
         $mime = 'image/gif';
     }
 
-    // Limpiar buffers previos (si hay output accidental lo eliminamos)
     while (ob_get_level()) ob_end_clean();
 
     header("Content-Type: {$mime}");
     header("Content-Length: {$len}");
-    header("Cache-Control: public, max-age=31536000"); // opcional
+    header("Cache-Control: public, max-age=31536000");
     echo $blob;
     exit;
-} catch (PDOException $e) {
-    // En producción no muestres el mensaje completo; para depuración temporal sí.
+} catch (PDOException $e) {    
     http_response_code(500);
     echo "DB error: " . $e->getMessage();
     exit;

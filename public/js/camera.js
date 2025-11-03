@@ -21,7 +21,12 @@ const filtersContainer = document.getElementById('filters')
 
 const imageContainer = document.getElementById('imageContainer')
 
-const darkStickers = ["🌙", "💀", "🖤", "⚡", "🔮", "🌟", "👁️", "🕷️", "🦇", "🔥", "💜", "🌌"]
+const darkStickers = [
+    { src: "/images/calabaza.png", name: "pumpkin" },
+    { src: "/images/fantasma.png", name: "ghost" },
+    { src: "/images/ojo.png", name: "eye" },
+    { src: "/images/murcielago.png", name: "bat" },
+];
 const filters = [
     { name: "none", label: "Original" },
     { name: "noir", label: "Noir" },
@@ -113,14 +118,16 @@ function clearAllMovableStickers() {
     movableStickers = []
 }
 
-function addMovableSticker(stickerEmoji) {
-    const sticker = document.createElement('span')
-    sticker.className = 'movable-sticker'
-    sticker.textContent = stickerEmoji
-    sticker.style.position = 'absolute'
-    sticker.style.fontSize = '48px'
-    sticker.style.cursor = 'move'
-    sticker.style.userSelect = 'none'
+function addMovableSticker(stickerSrc) {
+    const sticker = document.createElement('img');
+    sticker.src = stickerSrc;
+    sticker.className = 'movable-sticker';
+    sticker.style.position = 'absolute';
+    sticker.style.width = '64px';
+    sticker.style.height = '64px';
+    sticker.style.cursor = 'move';
+    sticker.style.userSelect = 'none';
+
 
     const baseWidth = capturedImage.clientWidth || 640;
     const baseHeight = capturedImage.clientHeight || 480;
@@ -140,7 +147,7 @@ function addMovableSticker(stickerEmoji) {
 
     imageContainer.appendChild(sticker)
 
-    movableStickers.push({ element: sticker, emoji: stickerEmoji, x: parseFloat(sticker.style.left), y: parseFloat(sticker.style.top) })
+    movableStickers.push({ element: sticker, emoji: stickerSrc, x: parseFloat(sticker.style.left), y: parseFloat(sticker.style.top) })
 }
 
 window.addEventListener('mouseup', () => {
@@ -189,9 +196,17 @@ function capturePhoto() {
     const scaleY = realHeight / displayHeight;
 
     movableStickers.forEach(sticker => {
-        ctx.font = '48px Arial';
-        ctx.fillText(sticker.emoji, sticker.x * scaleX, (sticker.y + 40) * scaleY);
+        const img = new Image();
+        img.src = sticker.element.src;
+        ctx.drawImage(
+            img,
+            sticker.x * scaleX,
+            sticker.y * scaleY,
+            sticker.element.width * scaleX,
+            sticker.element.height * scaleY
+        );
     });
+
 
     const imageData = canvas.toDataURL('image/png');
     capturedImage.src = imageData;
@@ -287,18 +302,24 @@ function handleUpload(event) {
 
 
 function createStickerButtons() {
-    stickersContainer.innerHTML = ''
+    stickersContainer.innerHTML = '';
     darkStickers.forEach(sticker => {
-        const btn = document.createElement('button')
-        btn.textContent = sticker
-        btn.className = 'sticker-btn cursor-pointer'
-        btn.style.fontSize = '24px'
+        const btn = document.createElement('button');
+        btn.className = 'sticker-btn cursor-pointer p-1';
+        const img = document.createElement('img');
+        img.src = sticker.src;
+        img.alt = sticker.name;
+        img.className = 'w-10 h-10';
+        btn.appendChild(img);
+
         btn.addEventListener('click', () => {
-            addMovableSticker(sticker)
-        })
-        stickersContainer.appendChild(btn)
-    })
+            addMovableSticker(sticker.src);
+        });
+
+        stickersContainer.appendChild(btn);
+    });
 }
+
 
 function createFilterButtons() {
     filters.forEach(filter => {
@@ -325,10 +346,8 @@ function savePhoto(title) {
 
     const imageData = canvas.toDataURL('image/png');
 
-    // Opcional: quitar el prefijo "data:image/png;base64," y enviarlo limpio
     const base64Image = imageData.split(',')[1];
-    alert("HOLA");
-    console.log("Tamaño Base64:", base64Image.length);
+    // console.log("Tamaño Base64:", base64Image.length);
 
     fetch('/camera.php', {
         method: 'POST',
@@ -364,7 +383,7 @@ uploadInput.addEventListener('change', handleUpload);
 brightnessInput.addEventListener('input', e => updateBrightness(e.target.value));
 contrastInput.addEventListener('input', e => updateContrast(e.target.value));
 
-createStickerButtons()
-createFilterButtons()
-updateBrightness(brightness)
-updateContrast(contrast)
+createStickerButtons();
+createFilterButtons();
+updateBrightness(brightness);
+updateContrast(contrast);

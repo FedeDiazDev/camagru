@@ -103,21 +103,77 @@ class PostController
         ]);
     }
 
-    public function createPost($userId, $title, $mediaUrl)
+    public function createPost($userId, $title, $baseImage, $stickers = [], $filter = 'none', $brightness = 100, $contrast = 100)
     {
-        if (!$userId) {
-            return false;
-        }
-        if (empty($title)) {
+        if (!$userId || empty($title) || !$baseImage) {
             return false;
         }
 
-        $userController = new UserController();
-        if (!$userController->getUserById($userId)) {
+        $dir = __DIR__ . '/../../public/images/posts/';
+        if (!is_dir($dir)) {
+            mkdir($dir, 0777, true);
+        }
+
+        $imageData = explode(',', $baseImage);
+        if (count($imageData) !== 2) {
             return false;
         }
 
-        return $this->post->createPost($userId, $title, $mediaUrl);
+        $decodedBase = base64_decode(str_replace(' ', '+', $imageData[1]));
+        if ($decodedBase === false) {
+            return false;
+        }
+
+        $baseImg = imagecreatefromstring($decodedBase);
+        if (!$baseImg) {
+            return false;
+        }
+
+        foreach ($stickers as $sticker) {
+            $stickerPath = __DIR__ . '/../../public/images/stickers/' . basename($sticker['src']);
+            if (!file_exists($stickerPath)) continue;
+
+            $stickerImg = imagecreatefrompng($stickerPath);
+            if (!$stickerImg) continue;
+
+            $width = $sticker['width'] ?? imagesx($stickerImg);
+            $height = $sticker['height'] ?? imagesy($stickerImg);
+
+            $resized = imagecreatetruecolor($width, $height);
+            imagealphablending($resized, false);
+            imagesavealpha($resized, true);
+            imagecopyresampled($resized, $stickerImg, 0, 0, 0, 0, $width, $height, imagesx($stickerImg), imagesy($stickerImg));
+
+            $x = $sticker['x'] ?? 0;
+            $y = $sticker['y'] ?? 0;
+
+            imagecopy($baseImg, $resized, $x, $y, 0, 0, $width, $height);
+
+            imagedestroy($resized);
+            imagedestroy($stickerImg);
+        }
+
+        imagefilter($baseImg, IMG_FILTER_BRIGHTNESS, $brightness - 100);
+        imagefilter($baseImg, IMG_FILTER_CONTRAST, 100 - $contrast);
+
+        switch ($filter) {
+            case 'grayscale':
+                imagefilter($baseImg, IMG_FILTER_GRAYSCALE);
+                break;
+            case 'sepia':
+                imagefilter($baseImg, IMG_FILTER_GRAYSCALE);
+                imagefilter($baseImg, IMG_FILTER_COLORIZE, 90, 60, 30);
+                break;
+            case 'invert':
+                imagefilter($baseImg, IMG_FILTER_NEGATE);
+                break;
+        }
+        $filename = 'post_' . time() . '_' . $userId . '.png';
+        $filePath = $dir . $filename;
+        imagepng($baseImg, $filePath);
+        imagedestroy($baseImg);
+        $relativePath = '/images/posts/' . $filename;
+        return $this->post->createPost($userId, $title, $relativePath);
     }
 
 

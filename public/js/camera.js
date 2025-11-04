@@ -250,7 +250,6 @@ function sharePhoto() {
     //     alert("Por favor, añade al menos un sticker antes de tomar la foto.");
     //     return;
     // }
-    alert("PHOOOOOOOOOOOTO");
     savePhoto("Sin título");
     // if (navigator.share) {
     //     navigator.share({
@@ -346,9 +345,13 @@ function savePhoto(title) {
 
     const imageData = canvas.toDataURL('image/png');
 
-    const base64Image = imageData.split(',')[1];
-    // console.log("Tamaño Base64:", base64Image.length);
-
+    const stickersData = movableStickers.map(s => ({
+        src: s.emoji,
+        x: s.x,
+        y: s.y,
+        width: s.element.width,
+        height: s.element.height
+    }));
     fetch('/camera.php', {
         method: 'POST',
         headers: {
@@ -356,8 +359,12 @@ function savePhoto(title) {
         },
         body: JSON.stringify({
             userId: 1,
-            title: "hola",
-            image: imageData
+            title: title,
+            image: imageData,
+            stickers: stickersData,
+            filter: selectedFilter,
+            brightness: brightness,
+            contrast: contrast
         })
     })
         .then(res => res.json())

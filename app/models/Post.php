@@ -81,9 +81,9 @@ class Post
 
             $posts = $stmt->fetchAll(PDO::FETCH_OBJ);
 
-            foreach ($posts as $post) {
-                $post->mediaUrl = "/get_image.php?id=" . $post->id;
-            }
+            // foreach ($posts as $post) {
+            //     $post->mediaUrl = "/get_image.php?id=" . $post->id;
+            // }
 
             return $posts;
         } catch (PDOException $e) {

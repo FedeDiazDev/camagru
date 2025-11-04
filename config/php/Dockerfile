@@ -15,7 +15,11 @@ COPY . /var/www
 
 RUN mkdir -p /var/www/html/uploads && \
     chown -R www-data:www-data /var/www/html/uploads && \
-    chmod -R 775 /var/www/html/uploads
+    chmod -R 775 /var/www/html/uploads && \
+    mkdir -p /var/www/html/public/images/posts && \
+    chown -R www-data:www-data /var/www/html/public/images && \
+    chmod -R 775 /var/www/html/public/images
+
 
 RUN composer require sendgrid/sendgrid
 

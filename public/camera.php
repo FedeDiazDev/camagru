@@ -12,7 +12,11 @@ $data = json_decode(file_get_contents("php://input"), true);
 
 $userId = $data['userId'] ?? null;
 $title = $data['title'] ?? '';
-$image = $data['image'] ?? null;
+$baseImage = $data['baseImage'] ?? null;
+$stickers = $data['stickers'] ?? [];
+$filter = $data['filter'] ?? 'none';
+$brightness = $data['brightness'] ?? 100;
+$contrast = $data['contrast'] ?? 100;
 
 if (!$userId || !$image) {
     http_response_code(400);
@@ -36,7 +40,7 @@ if ($decodedImage === false) {
 }
 
 $postController = new PostController();
-$postId = $postController->createPost($userId, $title, $decodedImage);
+$postId = $postController->createPost($userId, $title, $baseImage, $stickers, $filter, $brightness, $contrast);
 
 if (!$postId) {
     http_response_code(500);

@@ -108,6 +108,7 @@ class PostController
         if (!$userId || empty($title) || !$baseImage) {
             return false;
         }
+        printf("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
 
         $dir = __DIR__ . '/../../public/images/posts/';
         if (!is_dir($dir)) {
@@ -173,6 +174,7 @@ class PostController
         imagepng($baseImg, $filePath);
         imagedestroy($baseImg);
         $relativePath = '/images/posts/' . $filename;
+        printf("HOLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
         return $this->post->createPost($userId, $title, $relativePath);
     }
 

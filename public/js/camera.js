@@ -372,7 +372,7 @@ function savePhoto(title) {
             if (data.success) {
                 alert('Post creado! ID: ' + data.postId + '\nURL: ' + data.url);
             } else {
-                alert('Error al crear el post');
+                alert(data.error);
             }
         })
 

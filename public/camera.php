@@ -18,24 +18,9 @@ $filter = $data['filter'] ?? 'none';
 $brightness = $data['brightness'] ?? 100;
 $contrast = $data['contrast'] ?? 100;
 
-if (!$userId || !$image) {
+if (!$userId) {
     http_response_code(400);
     echo json_encode(["success" => false, "error" => "Faltan datos"]);
-    exit;
-}
-
-$imageData = explode(',', $image);
-if (count($imageData) !== 2) {
-    http_response_code(400);
-    echo json_encode(["success" => false, "error" => "Formato de imagen inválido"]);
-    exit;
-}
-
-$base64String = str_replace(' ', '+', $imageData[1]);
-$decodedImage = base64_decode($base64String);
-if ($decodedImage === false) {
-    http_response_code(400);
-    echo json_encode(["success" => false, "error" => "Base64 inválido"]);
     exit;
 }
 
@@ -44,7 +29,7 @@ $postId = $postController->createPost($userId, $title, $baseImage, $stickers, $f
 
 if (!$postId) {
     http_response_code(500);
-    echo json_encode(["success" => false, "error" => "No se pudo crear el post"]);
+    echo json_encode(["success" => false, "error" => "No se pudo crear"]);
     exit;
 }
 

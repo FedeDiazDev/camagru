@@ -15,7 +15,7 @@ class Post
             $stmt = $this->connection->prepare($query);
             $stmt->execute();
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
-            return (int)($row['total'] ?? 0);
+            return (int) ($row['total'] ?? 0);
         } catch (PDOException $e) {
             return 0;
         }
@@ -117,6 +117,8 @@ class Post
     {
         $query = "INSERT INTO post (userId, title, date, mediaUrl)
               VALUES (:userId, :title, NOW(), :mediaUrl)";
+        fwrite(STDOUT,"[DEBUG] Query: $query");
+        fwrite(STDOUT,"[DEBUG] userId: $userId, title: $title, mediaUrl: $mediaUrl");        
         $stmt = $this->connection->prepare($query);
 
         $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);

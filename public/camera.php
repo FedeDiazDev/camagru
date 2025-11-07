@@ -27,9 +27,9 @@ if (!$userId) {
 $postController = new PostController();
 $postId = $postController->createPost($userId, $title, $baseImage, $stickers, $filter, $brightness, $contrast);
 
-if (!$postId) {
+if (!is_numeric($postId)) {
     http_response_code(500);
-    echo json_encode(["success" => false, "error" => "No se pudo crear"]);
+    echo json_encode(["success" => false, "error" => $postId]);
     exit;
 }
 

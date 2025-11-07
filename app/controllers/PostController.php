@@ -107,9 +107,7 @@ class PostController
     {
         if (!$userId || empty($title) || !$baseImage) {
             return false;
-        }
-        printf("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
-
+        }        
         $dir = __DIR__ . '/../../public/images/posts/';
         if (!is_dir($dir)) {
             mkdir($dir, 0777, true);
@@ -117,17 +115,17 @@ class PostController
 
         $imageData = explode(',', $baseImage);
         if (count($imageData) !== 2) {
-            return false;
+            return "Error imgData";
         }
 
         $decodedBase = base64_decode(str_replace(' ', '+', $imageData[1]));
         if ($decodedBase === false) {
-            return false;
+            return "Error decodedBase";
         }
 
         $baseImg = imagecreatefromstring($decodedBase);
         if (!$baseImg) {
-            return false;
+            return "Error baseImb";
         }
 
         foreach ($stickers as $sticker) {
@@ -173,8 +171,7 @@ class PostController
         $filePath = $dir . $filename;
         imagepng($baseImg, $filePath);
         imagedestroy($baseImg);
-        $relativePath = '/images/posts/' . $filename;
-        printf("HOLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+        $relativePath = '/images/posts/' . $filename;        
         return $this->post->createPost($userId, $title, $relativePath);
     }
 

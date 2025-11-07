@@ -360,7 +360,7 @@ function savePhoto(title) {
         body: JSON.stringify({
             userId: 1,
             title: title,
-            image: imageData,
+            baseImage: imageData,
             stickers: stickersData,
             filter: selectedFilter,
             brightness: brightness,

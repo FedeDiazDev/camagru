@@ -133,8 +133,11 @@ class PostController
         imagealphablending($baseImg, true);
 
         foreach ($stickers as $sticker) {
-            $stickerPath = __DIR__ . '/../../public/' . basename($sticker['src']);
-            if (!file_exists($stickerPath)) continue;
+            $stickerPath = __DIR__ . '/../../public/images/' . basename($sticker['src']);
+            if (!file_exists($stickerPath)) {
+                file_put_contents('/tmp/camagru_stickers.log', "No existe: $stickerPath\n", FILE_APPEND);
+                continue;
+            }
 
             $stickerImg = imagecreatefrompng($stickerPath);
             if (!$stickerImg) continue;

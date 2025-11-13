@@ -106,8 +106,9 @@ class PostController
     public function createPost($userId, $title, $baseImage, $stickers = [], $filter = 'none', $brightness = 100, $contrast = 100)
     {
         if (!$userId || empty($title) || !$baseImage) {
-            return false;
-        }        
+            return "Error: missing data";
+        }
+
         $dir = __DIR__ . '/../../public/images/posts/';
         if (!is_dir($dir)) {
             mkdir($dir, 0777, true);
@@ -115,21 +116,24 @@ class PostController
 
         $imageData = explode(',', $baseImage);
         if (count($imageData) !== 2) {
-            return "Error imgData";
+            return "Error: invalid base64 data";
         }
 
         $decodedBase = base64_decode(str_replace(' ', '+', $imageData[1]));
         if ($decodedBase === false) {
-            return "Error decodedBase";
+            return "Error: base64 decode failed";
         }
 
         $baseImg = imagecreatefromstring($decodedBase);
         if (!$baseImg) {
-            return "Error baseImb";
+            return "Error: could not create image from base64";
         }
 
+        imagesavealpha($baseImg, true);
+        imagealphablending($baseImg, true);
+
         foreach ($stickers as $sticker) {
-            $stickerPath = __DIR__ . '/../../public/images/stickers/' . basename($sticker['src']);
+            $stickerPath = __DIR__ . '/../../public/' . basename($sticker['src']);
             if (!file_exists($stickerPath)) continue;
 
             $stickerImg = imagecreatefrompng($stickerPath);
@@ -139,8 +143,11 @@ class PostController
             $height = $sticker['height'] ?? imagesy($stickerImg);
 
             $resized = imagecreatetruecolor($width, $height);
-            imagealphablending($resized, false);
             imagesavealpha($resized, true);
+            imagealphablending($resized, false);
+            $transparent = imagecolorallocatealpha($resized, 0, 0, 0, 127);
+            imagefill($resized, 0, 0, $transparent);
+
             imagecopyresampled($resized, $stickerImg, 0, 0, 0, 0, $width, $height, imagesx($stickerImg), imagesy($stickerImg));
 
             $x = $sticker['x'] ?? 0;
@@ -156,25 +163,55 @@ class PostController
         imagefilter($baseImg, IMG_FILTER_CONTRAST, 100 - $contrast);
 
         switch ($filter) {
-            case 'grayscale':
-                imagefilter($baseImg, IMG_FILTER_GRAYSCALE);
+            case 'none':
                 break;
-            case 'sepia':
+
+            case 'noir':
                 imagefilter($baseImg, IMG_FILTER_GRAYSCALE);
-                imagefilter($baseImg, IMG_FILTER_COLORIZE, 90, 60, 30);
+                imagefilter($baseImg, IMG_FILTER_CONTRAST, -50);
                 break;
-            case 'invert':
-                imagefilter($baseImg, IMG_FILTER_NEGATE);
+
+            case 'gothic':
+                imagefilter($baseImg, IMG_FILTER_GRAYSCALE);
+                imagefilter($baseImg, IMG_FILTER_COLORIZE, 30, 30, 60, 30);
+                imagefilter($baseImg, IMG_FILTER_CONTRAST, -20);
+                break;
+
+            case 'shadow':
+                imagefilter($baseImg, IMG_FILTER_CONTRAST, -40);
+                imagefilter($baseImg, IMG_FILTER_BRIGHTNESS, -20);
+                imagefilter($baseImg, IMG_FILTER_COLORIZE, 20, 20, 20, 50);
+                break;
+
+            case 'mystic':
+                imagefilter($baseImg, IMG_FILTER_GRAYSCALE);
+                imagefilter($baseImg, IMG_FILTER_COLORIZE, 120, 0, 120, 40);
+                imagefilter($baseImg, IMG_FILTER_BRIGHTNESS, 15);
                 break;
         }
+
+
         $filename = 'post_' . time() . '_' . $userId . '.png';
         $filePath = $dir . $filename;
-        imagepng($baseImg, $filePath);
-        imagedestroy($baseImg);
-        $relativePath = '/images/posts/' . $filename;        
-        return $this->post->createPost($userId, $title, $relativePath);
-    }
+        imagealphablending($baseImg, false);
+        imagesavealpha($baseImg, true);
 
+        if (!imagepng($baseImg, $filePath)) {
+            imagedestroy($baseImg);
+            return "Error: could not save image";
+        }
+
+        imagedestroy($baseImg);
+
+        $relativePath = '/images/posts/' . $filename;
+
+        $postId = $this->post->createPost($userId, $title, $relativePath);
+        if (!$postId) {
+            return "Error: could not save post in database";
+        }
+
+        return $postId;
+    }
 
     public function deletePost($postId)
     {

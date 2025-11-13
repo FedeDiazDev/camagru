@@ -18,6 +18,7 @@ services:
       context: ./config/php
     volumes:
       - ./:/var/www/html
+      - posts-data:/var/www/html/public/images/posts
     environment:
       DB_HOST: mariadb
       DB_ROOT_PASSWORD: ${DB_PASSWORD}
@@ -45,6 +46,7 @@ services:
 
 volumes:
   db-data:
+  posts-data:
 
 networks:
   camagru-network:

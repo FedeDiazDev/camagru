@@ -53,7 +53,7 @@ class Post
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
         $comments = $stmt->fetchAll(PDO::FETCH_OBJ);
-
+        $post->mediaUrl = "/get_image.php?id=" . $post->id;
         $post->comments = $comments;
 
         return $post;
@@ -65,6 +65,7 @@ class Post
             $query = "SELECT p.id,
                          p.userId,
                          p.date,
+                         p.mediaUrl,
                          u.username AS author,
                          COUNT(l.id) AS likes
                   FROM post p
@@ -81,9 +82,9 @@ class Post
 
             $posts = $stmt->fetchAll(PDO::FETCH_OBJ);
 
-            // foreach ($posts as $post) {
-            //     $post->mediaUrl = "/get_image.php?id=" . $post->id;
-            // }
+            foreach ($posts as $post) {
+                $post->mediaUrl = "/get_image.php?id=" . $post->id;
+            }
 
             return $posts;
         } catch (PDOException $e) {
@@ -117,8 +118,6 @@ class Post
     {
         $query = "INSERT INTO post (userId, title, date, mediaUrl)
               VALUES (:userId, :title, NOW(), :mediaUrl)";
-        fwrite(STDOUT,"[DEBUG] Query: $query");
-        fwrite(STDOUT,"[DEBUG] userId: $userId, title: $title, mediaUrl: $mediaUrl");        
         $stmt = $this->connection->prepare($query);
 
         $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);

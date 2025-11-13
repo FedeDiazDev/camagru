@@ -352,6 +352,10 @@ function savePhoto(title) {
         width: s.element.width,
         height: s.element.height
     }));
+    console.log(stickersData);
+    console.log(selectedFilter);
+    console.log(brightness);
+    console.log(contrast);
     fetch('/camera.php', {
         method: 'POST',
         headers: {

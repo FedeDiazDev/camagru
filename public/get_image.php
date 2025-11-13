@@ -1,9 +1,6 @@
 <?php
 require_once __DIR__ . '/../config/php/database.php';
 
-ini_set('display_errors', 0);
-error_reporting(0);
-
 if (!isset($_GET['id'])) {
     http_response_code(400);
     exit('Missing ID');
@@ -30,27 +27,22 @@ try {
         exit('Image not found');
     }
 
-    $blob = $row['mediaUrl'];
-    $len = strlen($blob);
+    // mediaUrl guarda "/images/posts/xxxxx.png"
+    $relative = $row['mediaUrl'];
 
-    $mime = 'image/png';
-    if (substr($blob, 0, 8) === "\x89PNG\x0D\x0A\x1A\x0A") {
-        $mime = 'image/png';
-    } elseif (substr($blob, 0, 3) === "\xFF\xD8\xFF") {
-        $mime = 'image/jpeg';
-    } elseif (substr($blob, 0, 6) === "GIF87a" || substr($blob, 0, 6) === "GIF89a") {
-        $mime = 'image/gif';
+    // Convertirlo a ruta física dentro del contenedor
+    $path = $_SERVER['DOCUMENT_ROOT'] . $relative;
+
+    if (!file_exists($path)) {
+        http_response_code(404);
+        exit('File not found');
     }
 
-    while (ob_get_level()) {
-        ob_end_clean();
-    }
-
+    $mime = mime_content_type($path);
     header("Content-Type: $mime");
-    header("Content-Length: $len");
-    header("Cache-Control: public, max-age=31536000");
-    echo $blob;
+    readfile($path);
     exit;
+
 } catch (PDOException $e) {
     http_response_code(500);
     exit('Database error');

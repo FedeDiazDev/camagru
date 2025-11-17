@@ -19,19 +19,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $data->password = htmlspecialchars($_POST['password']);
     $data->confirmPassword = htmlspecialchars($_POST['confirmPassword']);
     $data->notifications = $_POST['notifications'] ?? 0;
-    // if ( $_POST['notifications'] )
-    //     echo "HOLA";
-    // else
-    //     echo"SAD"; 
-    // exit;
-
-    // echo "CONFIRMAION [" .$_POST['notifications'] . "]\n";
-    // exit ;
-    // echo  json_encode($data);
-    // exit;
     $userController = new UserController();
     $res = $userController->updateUser(json_encode($data));
-    //header('Content-Type: application/json');
     echo $res;
     exit;
 }
@@ -146,7 +135,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         </div>
                     </div>
                 </div>
-                <!-- pt-6 border-t border-gray-700 -->
                 <div class="flex flex-col sm:flex-row gap-3 ">
                     <button type="submit" id="saveBtn"
                         class="flex-1 h-12 rounded-lg bg-gradient-to-r hidden from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white flex items-center justify-center">

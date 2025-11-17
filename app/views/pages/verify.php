@@ -27,10 +27,7 @@ $jsonResult = json_encode($result);
 </head>
 
 <body class="text-gray-300">
-	<!-- <header class="border-b border-gray-800 bg-black/50 backdrop-blur-xl"> -->
-		<?php include __DIR__ . '/../templates/main_header.php'; ?>
-	<!-- </header> -->
-
+	<?php include __DIR__ . '/../templates/main_header.php'; ?>
 	<main class="flex items-center justify-center min-h-[calc(100vh-80px)] p-4">
 		<div
 			class="w-full max-w-md bg-gray-900/80 border border-gray-800 backdrop-blur-xl rounded-2xl shadow-xl p-6 text-center">

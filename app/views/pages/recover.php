@@ -47,10 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 
 <body class="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black">
-    <!-- <header class="border-b border-gray-800 bg-black/50 backdrop-blur-xl"> -->
-        <?php include __DIR__ . '/../templates/main_header.php'; ?>
-    <!-- </header> -->
-
+    <?php include __DIR__ . '/../templates/main_header.php'; ?>
     <main class="flex items-center justify-center min-h-[calc(100vh-80px)] p-4">
         <div class="w-full max-w-md bg-gray-900/80 border border-gray-800 rounded-2xl backdrop-blur-xl p-6">
             <div class="text-center mb-6">

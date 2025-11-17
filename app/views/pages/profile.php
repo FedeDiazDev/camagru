@@ -2,20 +2,14 @@
 session_start();
 
 if (!isset(($_SESSION['userId']))) {
-    header("Location: /");
+    header("Location: /login");
     die();
 }
 require_once __DIR__ . '/../../controllers/UserController.php';
-// echo ("HHHHHHHHHHHHHHHH");
-// echo( $_SESSION['userId']);
 $id = $_SESSION['userId'];
 if ($_SERVER["REQUEST_METHOD"] === "GET")
     if ($userCon = new UserController())
         $user = json_decode($userCon->getUserById($id), true);
-// echo $user['msg']['email'];
-// exit;
-//     echo $user;
-// exit;
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $data = new stdClass();
     $data->id = $id;
@@ -58,39 +52,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 <body class="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black">
 
-    <!-- <header class="lg:hidden border-b border-gray-800 bg-black/50 backdrop-blur-xl sticky top-0 z-50"> -->
-        <?php include __DIR__ . '/../templates/main_header.php'; ?>
-    <!-- </header> -->
-
-    <header class="hidden lg:block border-b border-gray-800 bg-black/50 backdrop-blur-xl">
-        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
-            <a href="/" class="flex items-center gap-2">
-                <i class="fas fa-camera text-purple-400 text-2xl"></i>
-                <h1
-                    class="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                    Camagru
-                </h1>
-            </a>
-            <a href="/" class="px-3 py-2 rounded-lg text-gray-300 hover:text-white hover:bg-gray-800 flex items-center">
-                <i class="fas fa-arrow-left mr-2"></i> Back to Home
-            </a>
-        </div>
-    </header>
-
+    <?php include __DIR__ . '/../templates/main_header.php'; ?>
     <div class="flex items-center justify-center min-h-[calc(100vh-80px)] p-4">
         <div class="w-full max-w-2xl bg-gray-900/80 border border-gray-800 backdrop-blur-xl rounded-2xl shadow-lg p-6">
-
-            <div class="flex justify-center mb-6 relative">
-                <div class="relative">
-                    <img src="https://placehold.co/600x600/png" alt="avatar"
-                        class="w-24 h-24 rounded-full border-4 border-purple-500/30 object-cover">
-                    <!-- <div -->
-                    <!-- class="absolute -bottom-2 -right-2 w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center border-2 border-gray-900"> -->
-                    <!-- <i class="fas fa-camera text-white text-sm"></i> -->
-                    <!-- </div> -->
-                </div>
-            </div>
-
             <h2 class="text-2xl lg:text-3xl text-white text-center mb-2">Update Profile</h2>
             <p class="text-gray-400 text-center mb-6">Manage your account information and security settings</p>
 
@@ -204,18 +168,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             </form>
             <div class="mt-8 pt-6 border-t border-gray-700">
                 <h3 class="text-lg font-semibold text-white mb-4">Account Actions</h3>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div class="grid grid-cols-1 gap-3">
                     <a href="/gallery"
                         class="h-11 rounded-lg border border-gray-600 text-gray-300 hover:bg-gray-800 hover:text-white flex items-center justify-center">
                         View My Photos
                     </a>
-                    <button
-                        class="h-11 rounded-lg border border-red-600 text-red-400 hover:bg-red-600 hover:text-white flex items-center justify-center">
-                        Delete Account
-                    </button>
                 </div>
             </div>
-            <a href="/logout" class="text-white">Cerrar sesión</a>
         </div>
 
     </div>

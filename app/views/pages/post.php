@@ -2,7 +2,7 @@
 session_start();
 
 if (!isset(($_SESSION['userId']))) {
-    header("Location: /");
+    header("Location: /login");
     die();
 }
 
@@ -13,8 +13,6 @@ require_once __DIR__ . '/../../controllers/LikeController.php';
 $postControl = new PostController();
 $postID = $_GET['id'];
 $dataPost = json_decode($postControl->getPostById($postID));
-// echo $dataPost;
-// die();
 $post = $dataPost->msg;
 
 function formatTime($date)
@@ -109,32 +107,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 </head>
 
 <body class="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black">
-    <header class="border-b border-gray-800 bg-black/50 backdrop-blur-xl sticky top-0 z-50">
-        <?php include __DIR__ . '/../templates/main_header.php'; ?>
-        <!-- <div class="container mx-auto px-4 py-4 flex items-center justify-between">
-            <div class="flex items-center gap-4">
-                <a href="/gallery" class="p-2 rounded-full text-gray-400 hover:text-white hover:bg-gray-800">
-                    <i class="fa-solid fa-arrow-left w-5 h-5"></i>
-                </a>
-                <div class="flex items-center gap-2">
-                    <i class="fa-solid fa-camera text-purple-400 text-xl"></i>
-                    <h1
-                        class="text-lg lg:text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                        Photo Details
-                    </h1>
-                </div>
-            </div>
-            <div class="flex items-center gap-2">
-                <button class="p-2 rounded-full text-gray-400 hover:text-white hover:bg-gray-800">
-                    <i class="fa-regular fa-bookmark"></i>
-                </button>
-                <button class="p-2 rounded-full text-gray-400 hover:text-white hover:bg-gray-800">
-                    <i class="fa-solid fa-share"></i>
-                </button>
-            </div>
-        </div> -->
-    </header>
-
+    <?php include __DIR__ . '/../templates/main_header.php'; ?>
     <div class="container mx-auto px-4 py-6 max-w-6xl">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div class="lg:col-span-2">

@@ -31,18 +31,14 @@
                 </a>
                 <a href="/profile" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-gray-800/50 transition-all">
                     <i class="fas fa-chart-line w-5 h-5"></i>
-                    <span>Profile(test)</span>
+                    <span>Profile</span>
                 </a>
             </nav>
-
-            <div class="flex gap-4">
-                <a href="/register" class="w-[120px] text-center bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded py-2">
-                    Sign Up
-                </a>
-                <a href="/login" class="w-[120px] text-center border border-gray-600 text-gray-300 hover:bg-gray-800 hover:text-white rounded py-2">
-                    Sign In
-                </a>
-            </div>
+        </div>
+        <div class="flex gap-4">
+            <a href="/logout" class="w-[120px] text-center border border-gray-600 text-gray-300 hover:bg-gray-800 hover:text-white rounded py-2">
+                Logout
+            </a>
         </div>
     </div>
 

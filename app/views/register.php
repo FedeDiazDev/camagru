@@ -164,6 +164,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         </div>
     </div>
     <?php include __DIR__ . '/templates/footer.php'; ?>
+    <script src="/js/alert.js"></script>
     <script>
         const form = document.getElementById("form");
         form.addEventListener("submit", async (event) => {
@@ -176,10 +177,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             });
             const result = await response.json();
             console.log(result);
-            if (!result.res) { //TODO:: pintar eerror en fron
-                console.log(result.msg);
+            if (!result.res) {
+                showAlert(result.msg, "error");
             } else {
-                window.location.href = "/login";
+                showAlert("Verifica tu cuenta en el email", "success");
+                setTimeout(() => {
+                    window.location.href = "/login";
+                }, 1000);
             }
         });
     </script>

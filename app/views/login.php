@@ -156,7 +156,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         </div>
     </div>
     <?php include __DIR__ . '/templates/footer.php'; ?>
-
+    <script src="/js/alert.js"></script>
     <script>
         const form = document.getElementById("form");
         form.addEventListener("submit", async (event) => {
@@ -169,8 +169,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             });
             const result = await response.json();
             console.log(result);
-            if (!result.res) { //TODO:: pintar error en front
-                console.log(result.msg);
+            if (!result.res) {
+                showAlert(result.msg, "error");
             } else {
                 window.location.href = "/camera";
             }

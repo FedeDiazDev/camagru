@@ -68,7 +68,11 @@ class User
         $hashed_pass = password_hash($data->password, PASSWORD_DEFAULT);
         $stmt = $this->connection->prepare($query);
         $stmt->bindParam(':username', $data->username);
-        $stmt->bindParam(':password', $hashed_pass, PDO::PARAM_STR);
+        $passwordToStore = $data->password;
+        if (!empty($data->newPassword)) {
+            $passwordToStore = password_hash($data->newPassword, PASSWORD_DEFAULT);
+        }
+        $stmt->bindParam(':password', $passwordToStore, PDO::PARAM_STR);
         $stmt->bindParam(':email', $data->email);
         $stmt->bindParam(':emailPreference', $data->notifications, PDO::PARAM_INT);
         $stmt->bindParam(':id', $data->id);
@@ -128,7 +132,7 @@ class User
 
     public function getUserByResetToken($token)
     {
-       $stmt = $this->connection->prepare("SELECT * FROM user WHERE reset_token = :token");
+        $stmt = $this->connection->prepare("SELECT * FROM user WHERE reset_token = :token");
         $stmt->bindParam(':token', $token);
         $stmt->execute();
         $user = $stmt->fetch(PDO::FETCH_OBJ);

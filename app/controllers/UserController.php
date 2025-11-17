@@ -139,14 +139,14 @@ class UserController
          * * Cómo se cuando cuando están vacíos a propósito y cuando no
          * * si rellenan la contraseña actual es obligatorio que rellenen las otras? o simplemente ignorarlo?
          */
-        if ($this->user->getUserByUsername($decodedData->username)) {
+        if ($this->user->getUserByUsername($decodedData->username) && ($user->username != $decodedData->username)) {
             return json_encode([
                 'res' => false,
                 'msg' => "Username already exists"
             ]);
         }
 
-        if ($this->user->getUserByEmail($decodedData->email)) {
+        if ($this->user->getUserByEmail($decodedData->email) && ($user->email != $decodedData->email)) {
             return json_encode([
                 'res' => false,
                 'msg' => "Email already exists"
@@ -157,7 +157,10 @@ class UserController
         $updatedData->id = $user->id;
         $updatedData->email = $decodedData->email;
         $updatedData->username = $decodedData->username;
-        $updatedData->password = $decodedData->password ? $decodedData->password : $user->password;
+        $updatedData->password = $user->password;
+        if (!empty($decodedData->password)) {
+            $updatedData->password = $decodedData->password;
+        }
         $updatedData->notifications = $decodedData->notifications;
 
         if (!$this->user->updateUser($updatedData)) {

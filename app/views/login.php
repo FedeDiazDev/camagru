@@ -83,7 +83,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         </p>
                     </header>
 
-                    <form id= "form" method="post" action="/login" class="space-y-6">
+                    <form id="form" method="post" action="/login" class="space-y-6">
                         <div class="space-y-1">
                             <label for="text" class="block text-gray-300 text-sm font-medium">
                                 Username
@@ -92,7 +92,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                                 id="username"
                                 type="username"
                                 name="username"
-                                 value="<?= htmlspecialchars($_POST['username'] ?? '') ?>"
+                                value="<?= htmlspecialchars($_POST['username'] ?? '') ?>"
                                 placeholder="Username"
                                 required
                                 class="w-full h-12 bg-gray-800 border border-gray-700 rounded px-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500" />
@@ -154,25 +154,28 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 </section>
             </div>
         </div>
-        <script>
-            const form = document.getElementById("form");
-            form.addEventListener("submit", async (event) => {
-                event.preventDefault();
+    </div>
+    <?php include __DIR__ . '/templates/footer.php'; ?>
 
-                const formData = new FormData(form);
-                const response = await fetch(form.action, {
-                    method: "POST",
-                    body: formData
-                });
-                const result = await response.json();
-                console.log(result);
-                if (!result.res) { //TODO:: pintar error en front
-                    console.log(result.msg);
-                } else {
-                    window.location.href = "/camera";
-                }
+    <script>
+        const form = document.getElementById("form");
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            const formData = new FormData(form);
+            const response = await fetch(form.action, {
+                method: "POST",
+                body: formData
             });
-        </script>
+            const result = await response.json();
+            console.log(result);
+            if (!result.res) { //TODO:: pintar error en front
+                console.log(result.msg);
+            } else {
+                window.location.href = "/camera";
+            }
+        });
+    </script>
 </body>
 
 </html>

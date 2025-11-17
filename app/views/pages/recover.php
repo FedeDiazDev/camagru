@@ -47,21 +47,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 
 <body class="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black">
-    <header class="border-b border-gray-800 bg-black/50 backdrop-blur-xl">
-        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
-            <a href="/" class="flex items-center gap-2">
-                <i class="fa-solid fa-camera text-purple-400 text-xl lg:text-2xl"></i>
-                <h1 class="text-xl lg:text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                    Camagru
-                </h1>
-            </a>
-            <a href="/profile" class="flex items-center text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg px-3 py-2 text-sm lg:text-base transition">
-                <i class="fa-solid fa-arrow-left mr-2"></i>
-                <span class="hidden sm:inline">Back to Profile</span>
-                <span class="sm:hidden">Back</span>
-            </a>
-        </div>
-    </header>
+    <!-- <header class="border-b border-gray-800 bg-black/50 backdrop-blur-xl"> -->
+        <?php include __DIR__ . '/../templates/main_header.php'; ?>
+    <!-- </header> -->
 
     <main class="flex items-center justify-center min-h-[calc(100vh-80px)] p-4">
         <div class="w-full max-w-md bg-gray-900/80 border border-gray-800 rounded-2xl backdrop-blur-xl p-6">
@@ -150,6 +138,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         </div>
     </main>
+    <?php include __DIR__ . '/../templates/footer.php'; ?>
 
     <script>
         const passwordInput = document.getElementById("password");

@@ -110,7 +110,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 <body class="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black">
     <header class="border-b border-gray-800 bg-black/50 backdrop-blur-xl sticky top-0 z-50">
-        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+        <?php include __DIR__ . '/../templates/main_header.php'; ?>
+        <!-- <div class="container mx-auto px-4 py-4 flex items-center justify-between">
             <div class="flex items-center gap-4">
                 <a href="/gallery" class="p-2 rounded-full text-gray-400 hover:text-white hover:bg-gray-800">
                     <i class="fa-solid fa-arrow-left w-5 h-5"></i>
@@ -131,7 +132,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     <i class="fa-solid fa-share"></i>
                 </button>
             </div>
-        </div>
+        </div> -->
     </header>
 
     <div class="container mx-auto px-4 py-6 max-w-6xl">
@@ -311,6 +312,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             </div>
         </div>
     </div>
+    <?php include __DIR__ . '/../templates/footer.php'; ?>
     <script>
         const form = document.getElementById("formComment");
         const likeBtn = document.getElementById("likeBtn");

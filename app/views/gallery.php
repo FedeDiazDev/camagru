@@ -26,27 +26,17 @@ $totalPages = ceil($totalPosts / $limit);
     <title>Gallery</title>
 </head>
 
-<body class="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black p-6">
+<body class="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black">
 
-    <a href="/" class="inline-flex items-center text-gray-400 hover:text-white hover:bg-gray-800 p-2 rounded mb-6">
-        <i class="fas fa-arrow-left w-5 h-5"></i>
-    </a>
-
-    <header class="mb-8">
-        <h2 class="text-3xl font-bold text-white mb-2">Gallery</h2>
-        <!-- <p class="text-gray-400">
-            <?= $totalPosts > 0 ? "$totalPosts photos found" : "No photos yet" ?>
-        </p> -->
-    </header>
-
-    <main>
+    <?php include __DIR__ . '/templates/main_header.php'; ?>
+    <main class="p-6">
         <?php if (count($posts) > 0): ?>
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
                 <?php foreach ($posts as $post): ?>
                     <div class="overflow-hidden group hover:shadow-2xl hover:shadow-purple-500/20 transition-all duration-300 bg-gray-900/50 border border-gray-800 backdrop-blur-sm rounded-lg">
                         <a href="/post?id=<?= htmlspecialchars($post->id) ?>" class="aspect-square block relative overflow-hidden rounded-lg">
                             <img src="<?= htmlspecialchars($post->mediaUrl) ?>" alt="Post image"
-                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                             <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg"></div>
                             <div class="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-white">
                                 <div class="flex items-center gap-2 mb-2">
@@ -88,6 +78,7 @@ $totalPages = ceil($totalPosts / $limit);
             <p class="text-gray-400 text-center mt-20 text-lg">Not photos yet.</p>
         <?php endif; ?>
     </main>
+    <?php include __DIR__ . '/templates/footer.php'; ?>
 
 </body>
 

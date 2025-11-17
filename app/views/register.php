@@ -12,7 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $email = trim(htmlspecialchars($_POST['email']));
     $password = htmlspecialchars($_POST['password']);
     $confirmPassword = htmlspecialchars($_POST['confirmPassword']);
-    
+
     $userController = new UserController();
     $res = $userController->register($username, $email, $password, $confirmPassword);
     // header('Content-Type: application/json');
@@ -163,22 +163,26 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             </div>
         </div>
     </div>
-<script>
-    const form = document.getElementById("form");
-    form.addEventListener("submit", async (event) => {
-		event.preventDefault();
+    <?php include __DIR__ . '/templates/footer.php'; ?>
+    <script>
+        const form = document.getElementById("form");
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault();
 
-		const formData = new FormData(form);
-		const response = await fetch(form.action, { method: "POST", body: formData });
-		const result = await response.json();
-        console.log(result);
-		if (!result.res) {//TODO:: pintar eerror en fron
-			console.log(result.msg);
-		} else {
-			window.location.href = "/login";
-		}
-	});
-</script>
+            const formData = new FormData(form);
+            const response = await fetch(form.action, {
+                method: "POST",
+                body: formData
+            });
+            const result = await response.json();
+            console.log(result);
+            if (!result.res) { //TODO:: pintar eerror en fron
+                console.log(result.msg);
+            } else {
+                window.location.href = "/login";
+            }
+        });
+    </script>
 </body>
 
 </html>

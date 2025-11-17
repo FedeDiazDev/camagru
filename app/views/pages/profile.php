@@ -58,17 +58,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 <body class="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black">
 
-    <header class="lg:hidden border-b border-gray-800 bg-black/50 backdrop-blur-xl sticky top-0 z-50">
-        <div class="flex items-center justify-between p-4">
-            <div class="flex items-center gap-2">
-                <i class="fas fa-camera text-purple-400 text-2xl"></i>
-                <h1 class="text-xl font-bold text-white">Profile Settings</h1>
-            </div>
-            <a href="/" class="p-2 rounded-full text-gray-400 hover:text-white hover:bg-gray-800">
-                <i class="fas fa-arrow-left"></i>
-            </a>
-        </div>
-    </header>
+    <!-- <header class="lg:hidden border-b border-gray-800 bg-black/50 backdrop-blur-xl sticky top-0 z-50"> -->
+        <?php include __DIR__ . '/../templates/main_header.php'; ?>
+    <!-- </header> -->
 
     <header class="hidden lg:block border-b border-gray-800 bg-black/50 backdrop-blur-xl">
         <div class="container mx-auto px-4 py-4 flex items-center justify-between">
@@ -227,6 +219,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         </div>
 
     </div>
+    <?php include __DIR__ . '/../templates/footer.php'; ?>
 
     <script>
         function togglePassword(id, iconId) {

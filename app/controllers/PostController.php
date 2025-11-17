@@ -142,8 +142,10 @@ class PostController
             $stickerImg = imagecreatefrompng($stickerPath);
             if (!$stickerImg) continue;
 
-            $width = $sticker['width'] ?? imagesx($stickerImg);
-            $height = $sticker['height'] ?? imagesy($stickerImg);
+            $width  = isset($sticker['width'])  ? (int) round($sticker['width'])  : imagesx($stickerImg);
+            $height = isset($sticker['height']) ? (int) round($sticker['height']) : imagesy($stickerImg);
+            $x = isset($sticker['x']) ? (int) round($sticker['x']) : 0;
+            $y = isset($sticker['y']) ? (int) round($sticker['y']) : 0;
 
             $resized = imagecreatetruecolor($width, $height);
             imagesavealpha($resized, true);
@@ -152,10 +154,6 @@ class PostController
             imagefill($resized, 0, 0, $transparent);
 
             imagecopyresampled($resized, $stickerImg, 0, 0, 0, 0, $width, $height, imagesx($stickerImg), imagesy($stickerImg));
-
-            $x = $sticker['x'] ?? 0;
-            $y = $sticker['y'] ?? 0;
-
             imagecopy($baseImg, $resized, $x, $y, 0, 0, $width, $height);
 
             imagedestroy($resized);

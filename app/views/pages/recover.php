@@ -136,7 +136,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </main>
     <?php include __DIR__ . '/../templates/footer.php'; ?>
-
+    <script src="/js/alert.js"></script>
     <script>
         const passwordInput = document.getElementById("password");
         const confirmInput = document.getElementById("confirmPassword");
@@ -235,14 +235,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 const text = await response.text();
 
                 if (text.includes("successfully")) {
-                    alert("✅ Password changed successfully!");
-                    window.location.href = "/login";
+                    showAlert("Password changed successfully!", "success");
+                    setTimeout(() => {
+                        window.location.href = "/login";
+                    })
                 } else {
-                    console.log("❌ " + text);
+                    showAlert(text, "error");
                 }
             } catch (err) {
-                console.error(err);
-                alert("⚠️ Error changing password. Please try again later.");
+                // console.error(err);
+                showAlert("Error changing password. Please try again later.", "error");
             }
         });
     </script>

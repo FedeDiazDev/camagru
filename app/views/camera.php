@@ -122,7 +122,7 @@ if (!isset(($_SESSION['userId']))) {
         </div>
     </main>
     <?php include __DIR__ . '/templates/footer.php'; ?>
-
+    <script src="/js/alert.js"></script>
     <script src="/js/camera.js"></script>
 </body>
 

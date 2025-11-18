@@ -177,6 +177,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </div>
 </body>
+<script src="/js/alert.js"></script>
 <script>
     document.addEventListener("DOMContentLoaded", () => {
         const form = document.querySelector("form");
@@ -206,16 +207,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 const data = await res.json();
 
                 if (data.success) {
-                    console.log("Email sent successfully! Check your inbox.");
+                    showAlert("Email sent successfully! Check your inbox.", "success");
                 } else {
-                    console.log((data.msg || "Something went wrong."));
+                    showAlert((data.msg || "Something went wrong.", "error"));
                 }
             } catch (err) {
-                console.log("Error: " + err.message);
+                showAlert(err.message, "error");
             }
-
-            button.disabled = false;
-            button.innerHTML = `<i class="fa-solid fa-envelope mr-2"></i> Send Reset Link`;
+            // button.disabled = false;
+            // button.innerHTML = `<i class="fa-solid fa-envelope mr-2"></i> Send Reset Link`;
         });
     });
 </script>

@@ -167,6 +167,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     </div>
     <?php include __DIR__ . '/../templates/footer.php'; ?>
+    <script src="/js/alert.js"></script>
 
     <script>
         function togglePassword(id, iconId) {
@@ -217,10 +218,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 body: formData
             });
             const result = await response.json();
-            console.log(result);
-            if (!result.res) { //TODO:: pintar eerror en fron
-                console.log(result.msg);
+            // console.log(result);
+            if (!result.res) {
+                showAlert(result.msg, "error");
             } else {
+                showAlert("Perfil actualizado", "success");
                 window.location.href = "/profile";
             }
         })

@@ -74,8 +74,8 @@ $jsonResult = json_encode($result);
 
 	<script>
 		const result = JSON.parse(<?php echo $jsonResult; ?>);
-		console.log(typeof(result));
-		console.log(result);
+		// console.log(typeof(result));
+		// console.log(result);
 		setTimeout(() => {
 			document.getElementById("loading").classList.add("hidden");
 			const icon = document.getElementById("icon");

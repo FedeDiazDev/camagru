@@ -352,10 +352,6 @@ function savePhoto(title) {
         width: s.element.width,
         height: s.element.height
     }));
-    console.log(stickersData);
-    console.log(selectedFilter);
-    console.log(brightness);
-    console.log(contrast);
     fetch('/camera.php', {
         method: 'POST',
         headers: {
@@ -374,7 +370,10 @@ function savePhoto(title) {
         .then(res => res.json())
         .then(data => {
             if (data.success) {
-                alert('Post creado! ID: ' + data.postId + '\nURL: ' + data.url);
+                showAlert('Post creado! ID: ' + data.postId + '\nURL: ' + data.url, "success");
+                setTimeout(() => {
+                    window.location.href = "/gallery";
+                }, 1000);
             } else {
                 alert(data.error);
             }

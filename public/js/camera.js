@@ -358,7 +358,7 @@ function savePhoto(title) {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            userId: 1,
+            userId: window.USER_ID,
             title: title,
             baseImage: imageData,
             stickers: stickersData,

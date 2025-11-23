@@ -112,7 +112,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div class="lg:col-span-2">
                 <div class="bg-gray-900/50 border border-gray-800 backdrop-blur-sm overflow-hidden rounded-2xl">
-                    <div class="aspect-square relative">
+                    <!-- <div class="aspect-square relative"> -->
+                    <div class="relative">
                         <img src="<?= htmlspecialchars($post->url) ?>" alt="Post image"
                             class="w-full h-full object-cover" />
                         <?php if (isset($post->userId) && $post->userId == $_SESSION['userId']): ?>

@@ -119,9 +119,11 @@ $posts = $data['posts'];
             <div
                 class="flex-1 bg-gray-900/50 border border-gray-800 backdrop-blur-sm mb-6 rounded p-6 flex flex-col relative overflow-hidden">
                 <video id="video" autoplay playsinline class="w-full h-full object-cover rounded-xl"></video>
-                <div id="imageContainer" style="position:relative;" class=" flex h-full w-full aling.center justify-center">
-                    <img id="capturedImage" src="" style="max-width: 1000px; max-height: 800px;" />
+                <!-- <div id="imageContainer" style="position:relative; width:100%; height:100%;"> -->
+                <div id="imageContainer" style="position:relative; width:100%; height:100%;">
+                    <img id="capturedImage" style="max-width:100%; max-height:100%;" />
                 </div>
+
 
                 <div id="stickerPreview"
                     class="absolute inset-0 flex items-center justify-center pointer-events-none text-8xl drop-shadow-2xl">

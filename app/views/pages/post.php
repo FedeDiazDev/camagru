@@ -108,7 +108,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 <body class="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black">
     <?php include __DIR__ . '/../templates/main_header.php'; ?>
-    <div class="container mx-auto px-4 py-6 max-w-6xl">
+    <div class="min-h-screen container mx-auto px-4 py-6 max-w-6xl">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div class="lg:col-span-2">
                 <div class="bg-gray-900/50 border border-gray-800 backdrop-blur-sm overflow-hidden rounded-2xl">

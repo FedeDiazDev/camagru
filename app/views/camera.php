@@ -5,6 +5,14 @@ if (!isset(($_SESSION['userId']))) {
     header("Location: /login");
     die();
 }
+require_once __DIR__ . '/../controllers/PostController.php';
+
+$postController = new PostController();
+$response = $postController->getPostsByUser($_SESSION['userId']);
+
+$data = json_decode($response, true);
+
+$posts = $data['posts'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -19,11 +27,13 @@ if (!isset(($_SESSION['userId']))) {
     <title>Camera</title>
 </head>
 
+<!-- <pre><?php var_dump($posts); ?></pre> -->
 
 <body class="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black">
     <?php include __DIR__ . '/templates/main_header.php'; ?>
     <main class="flex">
         <aside class="w-80 bg-black/50 backdrop-blur-sm border-r border-gray-800 p-6 flex flex-col">
+
             <div class="flex items-center gap-3 mb-8">
                 <div>
                     <h1 class="text-xl font-bold text-white">Dark Studio</h1>
@@ -47,17 +57,19 @@ if (!isset(($_SESSION['userId']))) {
                 <div id="filters" class="grid grid-cols-2 gap-2"></div>
             </div>
 
-            <div class="bg-gray-900/50 border border-gray-800 backdrop-blur-sm p-4 rounded">
+            <div class="bg-gray-900/50 border border-gray-800 backdrop-blur-sm p-4 rounded mb-6">
                 <h2 class="flex items-center gap-2 text-white text-lg mb-4">
                     <i class="fas fa-cog text-purple-400"></i>
                     Adjustments
                 </h2>
+
                 <div class="space-y-4">
                     <div>
                         <label for="brightness" class="text-sm text-gray-300 mb-2 block">Brightness</label>
                         <input id="brightness" type="range" min="50" max="200" value="100" class="w-full" />
                         <div id="brightnessValue" class="text-xs text-gray-400 mt-1">100%</div>
                     </div>
+
                     <div>
                         <label for="contrast" class="text-sm text-gray-300 mb-2 block">Contrast</label>
                         <input id="contrast" type="range" min="50" max="200" value="100" class="w-full" />
@@ -65,7 +77,43 @@ if (!isset(($_SESSION['userId']))) {
                     </div>
                 </div>
             </div>
+
+            <div class="bg-gray-900/50 border border-gray-800 backdrop-blur-sm p-4 rounded mb-6">
+                <h2 class="flex items-center gap-2 text-white text-lg mb-4">
+                    <i class="fas fa-upload text-purple-400"></i>
+                    Previous Photos
+                </h2>
+
+                <div class="grid grid-cols-3 gap-2" id="previousPhotos">
+                    <?php foreach ($posts as $post): ?>
+                        <div class="relative aspect-square rounded-lg overflow-hidden border border-gray-700 hover:border-purple-500 cursor-pointer transition-colors bg-gray-800">
+                            <img
+                                src="/get_image.php?id=<?= $post['id'] ?>"
+                                class="w-full h-full object-cover hover:scale-105 transition-transform" />
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+
+            </div>
+
+            <div class="bg-gray-900/50 border border-gray-800 backdrop-blur-sm p-4 rounded">
+                <h2 class="flex items-center gap-2 text-white text-lg mb-4">
+                    <span class="text-purple-400 text-lg">📝</span>
+                    Photo Title
+                </h2>
+
+                <input
+                    id="photoTitle"
+                    type="text"
+                    placeholder="Give your photo a title..."
+                    maxlength="100"
+                    class="w-full px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:border-purple-500 focus:outline-none transition-colors" />
+
+                <p id="titleLength" class="text-xs text-gray-400 mt-2">0 / 100</p>
+            </div>
+
         </aside>
+
 
         <div class="flex-1 p-8 flex flex-col">
             <div

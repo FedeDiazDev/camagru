@@ -238,4 +238,21 @@ class PostController
     {
         return $this->post->countPosts();
     }
+
+    public function getPostsByUser($userId)
+    {
+        if (!$userId) {
+            return json_encode([
+                'success' => false,
+                'message' => 'Missing user ID'
+            ]);
+        }
+
+        $posts = $this->post->getPostsByUser($userId);
+
+        return json_encode([
+            'success' => true,
+            'posts' => $posts
+        ]);
+    }
 }

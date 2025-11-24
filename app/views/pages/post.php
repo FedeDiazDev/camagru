@@ -182,7 +182,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             </div>
 
             <div class="hidden lg:block">
-                <div class="sticky top-24 space-y-6">
+                <div class="top-24 space-y-6">
                     <div class="bg-gray-900/50 border border-gray-800 backdrop-blur-sm rounded-2xl">
                         <div class="p-6">
                             <div class="flex items-center justify-between mb-6">
@@ -218,9 +218,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
                             <div class="space-y-4">
                                 <p class="text-gray-300 leading-relaxed">
-                                    Lost in the shadows of the night 🌙 This piece represents
-                                    the eternal dance between light and darkness. Created with
-                                    vintage film techniques and enhanced with digital magic.
+                                    <?= $post->title ?>
                                 </p>
                             </div>
                         </div>

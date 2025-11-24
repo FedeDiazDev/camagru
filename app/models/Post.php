@@ -151,4 +151,13 @@ class Post
         }
         return false;
     }
+
+    public function getPostsByUser($userID)
+    {
+        $query = "SELECT * FROM post WHERE userId = :userId";
+        $stmt = $this->connection->prepare($query);
+        $stmt->bindParam(':userId', $userID, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

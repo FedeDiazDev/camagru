@@ -19,7 +19,10 @@ const contrastValue = document.getElementById('contrastValue')
 const stickersContainer = document.getElementById('stickers')
 const filtersContainer = document.getElementById('filters')
 
-const imageContainer = document.getElementById('imageContainer')
+const imageContainer = document.getElementById('imageContainer');
+
+const titleInput = document.getElementById("photoTitle");
+const titleLength = document.getElementById("titleLength");
 
 const darkStickers = [
     { src: "/images/calabaza.png", name: "pumpkin" },
@@ -42,6 +45,11 @@ let brightness = 100
 let contrast = 100
 
 let movableStickers = []
+
+
+titleInput.addEventListener("input", () => {
+    titleLength.textContent = `${titleInput.value.length} / 100`;
+});
 
 function getFilterStyle() {
     let base = `brightness(${brightness}%) contrast(${contrast}%)`
@@ -246,11 +254,15 @@ function downloadPhoto() {
 }
 
 function sharePhoto() {
-    // if (movableStickers.length === 0) {
-    //     alert("Por favor, añade al menos un sticker antes de tomar la foto.");
-    //     return;
-    // }
-    savePhoto("Sin título");
+    if (movableStickers.length === 0) {
+        showAlert("Por favor, añade al menos un sticker antes de tomar la foto.", "error");
+        return;
+    }
+    if (!titleInput.value) {
+        showAlert("Por favor, agrega un título a la imagen.", "error");
+        return;
+    }
+    savePhoto(titleInput.value);
     // if (navigator.share) {
     //     navigator.share({
     //         title: 'Dark Studio Photo',

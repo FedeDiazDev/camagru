@@ -188,40 +188,18 @@ function capturePhoto() {
     //     alert("Por favor, añade al menos un sticker antes de tomar la foto.");
     //     return;
     // }
-
     const realWidth = video.videoWidth;
     const realHeight = video.videoHeight;
 
     canvas.width = realWidth;
     canvas.height = realHeight;
-    ctx.filter = getFilterStyle();
+
     ctx.drawImage(video, 0, 0, realWidth, realHeight);
-    ctx.filter = 'none';
-    const displayWidth = capturedImage.clientWidth || imageContainer.clientWidth;
-    const displayHeight = capturedImage.clientHeight || imageContainer.clientHeight;
-
-    const scaleX = realWidth / displayWidth;
-    const scaleY = realHeight / displayHeight;
-
-    movableStickers.forEach(sticker => {
-        const img = new Image();
-        img.src = sticker.element.src;
-        ctx.drawImage(
-            img,
-            sticker.x * scaleX,
-            sticker.y * scaleY,
-            sticker.element.width * scaleX,
-            sticker.element.height * scaleY
-        );
-    });
-
 
     const imageData = canvas.toDataURL('image/png');
     capturedImage.src = imageData;
     capturedImage.classList.remove('hidden');
     video.classList.add('hidden');
-
-    clearAllMovableStickers();
 
     captureBtn.classList.add('hidden');
     retakeBtn.classList.remove('hidden');
@@ -229,6 +207,7 @@ function capturePhoto() {
     shareBtn.classList.remove('hidden');
 
     stopCamera();
+
 }
 
 
@@ -354,16 +333,32 @@ function createFilterButtons() {
 }
 
 function savePhoto(title) {
-
+    // 1. Obtenemos la imagen base limpia del canvas
     const imageData = canvas.toDataURL('image/png');
 
-    const stickersData = movableStickers.map(s => ({
-        src: s.emoji,
-        x: s.x,
-        y: s.y,
-        width: s.element.width,
-        height: s.element.height
-    }));
+    // 2. Calculamos el factor de escala
+    // Cuántas veces es más grande la imagen real comparada con lo que se ve en pantalla
+    const domRect = imageContainer.getBoundingClientRect();
+    const realWidth = canvas.width; // 640 (o lo que dé la cámara)
+    const realHeight = canvas.height; // 480
+
+    // Si la imagen en pantalla mide 320px y la real 640px, el ratio es 2.
+    const ratioX = realWidth / imageContainer.clientWidth;
+    const ratioY = realHeight / imageContainer.clientHeight;
+
+    // 3. Mapeamos los stickers con las nuevas coordenadas escaladas
+    const stickersData = movableStickers.map(s => {
+        // Obtenemos la posición actual del elemento en el DOM relativo al contenedor
+        // s.element.offsetLeft es más fiables que s.x si el usuario movió la ventana
+        return {
+            src: s.emoji,
+            x: s.element.offsetLeft * ratioX, // Escalamos X
+            y: s.element.offsetTop * ratioY,  // Escalamos Y
+            width: s.element.offsetWidth * ratioX, // Escalamos el ancho del sticker
+            height: s.element.offsetHeight * ratioY // Escalamos el alto del sticker
+        };
+    });
+
     fetch('/camera.php', {
         method: 'POST',
         headers: {
@@ -382,7 +377,7 @@ function savePhoto(title) {
         .then(res => res.json())
         .then(data => {
             if (data.success) {
-                showAlert('Post creado! ID: ' + data.postId + '\nURL: ' + data.url, "success");
+                showAlert('Post creado! ID: ' + data.postId, "success");
                 setTimeout(() => {
                     window.location.href = "/gallery";
                 }, 1000);
@@ -390,7 +385,6 @@ function savePhoto(title) {
                 alert(data.error);
             }
         })
-
         .catch(console.error);
 }
 

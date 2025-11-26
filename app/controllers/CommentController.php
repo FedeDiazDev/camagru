@@ -77,4 +77,19 @@ class CommentController
             'msg' => "Couldn't post the comment"
         ]);
     }
+    public function deleteComment($commentId, $userId)
+    {
+        if (!$commentId || !$userId) {
+            return json_encode([
+                'success' => false,
+                'error' => "Missing data"
+            ]);
+        }
+
+        if ($this->comment->deleteComment($commentId, $userId)) {
+            return json_encode(['success' => true]);
+        } else {
+            return json_encode(['success' => false, 'error' => 'Could not delete comment']);
+        }
+    }
 }

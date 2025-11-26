@@ -17,10 +17,10 @@ class Comment
         $stmt->bindParam(':comment', $comment);
         $stmt->bindParam(':userCommentId', $userCommentId, PDO::PARAM_INT);
         if ($stmt->execute()) {
-			return true;
-		}
+            return true;
+        }
 
-		return false;
+        return false;
     }
 
     public function getCommentsByPost($postId)
@@ -40,6 +40,27 @@ class Comment
 
         if ($stmt->execute()) {
             return true;
+        }
+        return false;
+    }
+
+
+    public function deleteComment($commentId, $userId)
+    {
+        $queryCheck = "SELECT id FROM comment WHERE id = :id AND userComment = :userId";
+        $stmtCheck = $this->connection->prepare($queryCheck);
+        $stmtCheck->bindParam(':id', $commentId, PDO::PARAM_INT);
+        $stmtCheck->bindParam(':userId', $userId, PDO::PARAM_INT);
+        $stmtCheck->execute();
+
+        if ($stmtCheck->rowCount() > 0) {
+            $query = "DELETE FROM comment WHERE id = :id";
+            $stmt = $this->connection->prepare($query);
+            $stmt->bindParam(':id', $commentId, PDO::PARAM_INT);
+
+            if ($stmt->execute()) {
+                return true;
+            }
         }
         return false;
     }

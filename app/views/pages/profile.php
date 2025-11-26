@@ -218,7 +218,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 body: formData
             });
             const result = await response.json();
-            // console.log(result);
             if (!result.res) {
                 showAlert(result.msg, "error");
             } else {

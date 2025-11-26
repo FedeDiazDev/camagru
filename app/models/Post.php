@@ -30,6 +30,7 @@ class Post
         p.mediaUrl,
         p.title,
         u.username AS author,
+        u.id as userId,
         COUNT(l.id) AS likes
         FROM post p
         JOIN user u ON p.userId = u.id

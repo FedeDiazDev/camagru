@@ -42,6 +42,13 @@ function formatTime($date)
     return $postDate->format('d M Y');
 }
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    if (isset($_POST['action']) && $_POST['action'] === 'delete_comment') {
+        $commentController = new CommentController();
+        $commentId = $_POST['commentId'] ?? null;
+        echo $commentController->deleteComment($commentId, $_SESSION['userId']);
+        exit;
+    }
+
     if (isset($_POST['action']) && $_POST['action'] === 'delete_post') {
         if ($post->userId !== $_SESSION['userId']) {
             echo json_encode(["success" => false, "error" => "Unauthorized"]);
@@ -230,7 +237,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <div class="bg-gray-900/50 border border-gray-800 backdrop-blur-sm rounded-2xl">
                 <div class="p-6">
                     <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
-                        <i class="fa-regular fa-comment text-purple-400"></i> Comments <?= count($post->comments) ?>
+                        <i class="fa-regular fa-comment text-purple-400"></i>
+                        Comments <span id="comments-count"><?= count($post->comments) ?></span>
                     </h3>
                     <div class="mb-6">
                         <div class="flex gap-3">
@@ -253,22 +261,26 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     <div class="space-y-6" id="comments">
                         <?php if (!empty($post->comments)): ?>
                             <?php foreach ($post->comments as $comment): ?>
-                                <div class="flex gap-3">
-                                    <img src="<?= htmlspecialchars($comment->avatarUrl ?? 'https://placehold.co/40x40') ?>"
+                                <div class="flex gap-3 mb-4 comment-item" id="comment-<?= $comment->id ?>"> <img src="<?= htmlspecialchars($comment->avatarUrl ?? 'https://placehold.co/40x40') ?>"
                                         alt="Avatar" class="w-10 h-10 rounded-full border-2 border-purple-500/30" />
                                     <div class="flex-1 min-w-0">
-                                        <div class="bg-gray-800/50 rounded-lg p-4">
+                                        <div class="bg-gray-800/50 rounded-lg p-4 relative group"> <?php if (isset($comment->userId) && $comment->userId == $_SESSION['userId']): ?>
+                                                <button onclick="deleteComment(<?= $comment->id ?>)"
+                                                    class="absolute top-2 right-2 text-gray-500 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                    <i class="fa-solid fa-trash"></i>
+                                                </button>
+                                            <?php endif; ?>
+
                                             <div class="flex items-center justify-between mb-2">
                                                 <div class="flex items-center gap-2">
                                                     <p class="font-semibold text-white text-sm">
                                                         <?= htmlspecialchars($comment->username) ?>
                                                     </p>
                                                 </div>
-                                                <span class="text-gray-500 text-xs">
-                                                    <?= formatTime($comment->date) ?>
+                                                <span class="text-gray-500 text-xs text-right mr-6"> <?= formatTime($comment->date) ?>
                                                 </span>
                                             </div>
-                                            <p class="text-gray-300 leading-relaxed">
+                                            <p class="text-gray-300 leading-relaxed text-wrap break-words">
                                                 <?= htmlspecialchars($comment->content) ?>
                                             </p>
                                         </div>
@@ -285,6 +297,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         </div>
     </div>
     <?php include __DIR__ . '/../templates/footer.php'; ?>
+    <script src="/js/alert.js"></script>
     <script>
         const form = document.getElementById("formComment");
         const likeBtn = document.getElementById("likeBtn");
@@ -302,6 +315,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             if (result.success) {
                 renderComment(result.data);
                 form.reset();
+                const countSpan = document.getElementById("comments-count");
+                if (countSpan) {
+                    let currentCount = parseInt(countSpan.innerText);
+                    countSpan.innerText = currentCount + 1;
+                }
+                const smallCommentCount = document.querySelector(".fa-comment + span.font-medium");
+                if (smallCommentCount) {
+                    let currentSmallCount = parseInt(smallCommentCount.innerText);
+                    smallCommentCount.innerText = currentSmallCount + 1;
+                }
             }
 
         });
@@ -349,10 +372,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 });
                 const result = await res.json();
                 if (result.success) {
-                    alert("Post deleted successfully.");
+                    showAlert("Post deleted successfully.", "success");
                     window.location.href = "/gallery";
                 } else {
-                    alert(result.error || "Error deleting post.");
+                    showAlert(result.error || "Error deleting post.", "error");
                 }
             });
         }
@@ -379,6 +402,42 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             </div>
         `;
             commentsContainer.prepend(div);
+        }
+
+        async function deleteComment(commentId) {
+            if (!confirm("Are you sure you want to delete this comment?")) return;
+
+            const formData = new FormData();
+            formData.append("action", "delete_comment");
+            formData.append("commentId", commentId);
+
+            try {
+                const response = await fetch(window.location.href, {
+                    method: "POST",
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    const commentElement = document.getElementById(`comment-${commentId}`);
+                    if (commentElement) {
+                        commentElement.style.transition = "all 0.3s ease";
+                        commentElement.style.opacity = "0";
+                        commentElement.style.transform = "translateX(20px)";
+                        const countSpan = document.getElementById("comments-count");
+                        if (countSpan) {
+                            let currentCount = parseInt(countSpan.innerText);
+                            countSpan.innerText = Math.max(0, currentCount - 1);
+                        }
+                    }
+                } else {
+                    showAlert(result.error || "Error deleting comment", "error");
+                }
+            } catch (error) {
+                // console.error("Error:", error);
+                showAlert("An error occurred", "error");
+            }
         }
     </script>
 </body>

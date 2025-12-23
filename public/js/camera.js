@@ -165,12 +165,36 @@ window.addEventListener('mouseup', () => {
 
 window.addEventListener('mousemove', (e) => {
     if (!currentDraggingSticker) return
-    const rect = imageContainer.getBoundingClientRect()
-    let left = e.clientX - rect.left - offsetX
-    let top = e.clientY - rect.top - offsetY
 
-    left = Math.max(0, Math.min(left, imageContainer.clientWidth - currentDraggingSticker.clientWidth))
-    top = Math.max(0, Math.min(top, imageContainer.clientHeight - currentDraggingSticker.clientHeight))
+    // Obtenemos los límites de la imagen, que es donde queremos restringir el movimiento
+    const imageRect = capturedImage.getBoundingClientRect();
+    const containerRect = imageContainer.getBoundingClientRect();
+
+    // Offset del ratón respecto al sticker lo calculamos en mousedown
+
+    // La coordenada visual deseada (left/top relative to viewport)
+    let clientX = e.clientX - offsetX;
+    let clientY = e.clientY - offsetY;
+
+    // Convertimos a coordenadas relativas al imageContainer (que es el offsetParent del sticker)
+    // El sticker tiene position:absolute dentro de imageContainer.
+    // imageContainer tiene position relative/absolute.
+
+    // Sin embargo, queremos que visualmente no se salga de imageRect.
+    // Límites admisibles en coordenadas de viewport:
+    const minX = imageRect.left;
+    const maxX = imageRect.right - currentDraggingSticker.offsetWidth;
+    const minY = imageRect.top;
+    const maxY = imageRect.bottom - currentDraggingSticker.offsetHeight;
+
+    // Clampeamos al área de la imagen
+    clientX = Math.max(minX, Math.min(clientX, maxX));
+    clientY = Math.max(minY, Math.min(clientY, maxY));
+
+    // Ahora convertimos de vuelta a coordenadas relativas al contenedor padre (imageContainer)
+    // left = viewportX - containerLeft
+    let left = clientX - containerRect.left;
+    let top = clientY - containerRect.top;
 
     currentDraggingSticker.style.left = left + 'px'
     currentDraggingSticker.style.top = top + 'px'
@@ -339,33 +363,30 @@ function savePhoto(title) {
     // 1. Obtenemos la imagen base limpia del canvas
     const imageData = canvas.toDataURL('image/png');
 
-    // 2. Calculamos el factor de escala usando las dimensiones VISUALES de la imagen
-    const displayWidth = capturedImage.width;
-    const displayHeight = capturedImage.height;
+    // 2. Calculamos el factor de escala usando BoundingClientRect para mayor precisión
+    const imageRect = capturedImage.getBoundingClientRect();
 
     // Dimensiones reales (del canvas/archivo original)
     const realWidth = canvas.width;
     const realHeight = canvas.height;
 
-    const ratioX = realWidth / displayWidth;
-    const ratioY = realHeight / displayHeight;
+    const ratioX = realWidth / imageRect.width;
+    const ratioY = realHeight / imageRect.height;
 
-    // Offset de la imagen dentro del contenedor (por si está centrada o no ocupa todo)
-    const imageLeft = capturedImage.offsetLeft;
-    const imageTop = capturedImage.offsetTop;
-
-    // 3. Mapeamos los stickers con las nuestras coordenadas y offsets
+    // 3. Mapeamos los stickers
     const stickersData = movableStickers.map(s => {
-        // Calculamos la posición relativa a la imagen (restando el offset de la imagen)
-        const relativeX = s.element.offsetLeft - imageLeft;
-        const relativeY = s.element.offsetTop - imageTop;
+        const stickerRect = s.element.getBoundingClientRect();
+
+        // Posición relativa visual
+        const relativeX = stickerRect.left - imageRect.left;
+        const relativeY = stickerRect.top - imageRect.top;
 
         return {
             src: s.emoji,
-            x: relativeX * ratioX, // Escalamos X
-            y: relativeY * ratioY, // Escalamos Y
-            width: s.element.offsetWidth * ratioX, // Escalamos ancho
-            height: s.element.offsetHeight * ratioY // Escalamos alto
+            x: relativeX * ratioX,
+            y: relativeY * ratioY,
+            width: stickerRect.width * ratioX,
+            height: stickerRect.height * ratioY
         };
     });
 

@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once __DIR__ . '/../controllers/PostController.php';
 
 $postController = new PostController();
@@ -26,10 +27,10 @@ $totalPages = ceil($totalPosts / $limit);
     <title>Gallery</title>
 </head>
 
-<body class="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black">
+<body class="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black flex flex-col">
 
     <?php include __DIR__ . '/templates/main_header.php'; ?>
-    <main class="p-6">
+    <main class="p-6 flex-1">
         <?php if (count($posts) > 0): ?>
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
                 <?php foreach ($posts as $post): ?>

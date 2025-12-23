@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once __DIR__ . '/../../controllers/PostController.php';
 $postController = new PostController();
 $postsJson = $postController->getPosts(12, 0);

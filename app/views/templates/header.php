@@ -28,28 +28,9 @@
       </a>
       <a href="/profile" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-gray-800/50 transition-all">
         <i class="fas fa-chart-line w-5 h-5"></i>
-        <span>Profile(test)</span>
+        <span>Profile</span>
       </a>
     </nav>
-
-    <!-- <div class="bg-gray-900/50 rounded-2xl p-4 mb-8 border border-gray-800">
-      <h3 class="text-white font-semibold mb-3">Your Stats</h3>
-      <div class="space-y-2">
-        <div class="flex justify-between text-sm">
-          <span class="text-gray-400">Photos</span>
-          <span class="text-purple-400 font-medium">24</span>
-        </div>
-        <div class="flex justify-between text-sm">
-          <span class="text-gray-400">Likes</span>
-          <span class="text-pink-400 font-medium">1.2k</span>
-        </div>
-        <div class="flex justify-between text-sm">
-          <span class="text-gray-400">Followers</span>
-          <span class="text-purple-400 font-medium">89</span>
-        </div>
-      </div>
-    </div> -->
-
     <div class="mt-auto space-y-3">
       <a href="/register" class="block w-full text-center bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded py-2 border-0">
         Join the Darkness

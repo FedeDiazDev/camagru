@@ -74,7 +74,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 "success" => true,
                 "data" => [
                     "username" => $_SESSION['username'],
-                    "avatarUrl" => $_SESSION['avatarUrl'] ?? 'https://placehold.co/40x40',
+                    "avatarUrl" => $_SESSION['avatarUrl'] ?? 'https://i.pravatar.cc/150?u=a042581f4e29026704c',
                     "date" => formatTime(date('Y-m-d H:i:s')),
                     "content" => htmlspecialchars($comment)
                 ]
@@ -143,7 +143,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         <div class="p-4">
                             <div class="flex items-center justify-between mb-4">
                                 <div class="flex items-center gap-3">
-                                    <img src="https://placehold.co/600x600/png" alt=""
+                                    <img src="https://i.pravatar.cc/150?u=a042581f4e29026704c" alt=""
                                         class="w-12 h-12 rounded-full border-2 border-purple-500/30" />
                                     <div>
                                         <p class="font-semibold text-white"></p>
@@ -194,7 +194,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         <div class="p-6">
                             <div class="flex items-center justify-between mb-6">
                                 <div class="flex items-center gap-3">
-                                    <img src="https://placehold.co/600x600/png" alt=""
+                                    <img src="https://i.pravatar.cc/150?u=a042581f4e29026704c" alt=""
                                         class="w-12 h-12 rounded-full border-2 border-purple-500/30" />
                                     <div>
                                         <p class="font-semibold text-white"><?= htmlspecialchars($post->author); ?></p>
@@ -242,7 +242,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     </h3>
                     <div class="mb-6">
                         <div class="flex gap-3">
-                            <img src="https://placehold.co/600x600/png" alt=""
+                            <img src="https://i.pravatar.cc/150?u=a042581f4e29026704c" alt=""
                                 class="w-10 h-10 rounded-full border-2 border-purple-500/30" />
                             <div class="flex-1">
                                 <form id="formComment" method="post" action="/post?id=<?= $postID ?>">
@@ -261,7 +261,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     <div class="space-y-6" id="comments">
                         <?php if (!empty($post->comments)): ?>
                             <?php foreach ($post->comments as $comment): ?>
-                                <div class="flex gap-3 mb-4 comment-item" id="comment-<?= $comment->id ?>"> <img src="<?= htmlspecialchars($comment->avatarUrl ?? 'https://placehold.co/40x40') ?>"
+                                <div class="flex gap-3 mb-4 comment-item" id="comment-<?= $comment->id ?>"> <img src="<?= htmlspecialchars($comment->avatarUrl ?? 'https://i.pravatar.cc/150?u=a042581f4e29026704c') ?>"
                                         alt="Avatar" class="w-10 h-10 rounded-full border-2 border-purple-500/30" />
                                     <div class="flex-1 min-w-0">
                                         <div class="bg-gray-800/50 rounded-lg p-4 relative group"> <?php if (isset($comment->userId) && $comment->userId == $_SESSION['userId']): ?>

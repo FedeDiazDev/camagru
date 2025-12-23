@@ -1,3 +1,10 @@
+<?php
+require_once __DIR__ . '/../../controllers/PostController.php';
+$postController = new PostController();
+$postsJson = $postController->getPosts(12, 0);
+$postsData = json_decode($postsJson);
+$recentPosts = ($postsData && $postsData->res) ? $postsData->msg : [];
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -42,7 +49,7 @@
                             <div class="col-span-8 bg-gray-900/50 border border-gray-800 backdrop-blur-sm overflow-hidden group cursor-pointer hover:shadow-2xl hover:shadow-purple-500/20 transition-all duration-300 rounded">
                                 <div class="aspect-[16/10] relative">
                                     <img
-                                        src="https://placehold.co/600x400"
+                                        src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=800&q=80"
                                         alt="Featured Dark Photo"
                                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                                     <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
@@ -84,7 +91,7 @@
                                         <div class="flex items-center gap-3 group cursor-pointer">
                                             <div class="w-12 h-12 rounded-lg overflow-hidden bg-gray-800">
                                                 <img
-                                                    src="https://placehold.co/600x400"
+                                                    src="https://images.unsplash.com/photo-1439792675105-701e6a4ab6f0?q=80&w=1173&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                                                     alt="Trending 1"
                                                     class="w-full h-full object-cover group-hover:scale-110 transition-transform" />
                                             </div>
@@ -97,7 +104,7 @@
                                         <div class="flex items-center gap-3 group cursor-pointer">
                                             <div class="w-12 h-12 rounded-lg overflow-hidden bg-gray-800">
                                                 <img
-                                                    src="https://placehold.co/600x400"
+                                                    src="https://images.unsplash.com/photo-1475070929565-c985b496cb9f?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                                                     alt="Trending 2"
                                                     class="w-full h-full object-cover group-hover:scale-110 transition-transform" />
                                             </div>
@@ -110,7 +117,7 @@
                                         <div class="flex items-center gap-3 group cursor-pointer">
                                             <div class="w-12 h-12 rounded-lg overflow-hidden bg-gray-800">
                                                 <img
-                                                    src="https://placehold.co/600x400"
+                                                    src="https://images.unsplash.com/photo-1504903271097-d7e7c7f5f7ad?q=80&w=880&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                                                     alt="Trending 3"
                                                     class="w-full h-full object-cover group-hover:scale-110 transition-transform" />
                                             </div>
@@ -146,28 +153,40 @@
                                 </div>
 
                                 <div class="grid grid-cols-6 gap-4">
-                                    <!-- Repeat photos 12 times -->
-                                    <div class="overflow-hidden group cursor-pointer hover:shadow-xl hover:shadow-purple-500/20 transition-all duration-300 bg-gray-900/30 border border-gray-800 rounded">
-                                        <div class="aspect-square relative">
-                                            <img
-                                                src="https://placehold.co/600x400"
-                                                alt="Photo 1"
-                                                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-                                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                                            <div class="absolute bottom-2 left-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                                <div class="flex items-center justify-between text-white text-xs">
-                                                    <div class="flex items-center gap-1">
-                                                        ❤️
-                                                        <span>27</span>
-                                                    </div>
-                                                    <div class="flex items-center gap-1">
-                                                        💬
-                                                        <span>5</span>
+                                    <?php if (empty($recentPosts)): ?>
+                                        <div class="col-span-6 flex flex-col items-center justify-center py-12 text-center bg-gray-900/30 border border-gray-800 rounded-lg">
+                                            <div class="text-4xl mb-4">📸</div>
+                                            <h3 class="text-xl font-bold text-white mb-2">No photos yet</h3>
+                                            <p class="text-gray-400 mb-4">Be the first to capture a moment!</p>
+                                            <a href="/camera" class="px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 rounded text-white font-medium hover:from-purple-700 hover:to-pink-700 transition">
+                                                Go to Camera
+                                            </a>
+                                        </div>
+                                    <?php else: ?>
+                                        <?php foreach ($recentPosts as $post): ?>
+                                            <a href="/post?id=<?= $post->id ?>" class="block overflow-hidden group cursor-pointer hover:shadow-xl hover:shadow-purple-500/20 transition-all duration-300 bg-gray-900/30 border border-gray-800 rounded">
+                                                <div class="aspect-square relative">
+                                                    <img
+                                                        src="<?= htmlspecialchars($post->mediaUrl) ?>"
+                                                        alt="User Creation"
+                                                        class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                                                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                                    <div class="absolute bottom-2 left-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                                        <div class="flex items-center justify-between text-white text-xs">
+                                                            <div class="flex items-center gap-1">
+                                                                ❤️
+                                                                <span><?= htmlspecialchars($post->likes ?? 0) ?></span>
+                                                            </div>
+                                                            <div class="flex items-center gap-1">
+                                                                💬
+                                                                <span><?= htmlspecialchars($post->comments ?? 0) ?></span>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                            </a>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>

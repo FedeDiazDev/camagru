@@ -135,7 +135,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <div class="hidden lg:flex lg:w-1/2 relative overflow-hidden">
             <div class="absolute inset-0 bg-gradient-to-bl from-purple-600/20 to-pink-600/20"></div>
             <img
-                src="https://placehold.co/600x400"
+                src="https://images.unsplash.com/photo-1431440869543-efaf3388c585?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 alt="Dark Photography Community"
                 class="w-full h-full object-cover" />
             <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>

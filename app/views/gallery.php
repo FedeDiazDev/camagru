@@ -41,7 +41,7 @@ $totalPages = ceil($totalPosts / $limit);
                             <div class="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-white">
                                 <div class="flex items-center gap-2 mb-2">
                                     <div class="w-6 h-6 rounded-full border border-white/20 bg-gray-700 overflow-hidden flex items-center justify-center">
-                                        <img src="<?= htmlspecialchars($post->avatarUrl ?? 'https://placehold.co/24x24/png') ?>" alt="Avatar"
+                                        <img src="<?= htmlspecialchars($post->avatarUrl ?? 'https://i.pravatar.cc/150?u=a042581f4e29026704c') ?>" alt="Avatar"
                                             class="w-full h-full object-cover" />
                                     </div>
                                     <span class="text-sm font-medium"><?= htmlspecialchars($post->author ?? 'unknown') ?></span>

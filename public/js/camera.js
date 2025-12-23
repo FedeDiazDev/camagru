@@ -100,6 +100,7 @@ async function startCamera() {
         shareBtn.classList.add('hidden')
         capturedImage.classList.add('hidden')
         video.classList.remove('hidden')
+        imageContainer.classList.add('hidden')
         clearAllMovableStickers()
         applyFilter()
     } catch (err) {
@@ -199,6 +200,7 @@ function capturePhoto() {
     const imageData = canvas.toDataURL('image/png');
     capturedImage.src = imageData;
     capturedImage.classList.remove('hidden');
+    imageContainer.classList.remove('hidden');
     video.classList.add('hidden');
 
     captureBtn.classList.add('hidden');
@@ -270,6 +272,7 @@ function handleUpload(event) {
     reader.onload = (e) => {
         capturedImage.src = e.target.result;
         capturedImage.classList.remove('hidden');
+        imageContainer.classList.remove('hidden');
         video.classList.add('hidden');
 
         capturedImage.onload = () => {

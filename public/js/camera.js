@@ -336,26 +336,33 @@ function savePhoto(title) {
     // 1. Obtenemos la imagen base limpia del canvas
     const imageData = canvas.toDataURL('image/png');
 
-    // 2. Calculamos el factor de escala
-    // Cuántas veces es más grande la imagen real comparada con lo que se ve en pantalla
-    const domRect = imageContainer.getBoundingClientRect();
-    const realWidth = canvas.width; // 640 (o lo que dé la cámara)
-    const realHeight = canvas.height; // 480
+    // 2. Calculamos el factor de escala usando las dimensiones VISUALES de la imagen
+    const displayWidth = capturedImage.width;
+    const displayHeight = capturedImage.height;
 
-    // Si la imagen en pantalla mide 320px y la real 640px, el ratio es 2.
-    const ratioX = realWidth / imageContainer.clientWidth;
-    const ratioY = realHeight / imageContainer.clientHeight;
+    // Dimensiones reales (del canvas/archivo original)
+    const realWidth = canvas.width;
+    const realHeight = canvas.height;
 
-    // 3. Mapeamos los stickers con las nuevas coordenadas escaladas
+    const ratioX = realWidth / displayWidth;
+    const ratioY = realHeight / displayHeight;
+
+    // Offset de la imagen dentro del contenedor (por si está centrada o no ocupa todo)
+    const imageLeft = capturedImage.offsetLeft;
+    const imageTop = capturedImage.offsetTop;
+
+    // 3. Mapeamos los stickers con las nuestras coordenadas y offsets
     const stickersData = movableStickers.map(s => {
-        // Obtenemos la posición actual del elemento en el DOM relativo al contenedor
-        // s.element.offsetLeft es más fiables que s.x si el usuario movió la ventana
+        // Calculamos la posición relativa a la imagen (restando el offset de la imagen)
+        const relativeX = s.element.offsetLeft - imageLeft;
+        const relativeY = s.element.offsetTop - imageTop;
+
         return {
             src: s.emoji,
-            x: s.element.offsetLeft * ratioX, // Escalamos X
-            y: s.element.offsetTop * ratioY,  // Escalamos Y
-            width: s.element.offsetWidth * ratioX, // Escalamos el ancho del sticker
-            height: s.element.offsetHeight * ratioY // Escalamos el alto del sticker
+            x: relativeX * ratioX, // Escalamos X
+            y: relativeY * ratioY, // Escalamos Y
+            width: s.element.offsetWidth * ratioX, // Escalamos ancho
+            height: s.element.offsetHeight * ratioY // Escalamos alto
         };
     });
 

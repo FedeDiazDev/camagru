@@ -31,7 +31,7 @@ $posts = $data['posts'];
 
 <body class="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black">
     <?php include __DIR__ . '/templates/main_header.php'; ?>
-    <main class="flex">
+    <main class="flex min-h-screen">
         <aside class="w-80 bg-black/50 backdrop-blur-sm border-r border-gray-800 p-6 flex flex-col">
 
             <div class="flex items-center gap-3 mb-8">

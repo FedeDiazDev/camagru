@@ -4,7 +4,7 @@ require __DIR__ . '/../../vendor/autoload.php';
 function sendVerificationEmail($toEmail, $token)
 {
   $email = new \SendGrid\Mail\Mail();
-  $email->setFrom("federicojose2000@gmail.com", "Camagru");
+  $email->setFrom("juegosfedoska@gmail.com", "Camagru");
   $email->setSubject("Confirma tu correo electrónico");
   $email->addTo($toEmail);
   $email->addContent(
@@ -67,7 +67,7 @@ function sendVerificationEmail($toEmail, $token)
 function recoverPassword($toEmail, $token)
 {
   $email = new \SendGrid\Mail\Mail();
-  $email->setFrom("federicojose2000@gmail.com", "Camagru");
+  $email->setFrom("juegosfedoska@gmail.com", "Camagru");
   $email->setSubject("Recupera tu contraseña");
   $email->addTo($toEmail);
   $email->addContent(
@@ -135,7 +135,7 @@ function recoverPassword($toEmail, $token)
 function sendCommentNotification($toEmail, $username, $commenter, $postTitle, $postLink)
 {
   $email = new \SendGrid\Mail\Mail();
-  $email->setFrom("federicojose2000@gmail.com", "Camagru");
+  $email->setFrom("juegosfedoska@gmail.com", "Camagru");
   $email->setSubject("¡$commenter ha comentado tu post!");
   $email->addTo($toEmail);
   $email->addContent(

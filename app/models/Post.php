@@ -68,10 +68,12 @@ class Post
                          p.date,
                          p.mediaUrl,
                          u.username AS author,
-                         COUNT(l.id) AS likes
+                         COUNT(DISTINCT l.id) AS likes,
+                         COUNT(DISTINCT c.id) AS comments
                   FROM post p
                   JOIN user u ON p.userId = u.id
                   LEFT JOIN likes l ON l.postId = p.id
+                  LEFT JOIN comment c ON c.postId = p.id
                   GROUP BY p.id, p.userId, p.date, u.username
                   ORDER BY p.date DESC
                   LIMIT :limit OFFSET :offset;";

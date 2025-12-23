@@ -315,16 +315,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             if (result.success) {
                 renderComment(result.data);
                 form.reset();
-                const countSpan = document.getElementById("comments-count");
-                if (countSpan) {
-                    let currentCount = parseInt(countSpan.innerText);
-                    countSpan.innerText = currentCount + 1;
-                }
-                const smallCommentCount = document.querySelector(".fa-comment + span.font-medium");
-                if (smallCommentCount) {
-                    let currentSmallCount = parseInt(smallCommentCount.innerText);
-                    smallCommentCount.innerText = currentSmallCount + 1;
-                }
+                const countSpans = document.querySelectorAll("#comments-count, .fa-comment + span.font-medium");
+                countSpans.forEach(span => {
+                    let currentCount = parseInt(span.innerText);
+                    span.innerText = currentCount + 1;
+                });
             }
 
         });
@@ -425,11 +420,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         commentElement.style.transition = "all 0.3s ease";
                         commentElement.style.opacity = "0";
                         commentElement.style.transform = "translateX(20px)";
-                        const countSpan = document.getElementById("comments-count");
-                        if (countSpan) {
-                            let currentCount = parseInt(countSpan.innerText);
-                            countSpan.innerText = Math.max(0, currentCount - 1);
-                        }
+                        const countSpans = document.querySelectorAll("#comments-count, .fa-comment + span.font-medium");
+                        countSpans.forEach(span => {
+                            let currentCount = parseInt(span.innerText);
+                            span.innerText = Math.max(0, currentCount - 1);
+                        });
                     }
                 } else {
                     showAlert(result.error || "Error deleting comment", "error");

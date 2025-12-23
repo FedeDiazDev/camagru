@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../../testmail.php';
+require_once __DIR__ . '/../../mailer.php';
 require_once __DIR__ . '/../../controllers/UserController.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

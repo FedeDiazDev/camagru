@@ -50,11 +50,11 @@ $totalPages = ceil($totalPosts / $limit);
                                     <div class="flex items-center gap-3">
                                         <div class="flex items-center gap-1 text-pink-400">
                                             <i class="fas fa-heart w-4 h-4"></i>
-                                            <span class="text-sm"><?= htmlspecialchars($post->likes ?? 0) ?></span>
+                                            <span class="text-sm post-<?= htmlspecialchars($post->id) ?>-likes"><?= htmlspecialchars($post->likes ?? 0) ?></span>
                                         </div>
                                         <div class="flex items-center gap-1 text-purple-400">º
                                             <i class="fas fa-comment-dots w-4 h-4"></i>
-                                            <span class="text-sm"><?= htmlspecialchars($post->comments ?? 0) ?></span>
+                                            <span class="text-sm post-<?= htmlspecialchars($post->id) ?>-comments"><?= htmlspecialchars($post->comments ?? 0) ?></span>
                                         </div>
                                     </div>
                                     <span class="text-gray-300 text-xs"><?= htmlspecialchars($post->createdAt ?? '') ?></span>
@@ -80,6 +80,32 @@ $totalPages = ceil($totalPosts / $limit);
     </main>
     <?php include __DIR__ . '/templates/footer.php'; ?>
 
+    <script>
+        function updateGallery() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const page = urlParams.get('page') || 1;
+
+            fetch(`/api/posts?page=${page}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.res && Array.isArray(data.msg)) {
+                        data.msg.forEach(post => {
+                            // Update likes
+                            const likeCount = document.querySelector(`.post-${post.id}-likes`);
+                            if (likeCount) likeCount.textContent = post.likes;
+
+                            // Update comments
+                            const commentCount = document.querySelector(`.post-${post.id}-comments`);
+                            if (commentCount) commentCount.textContent = post.comments;
+                        });
+                    }
+                })
+                .catch(error => console.error('Error updating gallery:', error));
+        }
+
+        // Poll every 5 seconds
+        setInterval(updateGallery, 5000);
+    </script>
 </body>
 
 </html>

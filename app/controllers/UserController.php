@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../../config/php/database.php';
 require_once __DIR__ . '/../models/User.php';
-require_once __DIR__ . '/../testmail.php';
+require_once __DIR__ . '/../mailer.php';
 class UserController
 {
     private $user;

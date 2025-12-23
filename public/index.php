@@ -44,6 +44,15 @@ switch ($request) {
     case '/recover':
         include_once __DIR__ . '/../app/views/pages/recover.php';
         exit;
+    case '/api/posts':
+        require_once __DIR__ . '/../app/controllers/PostController.php';
+        $controller = new PostController();
+        $limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 6;
+        $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+        $offset = ($page - 1) * $limit;
+        header('Content-Type: application/json');
+        echo $controller->getPosts($limit, $offset);
+        exit;
         
     default:
         http_response_code(404);

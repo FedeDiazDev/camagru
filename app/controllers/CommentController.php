@@ -3,7 +3,7 @@ require_once __DIR__ . '/../../config/php/database.php';
 require_once __DIR__ . '/../models/Comment.php';
 require_once __DIR__ . '/../controllers/PostController.php';
 require_once __DIR__ . '/../controllers/UserController.php';
-require_once __DIR__ . '/../testmail.php';
+require_once __DIR__ . '/../mailer.php';
 
 class CommentController
 {

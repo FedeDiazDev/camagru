@@ -7,7 +7,6 @@ const stickerPreview = document.getElementById('stickerPreview')
 const startCameraBtn = document.getElementById('startCameraBtn')
 const captureBtn = document.getElementById('captureBtn')
 const retakeBtn = document.getElementById('retakeBtn')
-const downloadBtn = document.getElementById('downloadBtn')
 const shareBtn = document.getElementById('shareBtn')
 const uploadInput = document.getElementById('uploadInput')
 
@@ -96,7 +95,6 @@ async function startCamera() {
         startCameraBtn.classList.add('hidden')
         captureBtn.classList.remove('hidden')
         retakeBtn.classList.add('hidden')
-        downloadBtn.classList.add('hidden')
         shareBtn.classList.add('hidden')
         capturedImage.classList.add('hidden')
         video.classList.remove('hidden')
@@ -166,33 +164,20 @@ window.addEventListener('mouseup', () => {
 window.addEventListener('mousemove', (e) => {
     if (!currentDraggingSticker) return
 
-    // Obtenemos los límites de la imagen, que es donde queremos restringir el movimiento
     const imageRect = capturedImage.getBoundingClientRect();
     const containerRect = imageContainer.getBoundingClientRect();
 
-    // Offset del ratón respecto al sticker lo calculamos en mousedown
-
-    // La coordenada visual deseada (left/top relative to viewport)
     let clientX = e.clientX - offsetX;
     let clientY = e.clientY - offsetY;
 
-    // Convertimos a coordenadas relativas al imageContainer (que es el offsetParent del sticker)
-    // El sticker tiene position:absolute dentro de imageContainer.
-    // imageContainer tiene position relative/absolute.
-
-    // Sin embargo, queremos que visualmente no se salga de imageRect.
-    // Límites admisibles en coordenadas de viewport:
     const minX = imageRect.left;
     const maxX = imageRect.right - currentDraggingSticker.offsetWidth;
     const minY = imageRect.top;
     const maxY = imageRect.bottom - currentDraggingSticker.offsetHeight;
 
-    // Clampeamos al área de la imagen
     clientX = Math.max(minX, Math.min(clientX, maxX));
     clientY = Math.max(minY, Math.min(clientY, maxY));
 
-    // Ahora convertimos de vuelta a coordenadas relativas al contenedor padre (imageContainer)
-    // left = viewportX - containerLeft
     let left = clientX - containerRect.left;
     let top = clientY - containerRect.top;
 
@@ -209,10 +194,6 @@ window.addEventListener('mousemove', (e) => {
 function capturePhoto() {
     if (!isCapturing) return;
 
-    // if (movableStickers.length === 0) {
-    //     alert("Por favor, añade al menos un sticker antes de tomar la foto.");
-    //     return;
-    // }
     const realWidth = video.videoWidth;
     const realHeight = video.videoHeight;
 
@@ -229,34 +210,21 @@ function capturePhoto() {
 
     captureBtn.classList.add('hidden');
     retakeBtn.classList.remove('hidden');
-    downloadBtn.classList.remove('hidden');
     shareBtn.classList.remove('hidden');
 
     stopCamera();
-
 }
 
 
 function retakePhoto() {
     capturedImage.classList.add('hidden')
     retakeBtn.classList.add('hidden')
-    downloadBtn.classList.add('hidden')
     shareBtn.classList.add('hidden')
 
     clearAllMovableStickers()
     startCamera()
 }
 
-function downloadPhoto() {
-    // if (movableStickers.length === 0) {
-    //     alert("Por favor, añade al menos un sticker antes de tomar la foto.");
-    //     return;
-    // }
-    const link = document.createElement('a')
-    link.href = capturedImage.src
-    link.download = `darkstudio_${Date.now()}.png`
-    link.click()
-}
 
 function sharePhoto() {
     if (movableStickers.length === 0) {
@@ -268,17 +236,7 @@ function sharePhoto() {
         return;
     }
     savePhoto(titleInput.value);
-    // if (navigator.share) {
-    //     navigator.share({
-    //         title: 'Dark Studio Photo',
-    //         text: 'Check out my photo from Dark Studio!',
-    //         files: [dataURLtoFile(capturedImage.src, 'photo.png')],
-    //     }).catch(console.error)
-    // } else {
-    //     alert('Sharing not supported on this browser.')
-    // }
 }
-
 function dataURLtoFile(dataurl, filename) {
     let arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
         bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n)
@@ -311,7 +269,6 @@ function handleUpload(event) {
         startCameraBtn.classList.remove('hidden');
         captureBtn.classList.add('hidden');
         retakeBtn.classList.remove('hidden');
-        downloadBtn.classList.remove('hidden');
         shareBtn.classList.remove('hidden');
     };
     reader.readAsDataURL(file);
@@ -360,24 +317,19 @@ function createFilterButtons() {
 }
 
 function savePhoto(title) {
-    // 1. Obtenemos la imagen base limpia del canvas
     const imageData = canvas.toDataURL('image/png');
 
-    // 2. Calculamos el factor de escala usando BoundingClientRect para mayor precisión
     const imageRect = capturedImage.getBoundingClientRect();
 
-    // Dimensiones reales (del canvas/archivo original)
     const realWidth = canvas.width;
     const realHeight = canvas.height;
 
     const ratioX = realWidth / imageRect.width;
     const ratioY = realHeight / imageRect.height;
 
-    // 3. Mapeamos los stickers
     const stickersData = movableStickers.map(s => {
         const stickerRect = s.element.getBoundingClientRect();
 
-        // Posición relativa visual
         const relativeX = stickerRect.left - imageRect.left;
         const relativeY = stickerRect.top - imageRect.top;
 
@@ -423,7 +375,6 @@ function savePhoto(title) {
 startCameraBtn.addEventListener('click', startCamera);
 captureBtn.addEventListener('click', capturePhoto);
 retakeBtn.addEventListener('click', retakePhoto);
-downloadBtn.addEventListener('click', downloadPhoto);
 shareBtn.addEventListener('click', sharePhoto);
 uploadInput.addEventListener('change', handleUpload);
 

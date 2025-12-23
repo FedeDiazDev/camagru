@@ -158,10 +158,6 @@ $posts = $data['posts'];
                     <i class="fas fa-rotate-left"></i> Retake
                 </button>
 
-                <button id="downloadBtn"
-                    class="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white border-0 px-6 py-3 rounded flex items-center gap-2 hidden">
-                    <i class="fas fa-download"></i> Download
-                </button>
 
                 <button id="shareBtn"
                     class="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white border-0 px-8 py-3 rounded hidden">

@@ -117,12 +117,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         </div>
 
                         <div class="flex items-center justify-between text-sm text-gray-400">
-                            <label class="flex items-center space-x-2">
-                                <input
-                                    type="checkbox"
-                                    class="rounded border-gray-600 bg-gray-800 text-purple-600 focus:ring-purple-500" />
-                                <span>Remember me</span>
-                            </label>
                             <a href="/password" class="text-purple-400 hover:text-purple-300 transition-colors">
                                 Forgot password?
                             </a>

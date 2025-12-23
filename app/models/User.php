@@ -65,14 +65,9 @@ class User
     public function updateUser($data)
     {
         $query = "UPDATE user set username = :username, email = :email, password = :password, emailPreference = :emailPreference WHERE id = :id";
-        $hashed_pass = password_hash($data->password, PASSWORD_DEFAULT);
         $stmt = $this->connection->prepare($query);
         $stmt->bindParam(':username', $data->username);
-        $passwordToStore = $data->password;
-        if (!empty($data->newPassword)) {
-            $passwordToStore = password_hash($data->newPassword, PASSWORD_DEFAULT);
-        }
-        $stmt->bindParam(':password', $passwordToStore, PDO::PARAM_STR);
+        $stmt->bindParam(':password', $data->password, PDO::PARAM_STR);
         $stmt->bindParam(':email', $data->email);
         $stmt->bindParam(':emailPreference', $data->notifications, PDO::PARAM_INT);
         $stmt->bindParam(':id', $data->id);

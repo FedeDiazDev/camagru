@@ -159,7 +159,7 @@ class UserController
         $updatedData->username = $decodedData->username;
         $updatedData->password = $user->password;
         if (!empty($decodedData->password)) {
-            $updatedData->password = $decodedData->password;
+            $updatedData->password = password_hash($decodedData->password, PASSWORD_DEFAULT);
         }
         $updatedData->notifications = $decodedData->notifications;
 
